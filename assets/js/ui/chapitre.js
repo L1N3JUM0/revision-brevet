@@ -8,6 +8,7 @@ import { $, esc, toast, fmtChrono } from './dom.js';
 import { rebond, secousse, confettis } from './fx.js';
 import { flammeActuelle } from '../core/gamification.js';
 import { monterCalculatrice } from './calculatrice.js';
+import { htmlSaisie, brancherSaisie, lireSaisie } from './saisie.js';
 
 const NOMS_NIVEAUX = ['Facile', 'Moyen', 'Type brevet'];
 
@@ -235,81 +236,22 @@ function ecranSession({ app, gen, rng, urlChap, graine }, mode) {
         ${numero}
         <div class="enonce">${exo.enonce}</div>
         ${exo.figure || ''}
-        ${champSaisie(exo)}
+        ${htmlSaisie(exo)}
         <div class="aide-saisie" id="aide" aria-live="polite"></div>
         <button class="btn" id="valider">Valider</button>
       </section>
       <div id="retour"></div>`;
-    brancherSaisie(exo);
+    brancherSaisie(zone, { onEntree: valider, verrouille: () => enAttente });
     $('#valider', zone).addEventListener('click', valider);
     const champ = $('#champ', zone);
     if (champ) champ.focus({ preventScroll: true });
     window.scrollTo(0, 0);
   }
 
-  function champSaisie(exo) {
-    if (exo.type === 'qcm') {
-      return `<div class="qcm" id="qcm">${exo.choix.map(c =>
-        `<button type="button" data-valeur="${esc(c)}">${esc(c)}</button>`).join('')}</div>`;
-    }
-    const clavier = exo.type === 'duree' || exo.type === 'texte-court' || exo.type === 'point' ? 'text' : 'decimal';
-    const touches = [];
-    if (exo.type === 'nombre' || exo.type === 'fraction') touches.push('<button type="button" data-touche="signe" aria-label="Changer le signe">±</button>');
-    if (exo.type === 'fraction') touches.push('<button type="button" data-touche="/" aria-label="Barre de fraction">/</button>');
-    if (exo.type === 'point') touches.push('<button type="button" data-touche=";">;</button>', '<button type="button" data-touche="-">−</button>');
-    return `
-      <div class="saisie">
-        <input class="champ" id="champ" type="text" inputmode="${clavier}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="Ta réponse" placeholder="Ta réponse">
-        ${exo.unite ? `<span class="unite">${esc(exo.unite)}</span>` : ''}
-      </div>
-      ${touches.length ? `<div class="touches">${touches.join('')}</div>` : ''}`;
-  }
-
-  function brancherSaisie(exo) {
-    const champ = $('#champ', zone);
-    if (champ) {
-      champ.addEventListener('keydown', e => {
-        if (e.key === 'Enter') { e.preventDefault(); valider(); }
-      });
-      zone.querySelectorAll('[data-touche]').forEach(b => {
-        // pointerdown + preventDefault : le champ garde le focus (clavier iOS ouvert)
-        b.addEventListener('pointerdown', e => e.preventDefault());
-        b.addEventListener('click', () => {
-          const t = b.dataset.touche;
-          if (t === 'signe') {
-            const v = champ.value.trim();
-            champ.value = /^[-−]/.test(v) ? v.replace(/^[-−]\s*/, '') : '-' + v;
-          } else {
-            const deb = champ.selectionStart ?? champ.value.length;
-            const fin = champ.selectionEnd ?? champ.value.length;
-            champ.value = champ.value.slice(0, deb) + t + champ.value.slice(fin);
-            champ.setSelectionRange(deb + t.length, deb + t.length);
-          }
-          champ.focus();
-        });
-      });
-    }
-    const qcm = $('#qcm', zone);
-    if (qcm) {
-      qcm.addEventListener('click', e => {
-        const b = e.target.closest('button');
-        if (!b || enAttente) return;
-        qcm.querySelectorAll('button').forEach(x => x.classList.toggle('choisi', x === b));
-      });
-    }
-  }
-
-  function lireSaisie() {
-    const champ = $('#champ', zone);
-    if (champ) return champ.value;
-    const choisi = zone.querySelector('.qcm .choisi');
-    return choisi ? choisi.dataset.valeur : '';
-  }
-
   function valider() {
     if (enAttente) return;
     const exo = session.exo;
-    const res = session.repondre(lireSaisie());
+    const res = session.repondre(lireSaisie(zone));
     const aide = $('#aide', zone);
     if (!res.verif.valide) {
       aide.textContent = res.verif.message;

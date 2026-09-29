@@ -116,6 +116,14 @@ Les chapitres sont déclarés dans `maths/chapitres.js` (`charger: () => import(
 - **Vérification** des arrondis avec tolérance. Pour les durées, accepter `1h45`, `1 h 45 min` et `105 min` selon ce qui est demandé.
 - **Contexte** : `ctx` fournit un contexte (prénom, thème) tiré de `contexts.js`. Répartition : environ 70 % des énoncés sur les centres d'intérêt, 30 % neutres ou d'autres thèmes pour varier. Utiliser `ctx.de` (« d'Anna », « de Louise ») plutôt que `de ${ctx.prenom}`.
 
+### Contrôle blanc (`maths/controle.html`, `assets/js/ui/controle.js`)
+
+- Réglages : chapitres (tous cochés sauf Constructions, qui demande papier et instruments), 10, 15 ou 20 questions.
+- Sujet : environ 30 % faciles, 40 % moyennes, 30 % type brevet, réparties entre les chapitres et regroupées par chapitre (« Exercice 1 · Fractions »). Barème affiché : 1, 2 ou 3 points selon le niveau, note ramenée sur 20 (au demi-point). Durée conseillée : 2, 3 ou 5 min par question (12 min pour une construction).
+- Épreuve : une question par écran, navigation libre entre les questions, timer indicatif (dépassement en rouge, sans arrêt forcé), calculatrice. Aucune correction avant la fin.
+- Résultats : note, bilan par chapitre avec lien vers l'entraînement, correction complète (étapes, rédaction modèle, erreur probable). Les réponses comptent dans les statistiques et l'XP. Les 10 dernières notes sont gardées (`controles` dans le store).
+- La saisie (champ, touches ±, /, QCM) est partagée avec la page chapitre : `assets/js/ui/saisie.js`.
+
 ### Calculatrice (`assets/js/ui/calculatrice.js`)
 
 - `monterCalculatrice()` ajoute un bouton 🧮 flottant et un panneau en bas de l'écran (bottom-sheet). Renvoie `{ ouvrir, fermer, detruire }`.

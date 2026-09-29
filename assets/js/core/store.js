@@ -13,7 +13,8 @@ function etatParDefaut() {
     flamme: { jours: 0, dernier: null }, // dernier = 'AAAA-MM-JJ'
     badges: [],                          // ids de chapitres maîtrisés
     chapitres: {},                       // id -> statsChapitre()
-    calculatrice: { historique: [], ans: 0 } // 3 derniers calculs { expr, res } et dernier résultat
+    calculatrice: { historique: [], ans: 0 }, // 3 derniers calculs { expr, res } et dernier résultat
+    controles: []                        // 10 derniers contrôles blancs { date, note, questions }
   };
 }
 
