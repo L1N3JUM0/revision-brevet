@@ -31,7 +31,8 @@
   </main>
 
   <script type="module">
-    import { testerGenerateur, testerSaisie } from './verifications.js';
+    import { testerGenerateur, testerSaisie, testerCalculatrice } from './verifications.js';
+    import { evaluer, formaterResultat } from '../assets/js/ui/calculatrice.js';
     import { chargerTous } from '../maths/chapitres.js';
     import { formaterReponse } from '../assets/js/core/answer.js';
     import { esc } from '../assets/js/ui/dom.js';
@@ -39,18 +40,22 @@
     const N = Number(new URLSearchParams(location.search).get('n')) || 1000;
     let echecs = 0;
 
-    // Saisie
-    const cas = testerSaisie();
-    const ko = cas.filter(c => !c.ok);
-    echecs += ko.length;
-    document.getElementById('saisie').innerHTML = `
-      <section class="carte">
-        <h2>Saisie <span class="${ko.length ? 'ko' : 'ok'}">${cas.length - ko.length}/${cas.length}</span></h2>
-        <details ${ko.length ? 'open' : ''}><summary>Détail</summary>
-          <table>${cas.map(c => `<tr><td class="${c.ok ? 'ok' : 'ko'}">${c.ok ? '✓' : '✗'}</td><td>${esc(c.nom)}</td>
-            <td><code>${esc(JSON.stringify(c.obtenu))}</code>${c.ok ? '' : ` ≠ <code>${esc(JSON.stringify(c.attendu))}</code>`}</td></tr>`).join('')}</table>
-        </details>
-      </section>`;
+    // Tests unitaires : saisie des réponses, parseur de la calculatrice
+    function blocUnitaire(titre, cas) {
+      const ko = cas.filter(c => !c.ok);
+      echecs += ko.length;
+      return `
+        <section class="carte">
+          <h2>${titre} <span class="${ko.length ? 'ko' : 'ok'}">${cas.length - ko.length}/${cas.length}</span></h2>
+          <details ${ko.length ? 'open' : ''}><summary>Détail</summary>
+            <table>${cas.map(c => `<tr><td class="${c.ok ? 'ok' : 'ko'}">${c.ok ? '✓' : '✗'}</td><td>${esc(c.nom)}</td>
+              <td><code>${esc(JSON.stringify(c.obtenu))}</code>${c.ok ? '' : ` ≠ <code>${esc(JSON.stringify(c.attendu))}</code>`}</td></tr>`).join('')}</table>
+          </details>
+        </section>`;
+    }
+    document.getElementById('saisie').innerHTML =
+      blocUnitaire('Saisie', testerSaisie()) +
+      blocUnitaire('Calculatrice', testerCalculatrice(evaluer, formaterResultat));
 
     // Générateurs
     const gens = await chargerTous();

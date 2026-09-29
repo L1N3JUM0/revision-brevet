@@ -510,7 +510,12 @@ function exoReciproque(rng, ctx) {
   };
 }
 
-// ---------- Figure du cours ----------
+// ---------- Cours ----------
+
+// Séquence de touches dessinées : touches('√', '4', 'x²', '=')
+function touches(...liste) {
+  return liste.map(t => `<span class="touche-calc${/^[0-9,]+$/.test(t) ? '' : ' op'}">${t}</span>`).join('');
+}
 
 function figureCours() {
   const N = { noms: ['A', 'B', 'C'], droit: 'A', p: 'B', q: 'C' };
@@ -546,6 +551,18 @@ export default {
       contenu: `<p>BC = 13 cm (hypoténuse), AC = 5 cm. On cherche AB : on <strong>soustrait</strong> les carrés.</p>
         <div class="redaction">BC² = AB² + AC²<br>13² = AB² + 5²<br>169 = AB² + 25<br>AB² = 169 − 25 = 144<br>AB = √144 = 12 cm</div>
         <p class="piege">Piège : on soustrait les carrés, jamais les longueurs (13 − 5 = 8 est faux).</p>`
+    },
+    {
+      titre: 'À la calculatrice',
+      contenu: `<p>AB = 4 cm, AC = 7 cm. Pour BC = √(4² + 7²), tape :</p>
+        <p>${touches('√', '4', 'x²', '+', '7', 'x²', ')', '=')}</p>
+        <p>L'écran affiche <strong>8,062257748</strong>. La touche √ ouvre une parenthèse : pense à la fermer.</p>
+        <p><strong>Arrondir au dixième</strong> : on garde un chiffre après la virgule et on regarde le suivant (les centièmes).</p>
+        <ul>
+          <li>0, 1, 2, 3 ou 4 → on garde : 12,6<u>4</u>9… ≈ <strong>12,6</strong></li>
+          <li>5, 6, 7, 8 ou 9 → on ajoute 1 : 8,0<u>6</u>2… ≈ <strong>8,1</strong></li>
+        </ul>
+        <p class="doux petit">En entraînement, ta calculatrice est derrière le bouton 🧮.</p>`
     },
     {
       titre: 'Rectangle ou pas ?',

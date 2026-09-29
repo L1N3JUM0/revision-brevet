@@ -194,3 +194,42 @@ export function testerSaisie() {
 
   return cas.map(([nom, obtenu, attendu]) => ({ nom, obtenu, attendu, ok: obtenu === attendu }));
 }
+
+// Tests du parseur de la calculatrice : [expression, résultat affiché attendu ou message d'erreur]
+export function testerCalculatrice(evaluer, formaterResultat) {
+  const cas = [
+    ['2+3×4', '14'],
+    ['(2+3)×4', '20'],
+    ['−3²', '−9'],
+    ['(−3)²', '9'],
+    ['√(6²+8²)', '10'],
+    ['√(13²−5²', '12'],              // parenthèse fermée automatiquement
+    ['√(4²+7²)', '8,062257748'],
+    ['1,5×2', '3'],
+    ['0,1+0,2', '0,3'],
+    ['10÷4', '2,5'],
+    ['2(3+1)', '8'],
+    ['3√(4)', '6'],
+    ['2²²', '16'],
+    ['5−−2', '7'],
+    ['Ans+1', '42'],                 // avec Ans = 41
+    ['Ans×Ans', '1681'],
+    ['1000×1000', '1 000 000'],
+    ['7÷0', 'Division par zéro'],
+    ['√(−4)', 'Racine d\'un nombre négatif'],
+    ['2+', 'Calcul incomplet'],
+    ['1,2,3', 'Erreur de syntaxe'],
+    ['(2))', 'Parenthèse en trop'],
+    ['', 'Rien à calculer'],
+    ['2;3', 'Erreur de syntaxe']
+  ];
+  return cas.map(([expr, attendu]) => {
+    let obtenu;
+    try {
+      obtenu = formaterResultat(evaluer(expr, 41));
+    } catch (e) {
+      obtenu = e.message;
+    }
+    return { nom: expr || '(vide)', obtenu, attendu, ok: obtenu === attendu };
+  });
+}

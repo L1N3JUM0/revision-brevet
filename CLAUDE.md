@@ -80,24 +80,32 @@ export default {
   id: 'pythagore',
   titre: 'Théorème de Pythagore',
   niveaux: 3,                       // 1 = facile, 3 = type brevet
-  cours: [ /* 2 à 4 cartes : { titre, contenu (HTML court), figure? } */ ],
+  resume: 'Calculer une longueur…',  // sous-titre sur la page du chapitre
+  nomsNiveaux: ['…', '…', '…'],
+  cours: [ /* 2 à 5 cartes : { titre, contenu (HTML court), figure? } */ ],
   generer(niveau, rng, ctx) {
     return {
       cle,          // chaîne unique décrivant les paramètres (anti-doublon)
       enonce,       // HTML court, contextualisé
       figure,       // SVG optionnel
-      reponse,      // valeur attendue
+      reponse,      // valeur attendue ({ n, d } pour une fraction, texte du choix pour un QCM)
       type,         // 'nombre' | 'fraction' | 'qcm' | 'duree' | 'point' | 'texte-court'
       tolerance,    // pour les arrondis (ex. 0.05)
+      simplifiee,   // fraction : forme irréductible exigée (sinon « Presque ! »)
       unite,        // 'cm', 'km/h'… affichée à côté du champ
       choix,        // pour les QCM
       etapes,       // correction pas à pas (tableau de chaînes HTML)
-      redaction,    // rédaction modèle type brevet (optionnelle)
-      erreurs       // [{ test: (rep) => bool, message }] erreurs fréquentes détectées
+      redaction,    // rédaction modèle type brevet (optionnelle, repliable même si la réponse est juste)
+      erreurs,      // [{ test: (rep) => bool, message }] erreurs fréquentes détectées
+      expression,   // texte du calcul affiché (« √(6² + 8²) »), recalculé par les tests
+      donnees       // paramètres bruts pour controler()
     };
-  }
+  },
+  controler(exo) { /* optionnel : second calcul indépendant, renvoie un message d'erreur ou null */ }
 };
 ```
+
+Les chapitres sont déclarés dans `maths/chapitres.js` (`charger: () => import(…)`, `null` = bientôt).
 
 ### Règles
 
@@ -105,7 +113,18 @@ export default {
 - **Nombres « propres »** : les valeurs doivent donner des calculs faisables (triplets pythagoriciens au niveau 1, arrondi au dixième ensuite, fractions simplifiables sans nombres énormes).
 - **Saisie** : accepter la virgule **et** le point, les espaces, les fractions `3/4`, les nombres négatifs. `inputmode="decimal"` sur iOS. Pour les fractions, accepter toute forme équivalente, mais demander la forme simplifiée quand l'énoncé l'exige.
 - **Vérification** des arrondis avec tolérance. Pour les durées, accepter `1h45`, `1 h 45 min` et `105 min` selon ce qui est demandé.
-- **Contexte** : `ctx` fournit un contexte (prénom, thème) tiré de `contexts.js`. Répartition : environ 70 % des énoncés sur les centres d'intérêt, 30 % neutres ou d'autres thèmes pour varier.
+- **Contexte** : `ctx` fournit un contexte (prénom, thème) tiré de `contexts.js`. Répartition : environ 70 % des énoncés sur les centres d'intérêt, 30 % neutres ou d'autres thèmes pour varier. Utiliser `ctx.de` (« d'Anna », « de Louise ») plutôt que `de ${ctx.prenom}`.
+
+### Calculatrice (`assets/js/ui/calculatrice.js`)
+
+- `monterCalculatrice()` ajoute un bouton 🧮 flottant et un panneau en bas de l'écran (bottom-sheet). Renvoie `{ ouvrir, fermer, detruire }`.
+- **Disponible** en entraînement et en contrôle blanc (à appeler dans l'écran de session). **Masquée** en défi chrono et en cours flash.
+- Touches : chiffres, virgule, + − × ÷, parenthèses, x², √, C, ⌫, Ans, =. Touches de 52 px (≥ 48 px), thème sombre, virgule française, 3 derniers calculs affichés (touchables pour réutiliser le résultat).
+- Comme une calculatrice de collège : **√ ouvre une parenthèse**, les parenthèses non fermées sont fermées à la fin, multiplication implicite (`2(3+1)`), après `=` un opérateur continue avec `Ans`.
+- **Aucun `eval`** : `evaluer(texte, ans)` est un petit parseur récursif (priorités : parenthèses, ² et √, signe, × ÷, + −). Erreurs lisibles : division par zéro, racine d'un négatif, calcul incomplet.
+- Historique et `Ans` gardés dans le store (`calculatrice: { historique, ans }`).
+- Au clavier (ordinateur), les touches sont captées seulement quand le panneau est ouvert et qu'aucun champ n'a le focus ; Entrée calcule sans passer à la question suivante.
+- Tests du parseur dans `tests/generators.html` (`testerCalculatrice`).
 
 ## Banque de contextes (`contexts.js`)
 

@@ -417,6 +417,115 @@ li { margin-bottom: 10px; }
 .stats-ligne strong { display: block; font-size: 22px; }
 .stats-ligne span { font-size: 13px; color: var(--texte-doux); }
 
+/* ---------- Calculatrice ---------- */
+
+body.avec-calc .page { padding-bottom: calc(96px + var(--bas)); }
+body.calc-ouverte .page { padding-bottom: calc(var(--calc-hauteur, 460px) + 24px); }
+
+.calc-bouton {
+  position: fixed;
+  right: calc(16px + var(--droite));
+  bottom: calc(16px + var(--bas));
+  z-index: 30;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1px solid var(--bord);
+  background: var(--surface-2);
+  font-size: 28px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.calc-bouton:active { transform: scale(0.95); }
+
+.calc-panneau {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 8px calc(12px + var(--droite)) calc(12px + var(--bas)) calc(12px + var(--gauche));
+  background: var(--surface);
+  border: 1px solid var(--bord);
+  border-bottom: none;
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.5);
+  transform: translateY(105%);
+  visibility: hidden;
+  transition: transform 0.25s ease, visibility 0s linear 0.25s;
+}
+.calc-panneau.ouvert { transform: none; visibility: visible; transition: transform 0.25s ease; }
+
+.calc-tete { position: relative; display: flex; align-items: center; justify-content: space-between; min-height: 48px; padding: 6px 4px 0; }
+.calc-poignee { position: absolute; top: 0; left: 50%; width: 40px; height: 5px; margin-left: -20px; border-radius: 3px; background: var(--bord); }
+.calc-fermer {
+  width: 48px; height: 48px; border-radius: 14px; border: none;
+  background: var(--surface-2); color: var(--texte); font-size: 18px; cursor: pointer;
+}
+
+.calc-historique { list-style: none; margin: 0; padding: 0; }
+.calc-historique li { margin: 0; }
+.calc-historique button {
+  display: flex; justify-content: space-between; gap: 12px; width: 100%;
+  min-height: 32px; padding: 4px 8px; border: none; border-radius: 8px;
+  background: none; color: var(--texte-doux); font: inherit; font-size: 15px; text-align: left; cursor: pointer;
+}
+.calc-historique button span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.calc-historique button strong { color: var(--texte); white-space: nowrap; }
+.calc-historique button:active { background: var(--surface-2); }
+
+.calc-ecran {
+  margin: 6px 0 10px;
+  padding: 10px 14px;
+  border-radius: var(--rayon-petit);
+  background: var(--fond);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.calc-expr { font-size: 28px; font-weight: 800; white-space: nowrap; overflow-x: auto; min-height: 40px; scrollbar-width: none; }
+.calc-expr::-webkit-scrollbar { display: none; }
+.calc-apercu { font-size: 18px; color: var(--texte-doux); min-height: 26px; }
+.calc-apercu.calc-resultat { color: var(--accent-clair); font-size: 24px; font-weight: 800; }
+.calc-apercu.calc-erreur { color: var(--erreur); font-weight: 700; }
+
+.calc-touches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.calc-touches button {
+  min-height: 52px;
+  border: none;
+  border-radius: 14px;
+  background: var(--surface-2);
+  color: var(--texte);
+  font: inherit;
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.calc-touches button:active { filter: brightness(1.3); }
+.calc-touches .calc-op { background: var(--accent-fond); color: var(--accent-clair); }
+.calc-touches .calc-effacer { color: var(--erreur); }
+.calc-touches .calc-egal { background: var(--accent); color: #fff; }
+
+/* Petites touches dessinées dans le cours (« À la calculatrice ») */
+.touche-calc {
+  display: inline-block;
+  min-width: 34px;
+  padding: 3px 8px;
+  margin: 3px 2px;
+  border-radius: 9px;
+  border: 1px solid var(--bord);
+  border-bottom-width: 3px;
+  background: var(--surface-2);
+  font-weight: 800;
+  text-align: center;
+}
+.touche-calc.op { color: var(--accent-clair); }
+
 /* ---------- Toasts ---------- */
 
 .toasts {

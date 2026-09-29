@@ -12,7 +12,8 @@ function etatParDefaut() {
     xp: 0,
     flamme: { jours: 0, dernier: null }, // dernier = 'AAAA-MM-JJ'
     badges: [],                          // ids de chapitres maîtrisés
-    chapitres: {}                        // id -> statsChapitre()
+    chapitres: {},                       // id -> statsChapitre()
+    calculatrice: { historique: [], ans: 0 } // 3 derniers calculs { expr, res } et dernier résultat
   };
 }
 
@@ -43,7 +44,11 @@ function lire() {
       profil: { ...base.profil, ...(obj.profil || {}) },
       flamme: { ...base.flamme, ...(obj.flamme || {}) },
       badges: Array.isArray(obj.badges) ? obj.badges : [],
-      chapitres: obj.chapitres && typeof obj.chapitres === 'object' ? obj.chapitres : {}
+      chapitres: obj.chapitres && typeof obj.chapitres === 'object' ? obj.chapitres : {},
+      calculatrice: {
+        historique: Array.isArray(obj.calculatrice?.historique) ? obj.calculatrice.historique.slice(-3) : [],
+        ans: Number.isFinite(obj.calculatrice?.ans) ? obj.calculatrice.ans : 0
+      }
     };
   } catch {
     return etatParDefaut();

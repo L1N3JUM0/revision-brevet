@@ -7,6 +7,7 @@ import { formaterReponse } from '../core/answer.js';
 import { $, esc, toast, fmtChrono } from './dom.js';
 import { rebond, secousse, confettis } from './fx.js';
 import { flammeActuelle } from '../core/gamification.js';
+import { monterCalculatrice } from './calculatrice.js';
 
 const NOMS_NIVEAUX = ['Facile', 'Moyen', 'Type brevet'];
 
@@ -375,6 +376,7 @@ function ecranSession({ app, gen, rng, urlChap, graine }, mode) {
 
   $('#btn-fin', app)?.addEventListener('click', fin);
   if (chrono) minuteur = setInterval(majChrono, 250);
+  else monterCalculatrice(); // calculatrice autorisée en entraînement, masquée en défi chrono
   console.info(`[revision-brevet] graine de la session : ${graine} (ajoute &seed=${graine} à l'URL pour la rejouer)`);
   question();
 }
