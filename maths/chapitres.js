@@ -5,7 +5,7 @@ export const MATIERE = { id: 'maths', titre: 'Maths', emoji: '📐' };
 
 export const CHAPITRES = [
   { id: 'relatifs', titre: 'Nombres relatifs', emoji: '±', charger: () => import('./generators/relatifs.js') },
-  { id: 'fractions', titre: 'Fractions', emoji: '½', charger: null },
+  { id: 'fractions', titre: 'Fractions', emoji: '½', charger: () => import('./generators/fractions.js') },
   { id: 'pythagore', titre: 'Théorème de Pythagore', emoji: '📐', charger: null },
   { id: 'thales', titre: 'Théorème de Thalès', emoji: '🔺', charger: null },
   { id: 'conversions-longueurs', titre: 'Conversions de longueurs', emoji: '📏', charger: null },

@@ -206,11 +206,17 @@ export function verifier(exo, saisie) {
   let correct = egalite(exo, valeur);
 
   if (correct && exo.type === 'fraction' && exo.simplifiee) {
-    const irreductible = 'decimal' in valeur ? false : pgcd(valeur.n, valeur.d) === 1;
-    if (!irreductible && !(exo.reponse.d === 1 && 'decimal' in valeur)) {
+    // Un nombre décimal n'est accepté que si la réponse est un entier (2 ou 2,0)
+    if ('decimal' in valeur && exo.reponse.d !== 1) {
       return {
         valide: true, correct: false, presque: true, valeur,
-        erreur: 'Ta fraction est égale à la bonne réponse, mais elle n\'est pas simplifiée.'
+        erreur: 'C\'est la bonne valeur, mais on attend une <strong>fraction</strong>, par exemple 3/4.'
+      };
+    }
+    if (!('decimal' in valeur) && pgcd(valeur.n, valeur.d) !== 1) {
+      return {
+        valide: true, correct: false, presque: true, valeur,
+        erreur: 'Ta fraction est égale à la bonne réponse, mais elle n\'est pas <strong>simplifiée</strong> : on peut encore diviser le numérateur et le dénominateur par un même nombre.'
       };
     }
   }

@@ -226,7 +226,7 @@ const MODELES_N1 = {
       const b = x - y;
       return {
         a, o: '+', b, unite: '',
-        enonce: `Au handball, après trois matchs, la différence de buts de l'équipe de ${ctx.prenom} est de ${fmt(a)}. Au match suivant, l'équipe ${x > y ? 'gagne' : 'perd'} ${x} à ${y}.<br>Quelle est sa nouvelle différence de buts ?`,
+        enonce: `Au handball, après trois matchs, la différence de buts de l'équipe ${ctx.de} est de ${fmt(a)}. Au match suivant, l'équipe ${x > y ? 'gagne' : 'perd'} ${x} à ${y}.<br>Quelle est sa nouvelle différence de buts ?`,
         avantCalcul: `Le match rapporte ${x} − ${y} = ${fmt(b)} à la différence de buts.`,
         conclusion: r => `La nouvelle différence de buts est ${fmt(r)}.`
       };
@@ -239,14 +239,14 @@ const MODELES_N1 = {
         const a = -5 * rng.int(4, 60), b = 5 * rng.int(4, 80);
         return {
           a, o: '+', b, unite: '€',
-          enonce: `Le compte de la boutique de vêtements de ${ctx.prenom} affiche ${fmt(a)} €. Pendant les soldes, elle encaisse ${fmt(b)} € de ventes.<br>Quel est le nouveau solde du compte ?`,
+          enonce: `Le compte de la boutique de vêtements ${ctx.de} affiche ${fmt(a)} €. Pendant les soldes, elle encaisse ${fmt(b)} € de ventes.<br>Quel est le nouveau solde du compte ?`,
           conclusion: r => `Le nouveau solde est ${fmt(r)} €.`
         };
       }
       const a = 5 * rng.int(4, 40), b = 5 * rng.int(Math.floor(a / 5) + 1, Math.floor(a / 5) + 50);
       return {
         a, o: '-', b, unite: '€',
-        enonce: `Le compte de la boutique de ${ctx.prenom} affiche ${fmt(a)} €. Elle paie une facture de ${fmt(b)} € à son fournisseur.<br>Quel est le nouveau solde du compte ?`,
+        enonce: `Le compte de la boutique ${ctx.de} affiche ${fmt(a)} €. Elle paie une facture de ${fmt(b)} € à son fournisseur.<br>Quel est le nouveau solde du compte ?`,
         conclusion: r => `Le nouveau solde est ${fmt(r)} €.`
       };
     }

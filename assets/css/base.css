@@ -256,6 +256,31 @@ li { margin-bottom: 10px; }
 }
 .calcul-inline { font-weight: 800; white-space: nowrap; }
 
+/* Fraction empilée : le « / » reste dans le texte (copie, lecteur d'écran) mais est caché */
+.frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  vertical-align: middle;
+  text-align: center;
+  line-height: 1.15;
+  margin: 0 0.1em;
+  font-size: 0.92em;
+}
+.frac .num { border-bottom: 2px solid currentColor; padding: 0 0.2em 0.05em; }
+.frac .den { padding: 0.05em 0.2em 0; }
+.frac .sep {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.calcul .frac { margin: 0 0.15em; }
+.etapes li, .enonce p { line-height: 1.8; }
+.enonce p.petit { line-height: 1.4; }
+
 .saisie { display: flex; align-items: center; gap: 10px; margin: 20px 0 12px; }
 .saisie .champ { flex: 1; min-width: 0; }
 .saisie .unite { font-size: 20px; font-weight: 800; color: var(--texte-doux); }
@@ -370,6 +395,8 @@ li { margin-bottom: 10px; }
 .figure .codage { stroke: var(--texte); stroke-width: 1.5; fill: none; }
 .figure .fleche { stroke: var(--accent-clair); stroke-width: 2.5; fill: none; }
 .figure .fleche-pointe { fill: var(--accent-clair); }
+.figure .part-pleine { fill: var(--accent); stroke: var(--fond); stroke-width: 2; }
+.figure .part-vide { fill: var(--surface-2); stroke: var(--bord); stroke-width: 2; }
 .figure text { font-family: var(--police); }
 
 /* ---------- Choix du mode ---------- */

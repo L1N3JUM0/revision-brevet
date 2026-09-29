@@ -38,9 +38,14 @@ export function listePrenoms(prenomProfil = '') {
     .map(x => (x.prenom === 'Anna' ? { prenom: p, genre: 'f' } : x));
 }
 
+// « de Louise », mais « d'Anna », « d'Ayline » (élision devant une voyelle)
+export function de(nom) {
+  return /^[aeiouyàâäéèêëîïôöûü]/i.test(nom) ? `d'${nom}` : `de ${nom}`;
+}
+
 /**
  * Tire un contexte pour un énoncé.
- * Renvoie { prenom, genre, ami, theme, central, e(fem, masc) }
+ * Renvoie { prenom, genre, ami, de, deAmi, theme, central, e(fem, masc), il() }
  *  - ami : un deuxième prénom différent, pour les énoncés à deux personnes
  *  - e('e') : accord selon le genre (« parti » + ctx.e('e'))
  */
@@ -56,6 +61,8 @@ export function tirerContexte(rng, prenomProfil = '') {
     genre: principal.genre,
     ami: ami.prenom,
     amiGenre: ami.genre,
+    de: de(principal.prenom),   // « d'Anna », « de Louise »
+    deAmi: de(ami.prenom),
     theme,
     central,
     e(fem = 'e', masc = '') {

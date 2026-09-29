@@ -3,15 +3,20 @@
 import { creerRng } from '../assets/js/core/rng.js';
 import { tirerContexte } from '../assets/js/core/contexts.js';
 import {
-  verifier, formaterReponse, lireNombre, lireFraction, lireDuree, lirePoint, fmt
+  verifier, formaterReponse, lireNombre, lireFraction, lireDuree, lirePoint, fmt, pgcd
 } from '../assets/js/core/answer.js';
+
+// Texte visible d'un morceau de HTML (les espaces fines des milliers sont conservées)
+const sansBalises = html => html.replace(/<[^>]+>/g, '').replace(/[ \t\n\r]+/g, ' ');
 
 const TYPES = ['nombre', 'fraction', 'qcm', 'duree', 'point', 'texte-court'];
 const BORNE = 1e6;
 
 // Recalcule une expression affichée (− × ÷, virgule) indépendamment du générateur
+// Une fraction écrite « a/b » est un bloc : « 3/4 ÷ 5/6 » se lit (3/4) ÷ (5/6).
 export function evaluerExpression(txt) {
   const js = txt
+    .replace(/(\d+)\/(\d+)/g, '($1/$2)')
     .replace(/−/g, '-')
     .replace(/×/g, '*')
     .replace(/÷/g, '/')
@@ -70,8 +75,11 @@ export function testerGenerateur(gen, n = 1000, graine = 12345) {
         if (!Number.isFinite(v)) signaler(i, exo, 'réponse non finie : ' + v);
         else if (Math.abs(v) > BORNE) signaler(i, exo, 'réponse hors bornes : ' + v);
       }
-      if (exo.type === 'fraction' && (!Number.isInteger(exo.reponse.n) || !Number.isInteger(exo.reponse.d) || exo.reponse.d === 0)) {
-        signaler(i, exo, 'fraction invalide');
+      if (exo.type === 'fraction') {
+        const { n: fn, d: fd } = exo.reponse;
+        if (!Number.isInteger(fn) || !Number.isInteger(fd) || fd <= 0) signaler(i, exo, 'fraction invalide');
+        else if (exo.simplifiee && pgcd(fn, fd) !== 1) signaler(i, exo, 'la réponse attendue n\'est pas simplifiée');
+        if (Math.abs(fn) > 1000 || Math.abs(fd) > 1000) signaler(i, exo, `fraction trop grande : ${fn}/${fd}`);
       }
       if (exo.type === 'qcm' && (!Array.isArray(exo.choix) || !exo.choix.map(String).includes(String(exo.reponse)))) {
         signaler(i, exo, 'la bonne réponse n\'est pas dans les choix');
@@ -79,7 +87,7 @@ export function testerGenerateur(gen, n = 1000, graine = 12345) {
 
       // Recalcul indépendant à partir de l'expression affichée
       if (exo.expression) {
-        if (!exo.enonce.includes(exo.expression) && !exo.etapes.join(' ').includes(exo.expression)) {
+        if (!sansBalises(exo.enonce).includes(exo.expression) && !sansBalises(exo.etapes.join(' ')).includes(exo.expression)) {
           signaler(i, exo, 'l\'expression n\'apparaît ni dans l\'énoncé ni dans la correction');
         }
         try {
@@ -91,9 +99,9 @@ export function testerGenerateur(gen, n = 1000, graine = 12345) {
       }
 
       // La dernière ligne de correction doit contenir la réponse
-      if (v !== null && exo.type === 'nombre' && Array.isArray(exo.etapes)) {
-        const tout = exo.etapes.join(' ').replace(/<[^>]+>/g, '');
-        if (!tout.includes(fmt(exo.reponse))) signaler(i, exo, 'la réponse n\'apparaît pas dans la correction');
+      if (v !== null && (exo.type === 'nombre' || exo.type === 'fraction') && Array.isArray(exo.etapes)) {
+        const tout = sansBalises(exo.etapes.join(' '));
+        if (!tout.includes(formaterReponse(exo))) signaler(i, exo, 'la réponse n\'apparaît pas dans la correction');
       }
 
       // La vérification accepte la bonne réponse, sous plusieurs écritures
@@ -120,6 +128,13 @@ export function testerGenerateur(gen, n = 1000, graine = 12345) {
       if (exo.type === 'nombre') {
         const faux = verifier(exo, String(exo.reponse + 1 + (exo.tolerance || 0) * 2));
         if (faux.correct) signaler(i, exo, 'une mauvaise réponse est acceptée');
+      }
+      if (exo.type === 'fraction') {
+        const { n: fn, d: fd } = exo.reponse;
+        if (verifier(exo, `${fn + 1}/${fd}`).correct) signaler(i, exo, 'une mauvaise fraction est acceptée');
+        // Forme équivalente non simplifiée : « presque » si la forme simplifiée est exigée
+        const equiv = verifier(exo, `${fn * 2}/${fd * 2}`);
+        if (exo.simplifiee ? !equiv.presque : !equiv.correct) signaler(i, exo, 'forme équivalente mal traitée');
       }
     }
     rapport.niveaux.push({ niveau, n, erreurs, exemples, clesDistinctes: cles.size, duree: Date.now() - t0 });
