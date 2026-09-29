@@ -8,7 +8,7 @@ export const CHAPITRES = [
   { id: 'fractions', titre: 'Fractions', emoji: '½', charger: () => import('./generators/fractions.js') },
   { id: 'pythagore', titre: 'Théorème de Pythagore', emoji: '📐', charger: () => import('./generators/pythagore.js') },
   { id: 'thales', titre: 'Théorème de Thalès', emoji: '🔺', charger: () => import('./generators/thales.js') },
-  { id: 'conversions-longueurs', titre: 'Conversions de longueurs', emoji: '📏', charger: null },
+  { id: 'conversions-longueurs', titre: 'Conversions de longueurs', emoji: '📏', charger: () => import('./generators/conversions-longueurs.js') },
   { id: 'conversions-durees', titre: 'Conversions de durées', emoji: '⏱️', charger: null },
   { id: 'vitesses', titre: 'Vitesses', emoji: '🏎️', charger: null },
   { id: 'angles', titre: 'Angles et parallèles', emoji: '∠', charger: null },

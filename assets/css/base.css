@@ -417,6 +417,23 @@ li { margin-bottom: 10px; }
 .stats-ligne strong { display: block; font-size: 22px; }
 .stats-ligne span { font-size: 13px; color: var(--texte-doux); }
 
+/* ---------- Tableau de conversion ---------- */
+
+.tableau-conv-cadre { overflow-x: auto; margin: 6px 0; -webkit-overflow-scrolling: touch; }
+.tableau-conv { border-collapse: collapse; font-variant-numeric: tabular-nums; margin: 0 auto; }
+.tableau-conv th, .tableau-conv td {
+  min-width: 29px;
+  padding: 5px 2px;
+  border: 1px solid var(--bord);
+  text-align: center;
+}
+.tableau-conv th { font-size: 12px; color: var(--texte-doux); font-weight: 700; }
+.tableau-conv td { font-size: 18px; font-weight: 800; height: 38px; }
+.tableau-conv .depart { outline: 2px dashed var(--or); outline-offset: -3px; }
+.tableau-conv .cible { background: var(--accent-fond); color: var(--accent-clair); border-right: 4px solid var(--accent); }
+.etapes li:has(.tableau-conv) { padding-left: 0; }
+.etapes li:has(.tableau-conv)::before { display: none; }
+
 /* ---------- Calculatrice ---------- */
 
 body.avec-calc .page { padding-bottom: calc(96px + var(--bas)); }
