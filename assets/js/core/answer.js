@@ -25,6 +25,13 @@ export function fmtFraction(n, d) {
   return d === 1 ? fmt(n) : `${fmt(n)}/${fmt(d)}`;
 }
 
+// Fraction empilée en HTML (numérateur et dénominateur : nombres ou texte, ex. « AM »).
+// Le « / » caché garde un texte lisible (copie, lecteur d'écran, tests).
+export function fracHtml(n, d) {
+  const f = x => (typeof x === 'number' ? fmt(x) : x);
+  return `<span class="frac"><span class="num">${f(n)}</span><span class="sep">/</span><span class="den">${f(d)}</span></span>`;
+}
+
 // Durée en secondes -> « 1 h 45 min », « 2 min 30 s »
 export function fmtDuree(secondes) {
   let s = Math.round(secondes);
