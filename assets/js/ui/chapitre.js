@@ -269,6 +269,11 @@ function ecranSession({ app, gen, rng, urlChap, graine }, mode) {
       champ.blur(); // referme le clavier pour laisser voir la correction
     }
     zone.querySelectorAll('.touches button, .qcm button').forEach(b => { b.disabled = true; });
+    // QCM : la bonne réponse en vert, le mauvais choix en rouge
+    zone.querySelectorAll('.qcm button').forEach(b => {
+      if (b.dataset.valeur === String(exo.reponse)) b.classList.add('bonne');
+      else if (b.classList.contains('choisi')) b.classList.add('fausse');
+    });
     $('#valider', zone).remove();
     majTete();
 
@@ -288,6 +293,7 @@ function ecranSession({ app, gen, rng, urlChap, graine }, mode) {
         <div class="retour bon">
           <div class="titre-retour">✓ ${esc(res.message)}</div>
           <div class="xp">+${res.xp} XP</div>
+          ${exo.redaction ? `<details class="replie"><summary>Voir la rédaction modèle</summary><div class="redaction">${exo.redaction}</div></details>` : ''}
         </div>`;
     } else {
       const unite = exo.unite ? ` ${esc(exo.unite)}` : '';

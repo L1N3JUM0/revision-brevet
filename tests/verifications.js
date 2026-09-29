@@ -22,8 +22,10 @@ export function evaluerExpression(txt) {
     .replace(/÷/g, '/')
     .replace(/(\d),(\d)/g, '$1.$2')
     .replace(/ /g, '');
-  if (!/^[\d\s+\-*/().]+$/.test(js)) throw new Error('expression non reconnue : ' + txt);
-  return Function(`"use strict"; return (${js});`)();
+  // Seuls les chiffres, opérations, parenthèses, carrés et racines sont autorisés
+  if (!/^[\d\s+\-*/().²√]+$/.test(js)) throw new Error('expression non reconnue : ' + txt);
+  const final = js.replace(/²/g, '**2').replace(/√/g, 'Math.sqrt');
+  return Function(`"use strict"; return (${final});`)();
 }
 
 function valeurNumerique(exo) {
@@ -92,9 +94,19 @@ export function testerGenerateur(gen, n = 1000, graine = 12345) {
         }
         try {
           const recalc = evaluerExpression(exo.expression);
-          if (Math.abs(recalc - v) > 1e-9) signaler(i, exo, `réponse fausse : ${exo.expression} = ${recalc}, le générateur dit ${v}`);
+          if (Math.abs(recalc - v) > (exo.tolerance || 0) + 1e-9) signaler(i, exo, `réponse fausse : ${exo.expression} = ${recalc}, le générateur dit ${v}`);
         } catch (e) {
           signaler(i, exo, e.message);
+        }
+      }
+
+      // Contrôle propre au générateur (second calcul, indépendant)
+      if (typeof gen.controler === 'function') {
+        try {
+          const msg = gen.controler(exo);
+          if (msg) signaler(i, exo, 'contrôle : ' + msg);
+        } catch (e) {
+          signaler(i, exo, 'contrôle en exception : ' + e.message);
         }
       }
 

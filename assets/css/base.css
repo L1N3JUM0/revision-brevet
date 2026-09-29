@@ -316,6 +316,9 @@ li { margin-bottom: 10px; }
   cursor: pointer;
 }
 .qcm button.choisi { border-color: var(--accent); background: var(--accent-fond); }
+.qcm button:disabled { cursor: default; color: var(--texte); }
+.qcm button.bonne { border-color: var(--succes); background: var(--succes-fond); }
+.qcm button.fausse { border-color: var(--erreur); background: var(--erreur-fond); }
 
 .retour {
   border-radius: var(--rayon);
@@ -368,6 +371,8 @@ li { margin-bottom: 10px; }
   font-family: "Bradley Hand", "Segoe Print", var(--police);
 }
 .piege { color: var(--erreur); font-weight: 600; }
+.replie { margin-top: 10px; }
+.replie summary { cursor: pointer; font-weight: 700; color: var(--accent-clair); min-height: 32px; }
 
 /* ---------- Cours flash ---------- */
 
@@ -395,6 +400,7 @@ li { margin-bottom: 10px; }
 .figure .codage { stroke: var(--texte); stroke-width: 1.5; fill: none; }
 .figure .fleche { stroke: var(--accent-clair); stroke-width: 2.5; fill: none; }
 .figure .fleche-pointe { fill: var(--accent-clair); }
+.figure .trait-accent { stroke: var(--accent-clair); stroke-width: 3; }
 .figure .part-pleine { fill: var(--accent); stroke: var(--fond); stroke-width: 2; }
 .figure .part-vide { fill: var(--surface-2); stroke: var(--bord); stroke-width: 2; }
 .figure text { font-family: var(--police); }

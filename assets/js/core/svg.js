@@ -63,7 +63,9 @@ export function longueur(A, B, contenu, centre, decalage = 14) {
   nx /= n; ny /= n;
   // On oriente la normale à l'opposé du centre de la figure
   if (centre && (M.x - centre.x) * nx + (M.y - centre.y) * ny < 0) { nx = -nx; ny = -ny; }
-  return texte(M.x + nx * decalage, M.y + ny * decalage, contenu, { classe: 'longueur' });
+  // Le texte est horizontal : plus le côté est vertical, plus on l'écarte (demi-largeur du texte)
+  const d = decalage + Math.abs(nx) * String(contenu).length * 3.4;
+  return texte(M.x + nx * d, M.y + ny * d, contenu, { classe: 'longueur' });
 }
 
 function unitaire(A, B) {
@@ -86,6 +88,37 @@ export function ajuster(points, largeur, hauteur, marge = 30) {
   const ox = (largeur - (maxX - minX) * k) / 2;
   const oy = (hauteur - (maxY - minY) * k) / 2;
   return points.map(p => ({ x: ox + (p.x - minX) * k, y: hauteur - (oy + (p.y - minY) * k) }));
+}
+
+/**
+ * Triangle (ou polygone) nommé, mis à l'échelle dans le cadre.
+ * sommets : { A: {x, y}, B: …, C: … } en repère mathématique (y vers le haut)
+ * droit : nom du sommet de l'angle droit (codage), ou null
+ * cotes : { AB: '6 cm', BC: '?' } longueurs écrites le long des côtés
+ * accent : 'BC' pour mettre un côté en valeur (hypoténuse)
+ */
+export function figurePolygone(sommets, { droit = null, cotes = {}, accent = null, largeur = 340, hauteur = 240 } = {}) {
+  const noms = Object.keys(sommets);
+  const P = ajuster(noms.map(n => sommets[n]), largeur, hauteur, 50);
+  const M = Object.fromEntries(noms.map((n, i) => [n, P[i]]));
+  const G = { x: P.reduce((s, p) => s + p.x, 0) / P.length, y: P.reduce((s, p) => s + p.y, 0) / P.length };
+  let c = polygone(P);
+  if (accent) c += segment(M[accent[0]], M[accent[1]], { classe: 'trait trait-accent' });
+  if (droit) {
+    const i = noms.indexOf(droit);
+    const avant = noms[(i + noms.length - 1) % noms.length];
+    const apres = noms[(i + 1) % noms.length];
+    c += angleDroit(M[avant], M[droit], M[apres], 12);
+  }
+  for (const [seg, txt] of Object.entries(cotes)) c += longueur(M[seg[0]], M[seg[1]], txt, G, 16);
+  for (const n of noms) c += point(M[n], n, { dx: M[n].x - G.x, dy: M[n].y - G.y, croix: false });
+  return svg(largeur, hauteur, c, { titre: `Figure ${noms.join('')}` });
+}
+
+// Rotation d'un point autour de l'origine (angle en degrés)
+export function tourner(P, degres) {
+  const a = (degres * Math.PI) / 180;
+  return { x: P.x * Math.cos(a) - P.y * Math.sin(a), y: P.x * Math.sin(a) + P.y * Math.cos(a) };
 }
 
 /**
