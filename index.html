@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0e0e14">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Révision brevet</title>
+  <link rel="stylesheet" href="assets/css/base.css">
+</head>
+<body>
+  <main class="page">
+    <header class="barre-haut">
+      <div class="titre" id="salut">Révision brevet</div>
+      <button class="btn-icone" id="btn-prenom" aria-label="Changer de prénom">✏️</button>
+    </header>
+
+    <!-- Prénom (première visite) -->
+    <section class="carte cache" id="carte-prenom">
+      <h2>Salut ! Comment tu t'appelles ?</h2>
+      <p class="doux">Ton prénom apparaîtra dans les exercices. Il reste sur ton téléphone.</p>
+      <form id="form-prenom">
+        <input class="champ" id="champ-prenom" type="text" autocomplete="given-name" maxlength="30" placeholder="Ton prénom" required>
+        <button class="btn" type="submit" style="margin-top: 12px;">C'est parti</button>
+      </form>
+    </section>
+
+    <!-- Profil -->
+    <section class="carte profil" id="profil">
+      <div class="profil-ligne">
+        <div>
+          <div class="doux petit">Ton niveau</div>
+          <div class="niveau-nom" id="niveau-nom">—</div>
+        </div>
+        <div class="flamme" id="flamme" title="Jours de révision d'affilée">🔥 0</div>
+      </div>
+      <div class="jauge" aria-hidden="true"><span id="jauge-xp"></span></div>
+      <div class="profil-ligne doux petit">
+        <span id="xp-texte">0 XP</span>
+        <span id="xp-suivant"></span>
+      </div>
+    </section>
+
+    <h2 style="margin-top: 24px;">Matières</h2>
+    <a class="carte carte-lien matiere-maths" href="maths/index.html">
+      <span class="pastille">📐</span>
+      <span class="corps"><strong>Maths</strong><span class="doux petit">Relatifs, fractions, Pythagore…</span></span>
+      <span class="chevron">›</span>
+    </a>
+    <div class="carte carte-lien inactive matiere-sciences">
+      <span class="pastille">🧪</span>
+      <span class="corps"><strong>Sciences</strong><span class="doux petit">Bientôt</span></span>
+    </div>
+    <div class="carte carte-lien inactive matiere-histoire">
+      <span class="pastille">🏛️</span>
+      <span class="corps"><strong>Histoire-Géo</strong><span class="doux petit">Bientôt</span></span>
+    </div>
+    <div class="carte carte-lien inactive matiere-francais">
+      <span class="pastille">📚</span>
+      <span class="corps"><strong>Français</strong><span class="doux petit">Bientôt</span></span>
+    </div>
+
+    <section id="section-faibles" class="cache">
+      <h2 style="margin-top: 24px;">Mes points faibles</h2>
+      <p class="doux petit">Les chapitres où tu te trompes le plus. Un petit entraînement ?</p>
+      <div id="liste-faibles"></div>
+    </section>
+
+    <p class="doux petit centre" id="badges" style="margin-top: 24px;"></p>
+  </main>
+
+  <script type="module">
+    import { charger, prenom, definirPrenom } from './assets/js/core/store.js';
+    import { niveauPourXp, flammeActuelle, pointsFaibles } from './assets/js/core/gamification.js';
+    import { CHAPITRES } from './maths/chapitres.js';
+    import { $, esc } from './assets/js/ui/dom.js';
+
+    function afficher() {
+      const e = charger();
+      const p = prenom();
+      $('#salut').textContent = p ? `Salut ${p} 👋` : 'Révision brevet';
+      $('#carte-prenom').classList.toggle('cache', !!p);
+
+      const niv = niveauPourXp(e.xp);
+      $('#niveau-nom').textContent = `${niv.emoji} ${niv.nom}`;
+      $('#jauge-xp').style.width = `${Math.round(niv.progression * 100)}%`;
+      $('#xp-texte').textContent = `${e.xp} XP`;
+      $('#xp-suivant').textContent = niv.suivant ? `${niv.suivant.nom} à ${niv.suivant.seuil} XP` : 'Niveau maximum !';
+
+      const f = flammeActuelle();
+      $('#flamme').textContent = `🔥 ${f} jour${f > 1 ? 's' : ''}`;
+      $('#flamme').classList.toggle('eteinte', f === 0);
+
+      const faibles = pointsFaibles(3).filter(x => x.taux < 0.8);
+      $('#section-faibles').classList.toggle('cache', faibles.length === 0);
+      $('#liste-faibles').innerHTML = faibles.map(x => {
+        const ch = CHAPITRES.find(c => c.id === x.id);
+        if (!ch) return '';
+        return `<a class="carte carte-lien matiere-maths" href="maths/chapitre.html?c=${encodeURIComponent(x.id)}&mode=entrainement">
+          <span class="pastille">${esc(ch.emoji)}</span>
+          <span class="corps"><strong>${esc(ch.titre)}</strong><span class="doux petit">${Math.round(x.taux * 100)} % de réussite sur ${x.total} réponses</span></span>
+          <span class="chevron">›</span></a>`;
+      }).join('');
+
+      const nb = e.badges.length;
+      $('#badges').textContent = nb ? `🏅 ${nb} chapitre${nb > 1 ? 's' : ''} maîtrisé${nb > 1 ? 's' : ''}` : '';
+    }
+
+    $('#form-prenom').addEventListener('submit', ev => {
+      ev.preventDefault();
+      definirPrenom($('#champ-prenom').value);
+      afficher();
+    });
+    $('#btn-prenom').addEventListener('click', () => {
+      $('#champ-prenom').value = prenom();
+      $('#carte-prenom').classList.remove('cache');
+      $('#champ-prenom').focus();
+    });
+
+    afficher();
+  </script>
+</body>
+</html>

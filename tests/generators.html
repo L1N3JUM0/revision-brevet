@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Tests des générateurs</title>
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <style>
+    .ok { color: var(--succes); }
+    .ko { color: var(--erreur); }
+    table { width: 100%; border-collapse: collapse; font-size: 15px; }
+    td, th { padding: 8px 6px; border-top: 1px solid var(--bord); text-align: left; vertical-align: top; }
+    details { margin-top: 8px; }
+    summary { cursor: pointer; font-weight: 700; }
+    .exemple { padding: 10px 0; border-top: 1px solid var(--bord); font-size: 15px; }
+    .exemple .calcul { font-size: 18px; padding: 6px; }
+    code { font-size: 13px; color: var(--texte-doux); overflow-wrap: anywhere; }
+  </style>
+</head>
+<body class="matiere-maths">
+  <main class="page">
+    <header class="barre-haut">
+      <a class="btn-icone" href="../index.html" aria-label="Accueil">‹</a>
+      <div class="titre">Tests des générateurs</div>
+    </header>
+    <p class="doux">1 000 exercices par générateur et par niveau : réponse définie et finie, bornes, recalcul indépendant, bonne réponse acceptée par la vérification.</p>
+    <div class="carte" id="resume"><strong>Tests en cours…</strong></div>
+    <div id="saisie"></div>
+    <div id="generateurs"></div>
+  </main>
+
+  <script type="module">
+    import { testerGenerateur, testerSaisie } from './verifications.js';
+    import { chargerTous } from '../maths/chapitres.js';
+    import { formaterReponse } from '../assets/js/core/answer.js';
+    import { esc } from '../assets/js/ui/dom.js';
+
+    const N = Number(new URLSearchParams(location.search).get('n')) || 1000;
+    let echecs = 0;
+
+    // Saisie
+    const cas = testerSaisie();
+    const ko = cas.filter(c => !c.ok);
+    echecs += ko.length;
+    document.getElementById('saisie').innerHTML = `
+      <section class="carte">
+        <h2>Saisie <span class="${ko.length ? 'ko' : 'ok'}">${cas.length - ko.length}/${cas.length}</span></h2>
+        <details ${ko.length ? 'open' : ''}><summary>Détail</summary>
+          <table>${cas.map(c => `<tr><td class="${c.ok ? 'ok' : 'ko'}">${c.ok ? '✓' : '✗'}</td><td>${esc(c.nom)}</td>
+            <td><code>${esc(JSON.stringify(c.obtenu))}</code>${c.ok ? '' : ` ≠ <code>${esc(JSON.stringify(c.attendu))}</code>`}</td></tr>`).join('')}</table>
+        </details>
+      </section>`;
+
+    // Générateurs
+    const gens = await chargerTous();
+    const zone = document.getElementById('generateurs');
+    let total = 0;
+    for (const gen of gens) {
+      const r = testerGenerateur(gen, N);
+      const lignes = r.niveaux.map(nv => {
+        const nbErr = nv.erreurs.length;
+        echecs += nbErr;
+        total += nv.n;
+        return `<tr>
+          <td>Niveau ${nv.niveau}</td>
+          <td class="${nbErr ? 'ko' : 'ok'}">${nbErr ? `✗ ${nbErr} erreur(s)` : '✓ OK'}</td>
+          <td>${nv.clesDistinctes} énoncés distincts</td>
+          <td class="doux">${nv.duree} ms</td></tr>
+          ${nbErr ? `<tr><td colspan="4">${nv.erreurs.map(e => `<div class="ko">#${e.i} ${esc(e.msg)} <code>${esc(e.cle || '')}</code></div>`).join('')}</td></tr>` : ''}`;
+      }).join('');
+      const exemples = r.niveaux.map(nv => nv.exemples.slice(0, 3).map(ex => `
+        <div class="exemple"><span class="badge">N${nv.niveau}</span>
+          <div>${ex.enonce}</div>
+          <div class="doux">Réponse : <strong>${esc(formaterReponse(ex))}${ex.unite ? ' ' + esc(ex.unite) : ''}</strong> · <code>${esc(ex.cle)}</code></div>
+          <details><summary>Correction</summary><ol class="etapes">${(ex.etapes || []).map(e => `<li>${e}</li>`).join('')}</ol></details>
+        </div>`).join('')).join('');
+      zone.insertAdjacentHTML('beforeend', `
+        <section class="carte">
+          <h2>${esc(r.titre)} <code>${esc(r.id)}</code></h2>
+          <table>${lignes}</table>
+          <details><summary>Exemples</summary>${exemples}</details>
+        </section>`);
+    }
+
+    document.getElementById('resume').innerHTML = echecs
+      ? `<h2 class="ko">✗ ${echecs} problème(s)</h2><p>${total} exercices générés.</p>`
+      : `<h2 class="ok">✓ Tout est vert</h2><p>${total} exercices générés sur ${gens.length} générateur(s), saisie validée.</p>`;
+    document.title = echecs ? `✗ Tests (${echecs})` : '✓ Tests OK';
+  </script>
+</body>
+</html>
