@@ -10,7 +10,7 @@ export const CHAPITRES = [
   { id: 'thales', titre: 'Théorème de Thalès', emoji: '🔺', charger: () => import('./generators/thales.js') },
   { id: 'conversions-longueurs', titre: 'Conversions de longueurs', emoji: '📏', charger: () => import('./generators/conversions-longueurs.js') },
   { id: 'conversions-durees', titre: 'Conversions de durées', emoji: '⏱️', charger: () => import('./generators/conversions-durees.js') },
-  { id: 'vitesses', titre: 'Vitesses', emoji: '🏎️', charger: null },
+  { id: 'vitesses', titre: 'Vitesses', emoji: '🏎️', charger: () => import('./generators/vitesses.js') },
   { id: 'angles', titre: 'Angles et parallèles', emoji: '∠', charger: null },
   { id: 'scratch', titre: 'Scratch', emoji: '🐱', charger: null },
   { id: 'constructions', titre: 'Constructions géométriques', emoji: '🧭', charger: null }
