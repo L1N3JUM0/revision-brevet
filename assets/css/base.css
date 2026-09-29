@@ -400,6 +400,11 @@ li { margin-bottom: 10px; }
 .figure .codage { stroke: var(--texte); stroke-width: 1.5; fill: none; }
 .figure .fleche { stroke: var(--accent-clair); stroke-width: 2.5; fill: none; }
 .figure .fleche-pointe { fill: var(--accent-clair); }
+.figure .arc-angle { stroke-width: 1.5; }
+.figure .arc-donne { fill: rgba(139, 92, 246, 0.35); stroke: var(--accent-clair); }
+.figure .arc-cible { fill: rgba(251, 191, 36, 0.3); stroke: var(--or); }
+.figure .etiquette-angle { fill: var(--texte); font-size: 14px; font-weight: 800; }
+.figure .nom-droite { fill: var(--texte-doux); font-size: 15px; font-style: italic; font-weight: 700; }
 .figure .trait-accent { stroke: var(--accent-clair); stroke-width: 3; }
 .figure .part-pleine { fill: var(--accent); stroke: var(--fond); stroke-width: 2; }
 .figure .part-vide { fill: var(--surface-2); stroke: var(--bord); stroke-width: 2; }

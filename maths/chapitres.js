@@ -11,7 +11,7 @@ export const CHAPITRES = [
   { id: 'conversions-longueurs', titre: 'Conversions de longueurs', emoji: '📏', charger: () => import('./generators/conversions-longueurs.js') },
   { id: 'conversions-durees', titre: 'Conversions de durées', emoji: '⏱️', charger: () => import('./generators/conversions-durees.js') },
   { id: 'vitesses', titre: 'Vitesses', emoji: '🏎️', charger: () => import('./generators/vitesses.js') },
-  { id: 'angles', titre: 'Angles et parallèles', emoji: '∠', charger: null },
+  { id: 'angles', titre: 'Angles et parallèles', emoji: '∠', charger: () => import('./generators/angles.js') },
   { id: 'scratch', titre: 'Scratch', emoji: '🐱', charger: null },
   { id: 'constructions', titre: 'Constructions géométriques', emoji: '🧭', charger: null }
 ];
