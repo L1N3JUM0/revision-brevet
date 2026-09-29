@@ -82,7 +82,8 @@ export default {
   niveaux: 3,                       // 1 = facile, 3 = type brevet
   resume: 'Calculer une longueur…',  // sous-titre sur la page du chapitre
   nomsNiveaux: ['…', '…', '…'],
-  cours: [ /* 2 à 5 cartes : { titre, contenu (HTML court), figure? } */ ],
+  cours: [ /* 2 à 5 cartes : { titre, contenu (HTML court), figure?, animation? } */ ],
+  // animation : [{ texte, figure }] → lecteur étape par étape (‹ ▶ ›) dans le cours flash (fiches méthode)
   generer(niveau, rng, ctx) {
     return {
       cle,          // chaîne unique décrivant les paramètres (anti-doublon)

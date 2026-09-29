@@ -13,7 +13,7 @@ export const CHAPITRES = [
   { id: 'vitesses', titre: 'Vitesses', emoji: '🏎️', charger: () => import('./generators/vitesses.js') },
   { id: 'angles', titre: 'Angles et parallèles', emoji: '∠', charger: () => import('./generators/angles.js') },
   { id: 'scratch', titre: 'Scratch', emoji: '🐱', charger: () => import('./generators/scratch.js') },
-  { id: 'constructions', titre: 'Constructions géométriques', emoji: '🧭', charger: null }
+  { id: 'constructions', titre: 'Constructions géométriques', emoji: '🧭', charger: () => import('./generators/constructions.js') }
 ];
 
 export function trouverChapitre(id) {
