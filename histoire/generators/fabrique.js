@@ -144,8 +144,10 @@ function erreursAnnees(evs, bonne, cible) {
 }
 
 function exoDate(rng, d, { saisie }) {
-  const candidats = saisie ? d.evenements.filter(e => e.repere || rng.bool(0.4)) : d.evenements;
-  const e = rng.choix(candidats.length ? candidats : d.evenements);
+  // nomDate : le nom contient déjà la date (« Mai 68 ») → pas de question de date
+  const possibles = d.evenements.filter(e => !e.nomDate);
+  const candidats = saisie ? possibles.filter(e => e.repere || rng.bool(0.4)) : possibles;
+  const e = rng.choix(candidats.length ? candidats : possibles);
   const demandeFin = !!e.fin && rng.bool(0.35);
   const annee = demandeFin ? e.fin : e.annee;
   const libelle = e.fin ? (demandeFin ? 'Année de fin' : 'Année de début') : 'Année';
@@ -156,6 +158,7 @@ function exoDate(rng, d, { saisie }) {
   }));
   const base = {
     cle: `date:${saisie ? 's' : 'q'}:${e.nom}:${demandeFin}`,
+    donnees: { nom: e.nom, fin: demandeFin },
     enonce: `<p>${libelle} de cet événement ?</p><p class="evenement">${esc(e.nom)}</p>`,
     etapes: explication(e)
   };
@@ -407,9 +410,9 @@ export function fabriquer(d) {
         return premier.nom === exo.reponse ? null : 'avant/après incohérent';
       }
       if (exo.cle.startsWith('date:')) {
-        const nom = exo.cle.split(':')[2];
+        const { nom, fin } = exo.donnees;
         const e = d.evenements.find(x => x.nom === nom);
-        const fin = exo.cle.endsWith(':true');
+        if (!e) return `événement introuvable : ${nom}`;
         return String(fin ? e.fin : e.annee) === String(exo.reponse) ? null : `date de ${nom} incohérente`;
       }
       return null;
@@ -427,7 +430,7 @@ export function banqueReperes() {
     titre: 'Les repères du brevet',
     resume: 'Toutes les dates à connaître, tous chapitres mélangés.',
     periode: [Math.min(...annees), Math.max(...annees)],
-    essentiel: ['Ces dates sont les <strong>repères officiels</strong> du programme : au brevet, il faut savoir les citer et les placer sur une frise.', 'Astuce : associe chaque date à une image ou à un personnage.'],
+    essentiel: ['Ces dates sont les <strong>dates clés</strong> du programme de 3e : au brevet, il faut savoir les citer et les placer sur une frise.', 'Astuce : associe chaque date à une image ou à un personnage.'],
     evenements,
     personnages: DONNEES.flatMap(d => d.personnages || []).filter((p, i, t) => t.findIndex(x => x.nom === p.nom) === i),
     vocabulaire: DONNEES.flatMap(d => d.vocabulaire || []).filter((v, i, t) => t.findIndex(x => x.mot === v.mot) === i)

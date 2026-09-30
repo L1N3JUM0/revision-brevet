@@ -8,8 +8,12 @@ import decolonisation from './decolonisation.js';
 import guerreFroide from './guerre-froide.js';
 import europe from './europe.js';
 import mondeApres1989 from './monde-apres-1989.js';
+import refonderRepublique from './refonder-republique.js';
+import cinquiemeRepublique from './cinquieme-republique.js';
+import societe19501980 from './societe-1950-1980.js';
 
 export const DONNEES = [
   premiereGuerre, entreDeuxGuerres, secondeGuerre, franceOccupee,
-  decolonisation, guerreFroide, europe, mondeApres1989
+  decolonisation, guerreFroide, europe, mondeApres1989,
+  refonderRepublique, cinquiemeRepublique, societe19501980
 ];

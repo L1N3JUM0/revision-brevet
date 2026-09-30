@@ -13,9 +13,9 @@ export const CHAPITRES = [
   { id: 'guerre-froide', titre: 'Un monde bipolaire : la guerre froide', emoji: '🧱', theme: 2, charger: () => import('./generators/guerre-froide.js') },
   { id: 'europe', titre: 'Le projet européen', emoji: '🇪🇺', theme: 2, charger: () => import('./generators/europe.js') },
   { id: 'monde-apres-1989', titre: 'Le monde après 1989', emoji: '🌐', theme: 2, charger: () => import('./generators/monde-apres-1989.js') },
-  { id: 'refonder-republique', titre: '1944-1947 : refonder la République', emoji: '🏛️', theme: 3, charger: null },
-  { id: 'cinquieme-republique', titre: 'La Ve République', emoji: '🗳️', theme: 3, charger: null },
-  { id: 'societe-1950-1980', titre: 'Femmes et hommes dans la société (1950-1980)', emoji: '👩‍👩‍👧', theme: 3, charger: null }
+  { id: 'refonder-republique', titre: '1944-1947 : refonder la République', emoji: '🏛️', theme: 3, charger: () => import('./generators/refonder-republique.js') },
+  { id: 'cinquieme-republique', titre: 'La Ve République', emoji: '🗳️', theme: 3, charger: () => import('./generators/cinquieme-republique.js') },
+  { id: 'societe-1950-1980', titre: 'Femmes et hommes dans la société (1950-1980)', emoji: '👩‍👩‍👧', theme: 3, charger: () => import('./generators/societe-1950-1980.js') }
 ];
 
 export const THEMES = {

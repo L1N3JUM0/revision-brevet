@@ -122,7 +122,8 @@ Les chapitres sont déclarés dans `maths/chapitres.js` (`charger: () => import(
 - Sujet : environ 30 % faciles, 40 % moyennes, 30 % type brevet, réparties entre les chapitres et regroupées par chapitre (« Exercice 1 · Fractions »). Barème affiché : 1, 2 ou 3 points selon le niveau, note ramenée sur 20 (au demi-point). Durée conseillée : 2, 3 ou 5 min par question (12 min pour une construction).
 - Épreuve : une question par écran, navigation libre entre les questions, timer indicatif (dépassement en rouge, sans arrêt forcé), calculatrice. Aucune correction avant la fin.
 - Résultats : note, bilan par chapitre avec lien vers l'entraînement, correction complète (étapes, rédaction modèle, erreur probable). Les réponses comptent dans les statistiques et l'XP. Les 10 dernières notes sont gardées (`controles` dans le store).
-- La saisie (champ, touches ±, /, QCM) est partagée avec la page chapitre : `assets/js/ui/saisie.js`.
+- La saisie (champ, touches ±, /, QCM, ordre) est partagée avec la page chapitre : `assets/js/ui/saisie.js`.
+- Options par matière : `matiere` (les notes sont rangées par matière), `calculatrice` (maths : oui, histoire : non), `minutes` (durée conseillée par niveau), `sansParDefaut` (chapitres décochés au départ). Pages : `maths/controle.html`, `histoire/controle.html`.
 
 ### Calculatrice (`assets/js/ui/calculatrice.js`)
 

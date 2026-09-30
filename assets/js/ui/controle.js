@@ -3,7 +3,7 @@
 import { creerRng, graineDepuisUrl, graineAleatoire } from '../core/rng.js';
 import { charger, sauver, prenom as prenomProfil } from '../core/store.js';
 import { genererExercice } from '../core/engine.js';
-import { verifier, formaterReponse, fmt } from '../core/answer.js';
+import { verifier, formaterReponse, fmt, lireOrdre } from '../core/answer.js';
 import { enregistrerResultat } from '../core/gamification.js';
 import { $, esc, fmtChrono } from './dom.js';
 import { htmlSaisie, brancherSaisie, lireSaisie } from './saisie.js';
@@ -11,12 +11,21 @@ import { monterCalculatrice } from './calculatrice.js';
 import { confettis } from './fx.js';
 
 export const POINTS = { 1: 1, 2: 2, 3: 3 };           // barème par niveau de difficulté
-const MINUTES = { 1: 2, 2: 3, 3: 5 };                  // durée conseillée par question
 const MINUTES_PAPIER = 12;                             // une construction sur papier
-const NOMS_NIVEAUX = { 1: 'facile', 2: 'moyen', 3: 'type brevet' };
-const PAR_DEFAUT_SANS = ['constructions'];             // demande papier et instruments : décoché par défaut
 
-export function demarrerControle({ app, chapitres, urlMatiere }) {
+/**
+ * Options selon la matière :
+ *  - calculatrice : autorisée pendant l'épreuve (maths) ou non (histoire)
+ *  - minutes : durée conseillée par question, selon le niveau
+ *  - sansParDefaut : chapitres décochés au départ (constructions sur papier, repères déjà inclus ailleurs)
+ */
+export function demarrerControle({
+  app, chapitres, urlMatiere,
+  matiere = 'maths',
+  calculatrice = true,
+  minutes: MINUTES = { 1: 2, 2: 3, 3: 5 },
+  sansParDefaut: PAR_DEFAUT_SANS = ['constructions']
+}) {
   const dispo = chapitres.filter(c => c.charger);
   const graine = graineDepuisUrl() ?? graineAleatoire();
   const rng = creerRng(graine);
@@ -27,7 +36,7 @@ export function demarrerControle({ app, chapitres, urlMatiere }) {
   // ---------- 1. Réglages ----------
 
   function ecranReglages() {
-    const derniers = charger().controles || [];
+    const derniers = (charger().controles || []).filter(c => (c.matiere || 'maths') === matiere);
     const dernier = derniers[derniers.length - 1];
     app.innerHTML = `
       <header class="barre-haut">
@@ -127,7 +136,7 @@ export function demarrerControle({ app, chapitres, urlMatiere }) {
         </table>
         <p class="doux petit">Question facile : ${POINTS[1]} pt · moyenne : ${POINTS[2]} pts · type brevet : ${POINTS[3]} pts. Note ramenée sur 20.</p>
         <ul class="doux petit">
-          <li>🧮 Calculatrice autorisée.</li>
+          ${calculatrice ? '<li>🧮 Calculatrice autorisée.</li>' : '<li>Pas de calculatrice : tout est dans ta tête !</li>'}
           <li>Tu peux revenir sur une question avant de terminer.</li>
           <li>Aucune correction avant la fin : comme le jour J !</li>
           ${papier ? '<li>✏️ Prépare une feuille, une règle, un compas, une équerre et un rapporteur.</li>' : ''}
@@ -137,7 +146,7 @@ export function demarrerControle({ app, chapitres, urlMatiere }) {
     $('#retour', app).addEventListener('click', ecranReglages);
     $('#commencer', app).addEventListener('click', () => {
       sujet.debut = Date.now();
-      calc = monterCalculatrice();
+      if (calculatrice) calc = monterCalculatrice();
       ecranQuestion(sujet, 0);
     });
   }
@@ -256,7 +265,7 @@ export function demarrerControle({ app, chapitres, urlMatiere }) {
     const note = Math.round((obtenus / sujet.total) * 20 * 2) / 2;   // au demi-point
     const duree = sujet.fin - sujet.debut;
     const e = charger();
-    e.controles = [...(e.controles || []), { date: new Date().toISOString().slice(0, 10), note, questions: sujet.questions.length }].slice(-10);
+    e.controles = [...(e.controles || []), { matiere, date: new Date().toISOString().slice(0, 10), note, questions: sujet.questions.length }].slice(-10);
     sauver();
     if (note >= 15) confettis();
 
@@ -300,12 +309,15 @@ export function demarrerControle({ app, chapitres, urlMatiere }) {
     const v = q.verif;
     const statut = v.vide ? '<span class="badge">Sans réponse</span>' : q.correct ? '<span class="badge badge-ok">✓ Juste</span>' : '<span class="badge badge-ko">✗ Faux</span>';
     const unite = q.exo.unite ? ` ${esc(q.exo.unite)}` : '';
+    // Pour un ordre, on réaffiche les événements dans l'ordre choisi (et pas leurs numéros)
+    const indices = q.exo.type === 'ordre' ? lireOrdre(q.exo, q.saisie) : null;
+    const saisieLisible = indices ? indices.map(i => q.exo.items[i]).join(' → ') : q.saisie;
     return `
       <details class="carte correction-question${q.correct ? '' : ' ouverte-par-defaut'}" ${q.correct ? '' : 'open'}>
         <summary><strong>Question ${k + 1}</strong> · ${esc(q.gen.titre)} · ${q.correct ? q.points : 0}/${q.points} pt${q.points > 1 ? 's' : ''} ${statut}</summary>
         <div class="enonce">${q.exo.enonce}</div>
         ${q.exo.figure || ''}
-        <p>Ta réponse : <strong>${v.vide ? '—' : esc(q.saisie)}</strong>${v.vide ? '' : unite}</p>
+        <p>Ta réponse : <strong>${v.vide ? '—' : esc(saisieLisible)}</strong>${v.vide ? '' : unite}</p>
         <p>Bonne réponse : <strong>${esc(formaterReponse(q.exo))}${unite}</strong></p>
         ${v.presque ? `<div class="erreur-probable">💡 ${v.erreur}</div>` : ''}
         ${!q.correct && v.erreur && !v.presque ? `<div class="erreur-probable">💡 ${v.erreur}</div>` : ''}
