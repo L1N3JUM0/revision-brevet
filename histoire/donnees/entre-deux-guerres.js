@@ -17,7 +17,7 @@ export default {
     { nom: 'Staline au pouvoir en URSS', annee: 1924, fin: 1953, repere: true, explication: 'Après la mort de Lénine (1924), Staline impose une dictature totalitaire : collectivisation, terreur, goulag.' },
     { nom: 'Krach de Wall Street', annee: 1929, mois: 10, jour: 24, date: '24 octobre 1929', explication: 'La Bourse de New York s\'effondre : c\'est le début d\'une grave crise économique mondiale.' },
     { nom: 'Hitler au pouvoir en Allemagne', annee: 1933, mois: 1, jour: 30, fin: 1945, repere: true, explication: 'Nommé chancelier en janvier 1933, Hitler installe une dictature nazie, totalitaire et antisémite.' },
-    { nom: 'Émeutes du 6 février 1934', annee: 1934, mois: 2, jour: 6, date: '6 février 1934', explication: 'Des ligues d\'extrême droite manifestent violemment à Paris contre la République.' },
+    { nom: 'Émeutes des ligues d\'extrême droite à Paris', annee: 1934, mois: 2, jour: 6, date: '6 février 1934', explication: 'Des ligues d\'extrême droite manifestent violemment à Paris contre la République.' },
     { nom: 'Lois de Nuremberg', annee: 1935, mois: 9, jour: 15, date: 'septembre 1935', explication: 'Lois antisémites qui retirent la citoyenneté allemande aux Juifs et interdisent les mariages entre Juifs et non-Juifs.' },
     { nom: 'Victoire du Front populaire', annee: 1936, mois: 5, repere: true, explication: 'La gauche gagne les élections en France ; le gouvernement de Léon Blum accorde les congés payés et la semaine de 40 heures.' },
     { nom: 'Guerre d\'Espagne', annee: 1936, mois: 7, fin: 1939, explication: 'Guerre civile entre les républicains et les nationalistes du général Franco, aidés par Hitler et Mussolini.' },

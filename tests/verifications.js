@@ -239,3 +239,32 @@ export function testerCalculatrice(evaluer, formaterResultat) {
     return { nom: expr || '(vide)', obtenu, attendu, ok: obtenu === attendu };
   });
 }
+
+// Cohérence des banques de faits d'histoire (données saisies à la main)
+export function testerBanquesHistoire(banques) {
+  const cas = [];
+  const verif = (nom, ok, detail = '') => cas.push({ nom, obtenu: ok ? 'ok' : detail, attendu: 'ok', ok });
+  for (const b of banques) {
+    const noms = b.evenements.map(e => e.nom);
+    verif(`${b.id} : noms d'événements uniques`, new Set(noms).size === noms.length, 'doublon');
+    for (const e of b.evenements) {
+      verif(`${b.id} : « ${e.nom} » sans année dans le nom`, !/\b1[89]\d\d\b|\b20\d\d\b/.test(e.nom), 'année visible');
+      verif(`${b.id} : « ${e.nom} » année plausible`, Number.isInteger(e.annee) && e.annee >= 1900 && e.annee <= 2030, String(e.annee));
+      if (e.fin) verif(`${b.id} : « ${e.nom} » fin après début`, e.fin > e.annee, `${e.annee}-${e.fin}`);
+      if (e.mois) verif(`${b.id} : « ${e.nom} » mois valide`, Number.isInteger(e.mois) && e.mois >= 1 && e.mois <= 12, String(e.mois));
+      if (e.jour) verif(`${b.id} : « ${e.nom} » jour valide`, !!e.mois && e.jour >= 1 && e.jour <= 31, String(e.jour));
+      if (e.date && e.mois) {
+        const MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+        verif(`${b.id} : « ${e.nom} » date écrite cohérente avec le mois`, e.date.includes(MOIS[e.mois - 1]), e.date);
+      }
+      if (e.date) verif(`${b.id} : « ${e.nom} » date écrite cohérente avec l'année`, e.date.includes(String(e.annee)), e.date);
+    }
+    for (const p of b.personnages || []) {
+      const mots = p.nom.split(' ').filter(m => m.length > 3);
+      verif(`${b.id} : description de ${p.nom} sans son nom`, !mots.some(m => p.description.includes(m)), 'nom visible');
+    }
+    const mots = (b.vocabulaire || []).map(v => v.mot);
+    verif(`${b.id} : vocabulaire sans doublon`, new Set(mots).size === mots.length, 'doublon');
+  }
+  return cas;
+}

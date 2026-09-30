@@ -31,10 +31,11 @@
   </main>
 
   <script type="module">
-    import { testerGenerateur, testerSaisie, testerCalculatrice } from './verifications.js';
+    import { testerGenerateur, testerSaisie, testerCalculatrice, testerBanquesHistoire } from './verifications.js';
     import { evaluer, formaterResultat } from '../assets/js/ui/calculatrice.js';
     import { chargerTous } from '../maths/chapitres.js';
     import { chargerTous as chargerHistoire } from '../histoire/chapitres.js';
+    import { DONNEES as BANQUES_HISTOIRE } from '../histoire/donnees/index.js';
     import { formaterReponse } from '../assets/js/core/answer.js';
     import { esc } from '../assets/js/ui/dom.js';
 
@@ -56,7 +57,8 @@
     }
     document.getElementById('saisie').innerHTML =
       blocUnitaire('Saisie', testerSaisie()) +
-      blocUnitaire('Calculatrice', testerCalculatrice(evaluer, formaterResultat));
+      blocUnitaire('Calculatrice', testerCalculatrice(evaluer, formaterResultat)) +
+      blocUnitaire('Banques d’histoire', testerBanquesHistoire(BANQUES_HISTOIRE));
 
     // Générateurs
     const gens = [...await chargerTous(), ...await chargerHistoire()];
