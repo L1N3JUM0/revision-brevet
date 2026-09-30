@@ -154,7 +154,8 @@ const AIDE_SAISIE = {
   duree: 'Écris une durée, par exemple 1 h 45 min ou 105 min.',
   point: 'Écris des coordonnées, par exemple (3 ; −2).',
   qcm: 'Choisis une réponse.',
-  'texte-court': 'Écris ta réponse.'
+  'texte-court': 'Écris ta réponse.',
+  ordre: 'Touche tous les éléments, du plus ancien au plus récent.'
 };
 
 // Lit la saisie selon le type d'exercice. Renvoie la valeur ou null.
@@ -174,8 +175,22 @@ export function lire(exo, saisie) {
       const t = String(saisie ?? '').trim();
       return t ? t : null;
     }
+    case 'ordre': return lireOrdre(exo, saisie);
     default: return null;
   }
+}
+
+// Ordre : « 2,0,3,1 » (indices des éléments dans l'ordre choisi) ou « A → B → C » (libellés).
+// Renvoie un tableau d'indices complet (une permutation), sinon null.
+export function lireOrdre(exo, saisie) {
+  const s = String(saisie ?? '').trim();
+  const n = exo.items.length;
+  let indices;
+  if (/^\d+(\s*,\s*\d+)*$/.test(s)) indices = s.split(',').map(Number);
+  else if (s.includes('→')) indices = s.split('→').map(x => exo.items.indexOf(x.trim()));
+  else return null;
+  const ok = indices.length === n && new Set(indices).size === n && indices.every(i => i >= 0 && i < n);
+  return ok ? indices : null;
 }
 
 function egalite(exo, valeur) {
@@ -194,6 +209,7 @@ function egalite(exo, valeur) {
       const attendues = Array.isArray(r) ? r : [r];
       return attendues.some(a => normaliserTexte(a) === normaliserTexte(valeur));
     }
+    case 'ordre': return valeur.every((v, k) => v === r[k]);
     default: return false;
   }
 }
@@ -248,6 +264,7 @@ export function formaterReponse(exo) {
     case 'duree': return fmtDuree(r);
     case 'point': return `(${fmt(r.x)} ; ${fmt(r.y)})`;
     case 'texte-court': return Array.isArray(r) ? r[0] : String(r);
+    case 'ordre': return r.map(i => exo.items[i]).join(' → ');
     default: return String(r);
   }
 }

@@ -457,6 +457,32 @@ li { margin-bottom: 10px; }
 .checklist input { width: 22px; height: 22px; margin-top: 1px; flex: none; accent-color: var(--accent); }
 .checklist input:checked + span { color: var(--texte-doux); text-decoration: line-through; }
 
+.titre-theme { margin: 22px 0 10px; font-size: 15px; color: var(--accent-clair); text-transform: uppercase; letter-spacing: 0.04em; }
+.liste-dates { padding-left: 0; list-style: none; }
+.liste-dates li { padding: 6px 0; border-bottom: 1px solid var(--bord); margin: 0; }
+
+/* ---------- Remettre dans l'ordre (histoire) ---------- */
+
+.ordre { display: grid; gap: 8px; margin: 12px 0 6px; }
+.ordre button {
+  display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 10px 14px;
+  border-radius: var(--rayon-petit); border: 2px solid var(--bord); background: var(--surface-2);
+  color: var(--texte); font: inherit; font-weight: 700; text-align: left; cursor: pointer;
+}
+.ordre .rang {
+  flex: none; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+  border: 2px dashed var(--bord); font-weight: 900; color: var(--accent-clair);
+}
+.ordre button.place { border-color: var(--accent); background: var(--accent-fond); }
+.ordre button.place .rang { border-style: solid; border-color: var(--accent); background: var(--accent); color: #fff; }
+.btn-lien { min-height: 44px; padding: 8px 4px; border: none; background: none; color: var(--accent-clair); font: inherit; font-weight: 700; cursor: pointer; }
+.evenement { font-size: 22px; font-weight: 800; text-align: center; padding: 14px 10px; margin: 8px 0; border-radius: var(--rayon-petit); background: var(--surface-2); }
+.figure .frise-axe { stroke: var(--texte); stroke-width: 2.5; }
+.figure .frise-periode { fill: var(--accent); opacity: 0.55; }
+.figure .frise-segment { opacity: 0.22; }
+.figure .frise-lettre { fill: var(--texte); font-size: 16px; font-weight: 900; }
+.figure .frise-nom { fill: var(--texte); font-size: 11px; font-weight: 700; }
+
 /* ---------- Contrôle blanc ---------- */
 
 .carte-controle { border-color: var(--accent); background: linear-gradient(135deg, var(--accent-fond), var(--surface)); }

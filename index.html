@@ -53,10 +53,11 @@
       <span class="pastille">🧪</span>
       <span class="corps"><strong>Sciences</strong><span class="doux petit">Bientôt</span></span>
     </div>
-    <div class="carte carte-lien inactive matiere-histoire">
+    <a class="carte carte-lien matiere-histoire" href="histoire/index.html">
       <span class="pastille">🏛️</span>
-      <span class="corps"><strong>Histoire-Géo</strong><span class="doux petit">Bientôt</span></span>
-    </div>
+      <span class="corps"><strong>Histoire</strong><span class="doux petit">Dates, frises, personnages · Géo et EMC bientôt</span></span>
+      <span class="chevron">›</span>
+    </a>
     <div class="carte carte-lien inactive matiere-francais">
       <span class="pastille">📚</span>
       <span class="corps"><strong>Français</strong><span class="doux petit">Bientôt</span></span>
@@ -74,7 +75,14 @@
   <script type="module">
     import { charger, prenom, definirPrenom } from './assets/js/core/store.js';
     import { niveauPourXp, flammeActuelle, pointsFaibles } from './assets/js/core/gamification.js';
-    import { CHAPITRES } from './maths/chapitres.js';
+    import { CHAPITRES as CH_MATHS } from './maths/chapitres.js';
+    import { CHAPITRES as CH_HISTOIRE } from './histoire/chapitres.js';
+
+    // Chapitres de toutes les matières, avec leur dossier (pour les points faibles)
+    const CHAPITRES = [
+      ...CH_MATHS.map(c => ({ ...c, dossier: 'maths', classe: 'matiere-maths' })),
+      ...CH_HISTOIRE.map(c => ({ ...c, dossier: 'histoire', classe: 'matiere-histoire' }))
+    ];
     import { $, esc } from './assets/js/ui/dom.js';
 
     function afficher() {
@@ -98,7 +106,7 @@
       $('#liste-faibles').innerHTML = faibles.map(x => {
         const ch = CHAPITRES.find(c => c.id === x.id);
         if (!ch) return '';
-        return `<a class="carte carte-lien matiere-maths" href="maths/chapitre.html?c=${encodeURIComponent(x.id)}&mode=entrainement">
+        return `<a class="carte carte-lien ${ch.classe}" href="${ch.dossier}/chapitre.html?c=${encodeURIComponent(x.id)}&mode=entrainement">
           <span class="pastille">${esc(ch.emoji)}</span>
           <span class="corps"><strong>${esc(ch.titre)}</strong><span class="doux petit">${Math.round(x.taux * 100)} % de réussite sur ${x.total} réponses</span></span>
           <span class="chevron">›</span></a>`;

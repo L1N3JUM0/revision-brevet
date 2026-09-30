@@ -178,6 +178,15 @@ Les chapitres sont déclarés dans `maths/chapitres.js` (`charger: () => import(
 
 Les points 1 à 8 et 12 sont prioritaires avant jeudi soir. Les points 9 à 11 peuvent suivre.
 
+## Histoire (programme de 3e)
+
+- Structure : `histoire/donnees/<chapitre>.js` (banques de faits), `histoire/generators/fabrique.js` (modèles de questions), `histoire/generators/<chapitre>.js` (une ligne : `fabriquer(donnees)`), `histoire/chapitres.js` (registre, avec les thèmes), `histoire/index.html`, `histoire/chapitre.html` (sans calculatrice).
+- Banque d'un chapitre : `{ id, titre, theme, resume, periode: [début, fin], essentiel: [...], evenements: [{ nom, annee, fin?, mois?, jour?, date?, explication, repere? }], personnages: [{ nom, description }], vocabulaire: [{ mot, definition }] }`. Les descriptions de personnages ne contiennent jamais le nom.
+- **Exactitude avant tout** : n'ajouter que des faits sûrs, avec des chiffres arrondis prudents (« plus de 640 habitants »). `mois` et `jour` seulement quand la date est certaine : ils servent à ordonner deux événements de la même année.
+- Modèles de questions : date (QCM ou à taper), avant/après, remettre dans l'ordre (type `ordre`), placer sur une frise à zones A–D, personnage, vocabulaire (dans les deux sens), intrus (événement d'un autre chapitre), durée entre deux événements. Le cours flash est construit automatiquement (essentiel, dates, personnages, vocabulaire).
+- Chapitre transversal « Les repères du brevet » : tous les événements marqués `repere: true`.
+- Type de réponse `ordre` : `exo.items` (libellés dans l'ordre affiché) et `exo.reponse` (indices dans l'ordre chronologique). On touche les éléments dans l'ordre (UI dans `ui/saisie.js`).
+
 ## Qualité et tests
 
 - `tests/generators.html` génère **1 000 exercices par générateur et par niveau** et vérifie que la réponse est définie et finie, sans NaN ni division par zéro, que les nombres restent dans des bornes raisonnables, que les fractions affichées sont correctes et que la vérification accepte la bonne réponse.

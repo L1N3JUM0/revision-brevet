@@ -4,6 +4,16 @@ import { esc } from './dom.js';
 
 // HTML du champ adapté au type d'exercice. valeur : saisie à réafficher (contrôle blanc).
 export function htmlSaisie(exo, valeur = '') {
+  if (exo.type === 'ordre') {
+    // On touche les éléments dans l'ordre : chacun reçoit son rang (1, 2, 3…)
+    const deja = /^\d+(,\d+)*$/.test(valeur) ? valeur.split(',').map(Number) : [];
+    return `<p class="doux petit">Touche les éléments du <strong>plus ancien</strong> au <strong>plus récent</strong>.</p>
+      <div class="ordre" id="ordre">${exo.items.map((it, i) => {
+        const rang = deja.indexOf(i);
+        return `<button type="button" data-i="${i}" class="${rang >= 0 ? 'place' : ''}"><span class="rang">${rang >= 0 ? rang + 1 : ''}</span><span>${esc(it)}</span></button>`;
+      }).join('')}</div>
+      <button type="button" class="btn-lien" id="ordre-effacer">↺ Recommencer</button>`;
+  }
   if (exo.type === 'qcm') {
     return `<div class="qcm" id="qcm">${exo.choix.map(c =>
       `<button type="button" data-valeur="${esc(c)}" class="${c === valeur ? 'choisi' : ''}">${esc(c)}</button>`).join('')}</div>`;
@@ -50,6 +60,30 @@ export function brancherSaisie(racine, { onEntree = () => {}, verrouille = () =>
       });
     });
   }
+  const ordre = racine.querySelector('#ordre');
+  if (ordre) {
+    const suite = () => [...ordre.querySelectorAll('button.place')]
+      .sort((a, b) => Number(a.querySelector('.rang').textContent) - Number(b.querySelector('.rang').textContent));
+    const renumeroter = liste => liste.forEach((b, k) => { b.querySelector('.rang').textContent = k + 1; });
+    ordre.addEventListener('click', e => {
+      const b = e.target.closest('button');
+      if (!b || verrouille()) return;
+      const liste = suite();
+      if (b.classList.contains('place')) {
+        // Toucher un élément déjà placé le retire
+        b.classList.remove('place');
+        b.querySelector('.rang').textContent = '';
+        renumeroter(liste.filter(x => x !== b));
+      } else {
+        b.classList.add('place');
+        b.querySelector('.rang').textContent = liste.length + 1;
+      }
+    });
+    racine.querySelector('#ordre-effacer')?.addEventListener('click', () => {
+      if (verrouille()) return;
+      ordre.querySelectorAll('button').forEach(b => { b.classList.remove('place'); b.querySelector('.rang').textContent = ''; });
+    });
+  }
   const qcm = racine.querySelector('#qcm');
   if (qcm) {
     qcm.addEventListener('click', e => {
@@ -61,6 +95,12 @@ export function brancherSaisie(racine, { onEntree = () => {}, verrouille = () =>
 }
 
 export function lireSaisie(racine) {
+  const ordre = racine.querySelector('#ordre');
+  if (ordre) {
+    return [...ordre.querySelectorAll('button.place')]
+      .sort((a, b) => Number(a.querySelector('.rang').textContent) - Number(b.querySelector('.rang').textContent))
+      .map(b => b.dataset.i).join(',');
+  }
   const champ = racine.querySelector('#champ');
   if (champ) return champ.value;
   const choisi = racine.querySelector('.qcm .choisi');

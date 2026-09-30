@@ -9,7 +9,7 @@ import {
 // Texte visible d'un morceau de HTML (les espaces fines des milliers sont conservées)
 const sansBalises = html => html.replace(/<[^>]+>/g, '').replace(/[ \t\n\r]+/g, ' ');
 
-const TYPES = ['nombre', 'fraction', 'qcm', 'duree', 'point', 'texte-court'];
+const TYPES = ['nombre', 'fraction', 'qcm', 'duree', 'point', 'texte-court', 'ordre'];
 const BORNE = 1e6;
 
 // Recalcule une expression affichée (− × ÷, virgule) indépendamment du générateur
@@ -141,6 +141,12 @@ export function testerGenerateur(gen, n = 1000, graine = 12345) {
         const faux = verifier(exo, String(exo.reponse + 1 + (exo.tolerance || 0) * 2));
         if (faux.correct) signaler(i, exo, 'une mauvaise réponse est acceptée');
       }
+      if (exo.type === 'ordre') {
+        if (!Array.isArray(exo.items) || exo.items.length < 2) signaler(i, exo, 'ordre sans éléments');
+        else if (new Set(exo.items).size !== exo.items.length) signaler(i, exo, 'éléments en double');
+        else if (verifier(exo, exo.reponse.slice().reverse().join(',')).correct) signaler(i, exo, 'un ordre inversé est accepté');
+      }
+      if (exo.type === 'qcm' && new Set(exo.choix.map(String)).size !== exo.choix.length) signaler(i, exo, 'choix de QCM en double');
       if (exo.type === 'fraction') {
         const { n: fn, d: fd } = exo.reponse;
         if (verifier(exo, `${fn + 1}/${fd}`).correct) signaler(i, exo, 'une mauvaise fraction est acceptée');

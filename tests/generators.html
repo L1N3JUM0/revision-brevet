@@ -34,6 +34,7 @@
     import { testerGenerateur, testerSaisie, testerCalculatrice } from './verifications.js';
     import { evaluer, formaterResultat } from '../assets/js/ui/calculatrice.js';
     import { chargerTous } from '../maths/chapitres.js';
+    import { chargerTous as chargerHistoire } from '../histoire/chapitres.js';
     import { formaterReponse } from '../assets/js/core/answer.js';
     import { esc } from '../assets/js/ui/dom.js';
 
@@ -58,7 +59,7 @@
       blocUnitaire('Calculatrice', testerCalculatrice(evaluer, formaterResultat));
 
     // Générateurs
-    const gens = await chargerTous();
+    const gens = [...await chargerTous(), ...await chargerHistoire()];
     const zone = document.getElementById('generateurs');
     let total = 0;
     for (const gen of gens) {

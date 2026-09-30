@@ -12,7 +12,7 @@ import { htmlSaisie, brancherSaisie, lireSaisie } from './saisie.js';
 
 const NOMS_NIVEAUX = ['Facile', 'Moyen', 'Type brevet'];
 
-export async function demarrerChapitre({ app, trouverChapitre, urlMatiere, nomMatiere }) {
+export async function demarrerChapitre({ app, trouverChapitre, urlMatiere, nomMatiere, calculatrice = true }) {
   const params = new URLSearchParams(location.search);
   const id = params.get('c');
   const mode = params.get('mode');
@@ -39,7 +39,7 @@ export async function demarrerChapitre({ app, trouverChapitre, urlMatiere, nomMa
   const graine = graineDepuisUrl() ?? graineAleatoire();
   const rng = creerRng(graine);
   const urlChap = m => `chapitre.html?c=${encodeURIComponent(gen.id)}${m ? `&mode=${m}` : ''}`;
-  const ctx = { app, gen, rng, urlChap, urlMatiere, graine };
+  const ctx = { app, gen, rng, urlChap, urlMatiere, graine, calculatrice };
 
   if (mode === 'cours') ecranCours(ctx);
   else if (mode === 'entrainement' || mode === 'chrono') ecranSession(ctx, mode);
@@ -183,7 +183,7 @@ function ecranCours({ app, gen, urlChap }) {
 
 // ---------- Entraînement et défi chrono ----------
 
-function ecranSession({ app, gen, rng, urlChap, graine }, mode) {
+function ecranSession({ app, gen, rng, urlChap, graine, calculatrice }, mode) {
   const session = new Session({ generateur: gen, mode, rng });
   const chrono = mode === 'chrono';
   let minuteur = null;
@@ -255,7 +255,7 @@ function ecranSession({ app, gen, rng, urlChap, graine }, mode) {
     const aide = $('#aide', zone);
     if (!res.verif.valide) {
       aide.textContent = res.verif.message;
-      secousse($('#champ', zone) || $('#qcm', zone));
+      secousse($('#champ', zone) || $('#qcm', zone) || $('#ordre', zone));
       return;
     }
     enAttente = true;
@@ -266,7 +266,7 @@ function ecranSession({ app, gen, rng, urlChap, graine }, mode) {
       champ.classList.add(res.correct ? 'ok' : 'ko');
       champ.blur(); // referme le clavier pour laisser voir la correction
     }
-    zone.querySelectorAll('.touches button, .qcm button').forEach(b => { b.disabled = true; });
+    zone.querySelectorAll('.touches button, .qcm button, .ordre button, #ordre-effacer').forEach(b => { b.disabled = true; });
     // QCM : la bonne réponse en vert, le mauvais choix en rouge
     zone.querySelectorAll('.qcm button').forEach(b => {
       if (b.dataset.valeur === String(exo.reponse)) b.classList.add('bonne');
@@ -373,7 +373,7 @@ function ecranSession({ app, gen, rng, urlChap, graine }, mode) {
 
   $('#btn-fin', app)?.addEventListener('click', fin);
   if (chrono) minuteur = setInterval(majChrono, 250);
-  else monterCalculatrice(); // calculatrice autorisée en entraînement, masquée en défi chrono
+  else if (calculatrice) monterCalculatrice(); // autorisée en entraînement (maths), masquée en défi chrono
   console.info(`[revision-brevet] graine de la session : ${graine} (ajoute &seed=${graine} à l'URL pour la rejouer)`);
   question();
 }
