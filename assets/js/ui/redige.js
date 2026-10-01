@@ -33,7 +33,6 @@ export const CHECKLIST_REPONSE = {
   repere: 'J\'ai cité un repère (une date, un personnage, un lieu).'
 };
 
-// ---------- Analyse automatique d'une réponse (indices, jamais une note) ----------
 
 export async function ecranRedige({ app, gen, urlChap, entree }) {
   let module;
@@ -55,7 +54,7 @@ export async function ecranRedige({ app, gen, urlChap, entree }) {
     afficher();
   }
 
-  const htmlDocuments = ouvert => `
+  const htmlDocuments = ouvert => (!sujet.documents?.length ? '' : `
     <details class="replie documents"${ouvert ? ' open' : ''}>
       <summary>📄 ${sujet.documents.length > 1 ? `Les ${sujet.documents.length} documents` : 'Le document'}</summary>
       ${sujet.documents.map((d, k) => `
@@ -64,7 +63,7 @@ export async function ecranRedige({ app, gen, urlChap, entree }) {
           <div class="document-corps">${d.html}</div>
           <p class="source">${d.source}</p>
         </section>`).join('')}
-    </details>`;
+    </details>`);
 
   function afficher() {
     const question = sujet.questions[q];
@@ -100,7 +99,7 @@ export async function ecranRedige({ app, gen, urlChap, entree }) {
     const majCompteur = () => {
       if (!compteur) return;
       const nb = compterPhrases(champ.value), mots = champ.value.trim().split(/\s+/).filter(Boolean).length;
-      compteur.textContent = `${nb} phrase${nb > 1 ? 's' : ''} · ${mots} mot${mots > 1 ? 's' : ''}${question.lignes ? ` · environ ${Math.round(mots / 12)} lignes` : ''}`;
+      compteur.textContent = `${nb} phrase${nb > 1 ? 's' : ''} · ${mots} mot${mots > 1 ? 's' : ''}${question.lignes ? ` · environ ${Math.round(mots / 10)} lignes` : ''}`;
     };
     champ.addEventListener('input', () => { reponses[q] = champ.value; majCompteur(); });
     majCompteur();
@@ -149,7 +148,7 @@ export async function ecranRedige({ app, gen, urlChap, entree }) {
         <ul class="indices">${etat.indices.map(i => `<li class="${i.ok ? 'ok' : 'ko'}">${i.ok ? '✓' : '•'} ${i.texte}</li>`).join('')}</ul>
       </div>
       <h3>Corrigé modèle</h3>
-      <div class="redaction">${question.corrige}</div>
+      <div class="redaction">${question.corrige.split(/\n\n+/).map(p => `<p>${p}</p>`).join('')}</div>
       <h3>Je m'autoévalue</h3>
       <ul class="checklist">${liste.map((c, k) => `<li><label><input type="checkbox" data-coche="${k}" ${etat.coches.includes(k) ? 'checked' : ''}><span>${c}</span></label></li>`).join('')}</ul>`;
   }

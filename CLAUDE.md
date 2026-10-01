@@ -65,7 +65,7 @@ Julien (le père, développeur autodidacte) définit les besoins dans une conver
     └── generators.html        # test de masse des générateurs
 ```
 
-Les autres matières suivront le même schéma (`/histoire`, `/francais`, `/sciences`).
+Les autres matières suivent le même schéma (`/histoire`, `/geographie`, `/emc`, `/sciences`, puis `/francais`).
 
 ## Design system
 
@@ -213,6 +213,14 @@ Les points 1 à 8 et 12 sont prioritaires avant jeudi soir. Les points 9 à 11 p
 - Source unique : Wikimedia Commons, domaine public, CC0, CC BY ou CC BY-SA. `credits.json` est la source de vérité ; `images.js` est généré par `node outils/images.mjs` (avec `docs/images-a-verifier.md`).
 - Statuts : `a_rechercher` → `en_attente` (téléchargée, WebP 800 px, < 120 Ko) → `validee` (par Julien : `--valider <id>`) ou `refusee`. **Une image non validée n'est jamais affichée** ; un document dont l'image n'est pas validée est écarté.
 - Crédit affiché sous chaque image : `credit(im)`.
+
+## Géographie (programme de 3e)
+
+- Structure : `geographie/chapitres.js` (registre, `theme` 0 à 3), `index.html`, `chapitre.html`, `controle.html` (sans calculatrice). Banques au format des sciences (`fabriquer(banque)` de `sciences/generators/fabrique.js`), `discipline` : `reperes`, `g1`, `g2`, `g3`.
+- Vocabulaire des sujets officiels : « aires urbaines », « espaces de faible densité », « territoires ultramarins ».
+- **Cartes** : `outils/cartes.mjs` (script de dev, données ouvertes : contour IGN Admin Express via france-geojson, licence ouverte Etalab ; fleuves, massifs, pays voisins : Natural Earth, domaine public) écrit `geographie/cartes/france.js`. Ne jamais modifier ce fichier à la main. Rendu : `geographie/cartes/carte.js` (`carte({ villes, fleuves, massifs, zones, traits, etiquettes })`, échelle 200 km et nord comme sur l'annexe du brevet).
+- Exercices de carte (`generators/exos-cartes.js`) : nommer ou localiser (lettres A à D) une aire urbaine, un fleuve, un massif, une mer ; croquis : légende à compléter, emplacement d'un figuré. Les tracés du croquis (diagonale, littoraux, frontière) sont schématiques.
+- **Développement construit** (mode `redige`) : `geographie/developpements/<chapitre>.js` = `fabriquerDeveloppement(titre, { sujets, definitions })`. Une définition (1 à 2 phrases), puis le développement d'au moins 30 lignes avec les mots imposés et un plan possible. Corrigé modèle d'au moins 30 lignes (10 mots par ligne manuscrite). Checklists propres (`checklist`) + critères de langue.
 
 ## Sciences (Physique-Chimie, SVT, Technologie)
 

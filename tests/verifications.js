@@ -285,11 +285,11 @@ export function testerBanquesHistoire(banques) {
 }
 
 // Cohérence des banques de sciences (questions saisies à la main)
-export function testerBanquesSciences(banques) {
+export function testerBanquesSciences(banques, disciplines = ['pc', 'svt', 'techno']) {
   const cas = [];
   const verif = (nom, ok, detail = '') => cas.push({ nom, obtenu: ok ? 'ok' : detail, attendu: 'ok', ok });
   for (const b of banques) {
-    verif(`${b.id} : discipline connue`, ['pc', 'svt', 'techno'].includes(b.discipline), String(b.discipline));
+    verif(`${b.id} : discipline connue`, disciplines.includes(b.discipline), String(b.discipline));
     for (const q of b.questions || []) {
       const tous = [q.bonne, ...q.fausses];
       verif(`${b.id} : « ${q.q} » au moins 3 mauvaises réponses`, q.fausses.length >= 3, String(q.fausses.length));
@@ -373,7 +373,7 @@ export function testerSujetsRediges(paires, analyser, n = 200) {
       if (erreurs.length > 5) break;
     }
     verif(`${id} : ${n} sujets valides`, !erreurs.length, erreurs.slice(0, 3).join(' | '));
-    verif(`${id} : sujets variés`, cles.size >= Math.min(8, n / 10), `${cles.size} sujets distincts`);
+    verif(`${id} : sujets variés`, cles.size >= Math.min(8, n / 10, module.variantes ?? Infinity), `${cles.size} sujets distincts`);
   }
   return cas;
 }

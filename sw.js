@@ -4,7 +4,7 @@
 // VERSION et FICHIERS sont mis à jour par : node tests/verifier-sw.mjs --maj
 // (à lancer avant chaque commit ; sans --maj, le script vérifie seulement).
 
-const VERSION = '662062f498be';
+const VERSION = '5ec37b91c40f';
 const CACHE = `revision-brevet-${VERSION}`;
 const DELAI_RESEAU = 4000; // ms avant de se rabattre sur le cache
 
@@ -31,6 +31,27 @@ const FICHIERS = [
   'assets/js/ui/onboarding.js',
   'assets/js/ui/redige.js',
   'assets/js/ui/saisie.js',
+  'geographie/cartes/carte.js',
+  'geographie/cartes/france.js',
+  'geographie/chapitre.html',
+  'geographie/chapitres.js',
+  'geographie/controle.html',
+  'geographie/developpements/aires-urbaines.js',
+  'geographie/developpements/fabrique-dev.js',
+  'geographie/developpements/faible-densite.js',
+  'geographie/developpements/outre-mer.js',
+  'geographie/developpements/union-europeenne.js',
+  'geographie/generators/aires-urbaines.js',
+  'geographie/generators/amenager.js',
+  'geographie/generators/cartes.js',
+  'geographie/generators/croquis.js',
+  'geographie/generators/espaces-productifs.js',
+  'geographie/generators/exos-cartes.js',
+  'geographie/generators/faible-densite.js',
+  'geographie/generators/france-monde.js',
+  'geographie/generators/outre-mer.js',
+  'geographie/generators/union-europeenne.js',
+  'geographie/index.html',
   'histoire/chapitre.html',
   'histoire/chapitres.js',
   'histoire/controle.html',

@@ -50,7 +50,12 @@
     </a>
     <a class="carte carte-lien matiere-histoire" href="histoire/index.html">
       <span class="pastille">🏛️</span>
-      <span class="corps"><strong>Histoire</strong><span class="doux petit">Dates, frises, personnages · Géo et EMC bientôt</span></span>
+      <span class="corps"><strong>Histoire</strong><span class="doux petit">Dates, frises, étude de document</span></span>
+      <span class="chevron">›</span>
+    </a>
+    <a class="carte carte-lien matiere-geographie" href="geographie/index.html">
+      <span class="pastille">🗺️</span>
+      <span class="corps"><strong>Géographie</strong><span class="doux petit">Cartes, croquis, développement construit</span></span>
       <span class="chevron">›</span>
     </a>
     <div class="carte carte-lien inactive matiere-francais">
@@ -75,12 +80,14 @@
     import { CHAPITRES as CH_MATHS } from './maths/chapitres.js';
     import { CHAPITRES as CH_HISTOIRE } from './histoire/chapitres.js';
     import { CHAPITRES as CH_SCIENCES } from './sciences/chapitres.js';
+    import { CHAPITRES as CH_GEO } from './geographie/chapitres.js';
 
     // Chapitres de toutes les matières, avec leur dossier (pour les points faibles)
     const CHAPITRES = [
       ...CH_MATHS.map(c => ({ ...c, dossier: 'maths', classe: 'matiere-maths' })),
       ...CH_SCIENCES.map(c => ({ ...c, dossier: 'sciences', classe: 'matiere-sciences' })),
-      ...CH_HISTOIRE.map(c => ({ ...c, dossier: 'histoire', classe: 'matiere-histoire' }))
+      ...CH_HISTOIRE.map(c => ({ ...c, dossier: 'histoire', classe: 'matiere-histoire' })),
+      ...CH_GEO.map(c => ({ ...c, dossier: 'geographie', classe: 'matiere-geographie' }))
     ];
     import { $, esc } from './assets/js/ui/dom.js';
 

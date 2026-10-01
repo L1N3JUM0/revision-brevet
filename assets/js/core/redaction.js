@@ -19,8 +19,8 @@ export function analyserReponse(texte, q) {
     indices.push({ ok, texte: ok ? `${n} phrase${n > 1 ? 's' : ''} : c'est la longueur attendue.` : n < min ? `${n} phrase${n > 1 ? 's' : ''} : il en faut au moins ${min}.` : `${n} phrases : c'est plus long que demandé (${max} au plus).` });
   }
   if (q.lignes) {
-    // Environ 12 mots par ligne manuscrite
-    const lignes = Math.round(t.split(/\s+/).filter(Boolean).length / 12);
+    // Environ 10 mots par ligne manuscrite (copie d'élève)
+    const lignes = Math.round(t.split(/\s+/).filter(Boolean).length / 10);
     const ok = lignes >= q.lignes;
     indices.push({ ok, texte: ok ? `Environ ${lignes} lignes : c'est la longueur attendue.` : `Environ ${lignes} lignes : il en faut au moins ${q.lignes}.` });
   }
