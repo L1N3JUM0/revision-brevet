@@ -13,7 +13,8 @@ import { brancherAnimation, htmlAnimation } from './animation.js';
 
 const NOMS_NIVEAUX = ['Facile', 'Moyen', 'Type brevet'];
 
-export async function demarrerChapitre({ app, trouverChapitre, urlMatiere, nomMatiere, calculatrice = true }) {
+// redige : { libelle, emoji, description } du mode « exercice rédigé » de la matière (étude de document, situation pratique…)
+export async function demarrerChapitre({ app, trouverChapitre, urlMatiere, nomMatiere, calculatrice = true, redige = null }) {
   const params = new URLSearchParams(location.search);
   const id = params.get('c');
   const mode = params.get('mode');
@@ -40,17 +41,18 @@ export async function demarrerChapitre({ app, trouverChapitre, urlMatiere, nomMa
   const graine = graineDepuisUrl() ?? graineAleatoire();
   const rng = creerRng(graine);
   const urlChap = m => `chapitre.html?c=${encodeURIComponent(gen.id)}${m ? `&mode=${m}` : ''}`;
-  const ctx = { app, gen, rng, urlChap, urlMatiere, graine, calculatrice, entree, params };
+  const ctx = { app, gen, rng, urlChap, urlMatiere, graine, calculatrice, entree, params, redige: entree.redige ? redige : null };
 
   if (mode === 'cours') ecranCours(ctx);
   else if (mode === 'approfondir' && entree.approfondir) (await import('./approfondir.js')).ecranApprofondir(ctx);
+  else if (mode === 'redige' && entree.redige) (await import('./redige.js')).ecranRedige(ctx);
   else if (mode === 'entrainement' || mode === 'chrono') ecranSession(ctx, mode);
   else ecranModes(ctx);
 }
 
 // ---------- Choix du mode ----------
 
-function ecranModes({ app, gen, urlChap, urlMatiere }) {
+function ecranModes({ app, gen, urlChap, urlMatiere, redige }) {
   const st = statsChapitre(gen.id);
   const record = st.record
     ? `Record : ${st.record.score}/${QUESTIONS_CHRONO} en ${fmtChrono(st.record.temps)}`
@@ -80,6 +82,11 @@ function ecranModes({ app, gen, urlChap, urlMatiere }) {
         <span class="corps"><strong>Défi chrono</strong><span class="doux petit">${QUESTIONS_CHRONO} questions · ${record}</span></span>
         <span class="chevron">›</span>
       </a>
+      ${redige ? `<a class="carte carte-lien" href="${urlChap('redige')}">
+        <span class="pastille">${esc(redige.emoji)}</span>
+        <span class="corps"><strong>${esc(redige.libelle)}</strong><span class="doux petit">${esc(redige.description)}</span></span>
+        <span class="chevron">›</span>
+      </a>` : ''}
     </div>`;
 }
 

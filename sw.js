@@ -4,7 +4,7 @@
 // VERSION et FICHIERS sont mis à jour par : node tests/verifier-sw.mjs --maj
 // (à lancer avant chaque commit ; sans --maj, le script vérifie seulement).
 
-const VERSION = 'dd65434f705a';
+const VERSION = '662062f498be';
 const CACHE = `revision-brevet-${VERSION}`;
 const DELAI_RESEAU = 4000; // ms avant de se rabattre sur le cache
 
@@ -17,6 +17,7 @@ const FICHIERS = [
   'assets/js/core/engine.js',
   'assets/js/core/gamification.js',
   'assets/js/core/hors-ligne.js',
+  'assets/js/core/redaction.js',
   'assets/js/core/rng.js',
   'assets/js/core/store.js',
   'assets/js/core/svg.js',
@@ -28,10 +29,22 @@ const FICHIERS = [
   'assets/js/ui/dom.js',
   'assets/js/ui/fx.js',
   'assets/js/ui/onboarding.js',
+  'assets/js/ui/redige.js',
   'assets/js/ui/saisie.js',
   'histoire/chapitre.html',
   'histoire/chapitres.js',
   'histoire/controle.html',
+  'histoire/documents/cinquieme-republique.js',
+  'histoire/documents/decolonisation.js',
+  'histoire/documents/entre-deux-guerres.js',
+  'histoire/documents/europe.js',
+  'histoire/documents/fabrique-etude.js',
+  'histoire/documents/france-occupee.js',
+  'histoire/documents/guerre-froide.js',
+  'histoire/documents/premiere-guerre.js',
+  'histoire/documents/refonder-republique.js',
+  'histoire/documents/seconde-guerre.js',
+  'histoire/documents/societe-1950-1980.js',
   'histoire/donnees/cinquieme-republique.js',
   'histoire/donnees/decolonisation.js',
   'histoire/donnees/entre-deux-guerres.js',
@@ -57,6 +70,8 @@ const FICHIERS = [
   'histoire/generators/reperes.js',
   'histoire/generators/seconde-guerre.js',
   'histoire/generators/societe-1950-1980.js',
+  'histoire/images/credits.json',
+  'histoire/images/images.js',
   'histoire/index.html',
   'index.html',
   'maths/approfondir/angles.js',

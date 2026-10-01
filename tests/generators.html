@@ -31,7 +31,9 @@
   </main>
 
   <script type="module">
-    import { testerGenerateur, testerSaisie, testerCalculatrice, testerBanquesHistoire, testerBanquesSciences, testerFiches } from './verifications.js';
+    import { testerGenerateur, testerSaisie, testerCalculatrice, testerBanquesHistoire, testerBanquesSciences, testerFiches, testerSujetsRediges } from './verifications.js';
+    import { analyserReponse } from '../assets/js/core/redaction.js';
+    import { CHAPITRES as CH_HISTOIRE } from '../histoire/chapitres.js';
     import { evaluer, formaterResultat } from '../assets/js/ui/calculatrice.js';
     import { chargerTous, CHAPITRES as CH_MATHS } from '../maths/chapitres.js';
     import { chargerTous as chargerHistoire } from '../histoire/chapitres.js';
@@ -62,7 +64,9 @@
       blocUnitaire('Banques d’histoire', testerBanquesHistoire(BANQUES_HISTOIRE)) +
       blocUnitaire('Banques de sciences', testerBanquesSciences(await banquesSciences())) +
       blocUnitaire('Fiches « Explique-moi plus »', testerFiches(await Promise.all([...CH_MATHS, ...CH_SCIENCES].filter(c => c.approfondir)
-        .map(async c => ({ gen: (await c.charger()).default, fiche: (await c.approfondir()).default })))));
+        .map(async c => ({ gen: (await c.charger()).default, fiche: (await c.approfondir()).default }))))) +
+      blocUnitaire('Sujets rédigés (étude de document…)', testerSujetsRediges(await Promise.all(CH_HISTOIRE.filter(c => c.redige)
+        .map(async c => ({ id: c.id, module: (await c.redige()).default, evenements: BANQUES_HISTOIRE.flatMap(b => b.evenements) }))), analyserReponse));
 
     // Générateurs
     const gens = [...await chargerTous(), ...await chargerSciences(), ...await chargerHistoire()];

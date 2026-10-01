@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 
 const RACINE = join(dirname(fileURLToPath(import.meta.url)), '..');
 const EXTENSIONS = /\.(html|js|css|svg|png|webmanifest|json|ico)$/;
-const EXCLUS = ['.git', 'tests', 'node_modules', '.claude', 'sw.js'];
+const EXCLUS = ['.git', 'tests', 'node_modules', '.claude', 'sw.js', 'outils', 'doc', 'docs'];
 
 function lister(dossier) {
   const res = [];

@@ -53,6 +53,7 @@ Julien (le père, développeur autodidacte) définit les besoins dans une conver
 │       │   ├── gamification.js# XP, niveaux, badges, séries
 │       │   └── svg.js         # utilitaires de figures
 │       └── ui/                # composants (clavier, cartes, toasts…)
+├── outils/                    # scripts de développement Node (images, cartes), hors site et hors cache
 ├── maths/
 │   ├── index.html             # liste des chapitres
 │   ├── chapitre.html          # page générique : ?c=pythagore&mode=entrainement
@@ -197,6 +198,21 @@ Les points 1 à 8 et 12 sont prioritaires avant jeudi soir. Les points 9 à 11 p
 - Modèles de questions : date (QCM ou à taper), avant/après, remettre dans l'ordre (type `ordre`), placer sur une frise à zones A–D, personnage, vocabulaire (dans les deux sens), intrus (événement d'un autre chapitre), durée entre deux événements. Le cours flash est construit automatiquement (essentiel, dates, personnages, vocabulaire).
 - Chapitre transversal « Les repères du brevet » : tous les événements marqués `repere: true`.
 - Type de réponse `ordre` : `exo.items` (libellés dans l'ordre affiché) et `exo.reponse` (indices dans l'ordre chronologique). On touche les éléments dans l'ordre (UI dans `ui/saisie.js`).
+
+### Étude de document (mode `redige`)
+
+- Format DNB 2027 (`docs/attendus-2027.md`) : repères chronologiques (dates), prélèvement d'informations (1 à 2 phrases), analyse (au moins 2 phrases par document, puis « Montrez que… » sur deux documents en au moins 4 phrases).
+- Registre : `redige: () => import('./documents/<chapitre>.js')`. La page de la matière passe `redige: { libelle, emoji, description }` à `demarrerChapitre` ; URL `chapitre.html?c=…&mode=redige`.
+- Banques `histoire/documents/<chapitre>.js` = `fabriquerEtude(donnees, { documents, syntheses, reperes })` (`documents/fabrique-etude.js`). Document : `{ id, titre, html, source, image?, prelevement: [{ consigne, mots, corrige }], analyse: [...] }`. Synthèse : `{ docs: [id, id], consigne, mots, corrige }`. `mots` = `[[variantes…], …]`.
+- Uniquement des textes sûrs et sourcés (textes officiels, discours célèbres en citation courte). Un passage résumé est signalé dans la source.
+- Écran `assets/js/ui/redige.js` : une question par écran, corrigé modèle, indices automatiques (`core/redaction.js`, sans DOM), checklist de réponse + checklist « maîtrise de la langue » pour les réponses longues. Hors statistiques et hors XP.
+- Test : `testerSujetsRediges` (chaque corrigé modèle doit satisfaire ses propres indices, repères cohérents avec les banques).
+
+### Images d'histoire (`histoire/images/`)
+
+- Source unique : Wikimedia Commons, domaine public, CC0, CC BY ou CC BY-SA. `credits.json` est la source de vérité ; `images.js` est généré par `node outils/images.mjs` (avec `docs/images-a-verifier.md`).
+- Statuts : `a_rechercher` → `en_attente` (téléchargée, WebP 800 px, < 120 Ko) → `validee` (par Julien : `--valider <id>`) ou `refusee`. **Une image non validée n'est jamais affichée** ; un document dont l'image n'est pas validée est écarté.
+- Crédit affiché sous chaque image : `credit(im)`.
 
 ## Sciences (Physique-Chimie, SVT, Technologie)
 

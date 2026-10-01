@@ -341,3 +341,39 @@ export function testerFiches(paires) {
   }
   return cas;
 }
+
+// Sujets rédigés (étude de document, EMC…) : structure, corrigés, cohérence avec les banques.
+// analyser = analyserReponse de ui/redige.js : chaque corrigé modèle doit satisfaire ses propres indices.
+// Les variantes de mots-clés sont comparées sans accents ni majuscules : on vérifie aussi qu'aucune n'est vide.
+export function testerSujetsRediges(paires, analyser, n = 200) {
+  const cas = [];
+  const verif = (nom, ok, detail = '') => cas.push({ nom, obtenu: ok ? 'ok' : detail, attendu: 'ok', ok });
+  for (const { id, module, evenements } of paires) {
+    const erreurs = [];
+    const cles = new Set();
+    for (let i = 0; i < n; i++) {
+      const rng = creerRng(1000 + i);
+      let s;
+      try { s = module.generer(rng, { prenom: 'Camille', de: 'de Camille', genre: 'f' }); } catch (e) { erreurs.push(`#${i} exception ${e.message}`); continue; }
+      cles.add(s.cle);
+      if (!s.cle || !s.questions?.length) erreurs.push(`#${i} sujet vide`);
+      for (const q of s.questions || []) {
+        if (!q.consigne || !q.corrige) erreurs.push(`#${i} consigne ou corrigé vide`);
+        if (q.type === 'date') {
+          const e = evenements.find(x => x.nom === q.evenement);
+          if (!e || e.annee !== q.annee) erreurs.push(`#${i} repère incohérent : ${q.evenement}`);
+          if (!String(q.date).includes(String(q.annee))) erreurs.push(`#${i} date écrite sans l'année : ${q.date}`);
+        } else if (q.type === 'redige') {
+          if ((q.mots || []).some(v => !v.length || v.some(x => !String(x).trim()))) erreurs.push(`#${i} mot-clé vide`);
+          const indices = analyser(q.corrige.replace(/<[^>]+>/g, ''), q);
+          const ko = indices.filter(x => !x.ok);
+          if (ko.length) erreurs.push(`#${i} corrigé modèle refusé par ses indices (${ko.map(x => x.texte).join(' / ')}) : ${q.consigne.replace(/<[^>]+>/g, '').slice(0, 60)}`);
+        } else erreurs.push(`#${i} type inconnu ${q.type}`);
+      }
+      if (erreurs.length > 5) break;
+    }
+    verif(`${id} : ${n} sujets valides`, !erreurs.length, erreurs.slice(0, 3).join(' | '));
+    verif(`${id} : sujets variés`, cles.size >= Math.min(8, n / 10), `${cles.size} sujets distincts`);
+  }
+  return cas;
+}

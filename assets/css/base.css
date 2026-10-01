@@ -742,3 +742,22 @@ body.calc-ouverte .page { padding-bottom: calc(var(--calc-hauteur, 460px) + 24px
 .reponse-exemple { font-size: 18px; }
 .lien-externe { display: inline-flex; align-items: center; min-height: 48px; font-weight: 800; }
 .fiche > .btn-secondaire { margin-top: 16px; }
+
+/* ---------- Exercices rédigés (étude de document, situation pratique) ---------- */
+
+.documents { margin: 12px 0; }
+.document { margin-top: 12px; padding: 12px; border-radius: var(--rayon-petit); background: var(--surface-2); }
+.document h3 { margin: 0 0 8px; font-size: 16px; }
+.document-corps { font-size: 17px; line-height: 1.6; }
+.document-corps p { margin: 0 0 8px; }
+.document-corps u { text-decoration-color: var(--accent); text-decoration-thickness: 2px; }
+.document .source { margin: 8px 0 0; font-size: 13px; color: var(--texte-doux); font-style: italic; }
+.consigne { font-size: 18px; line-height: 1.5; }
+.zone-redaction { width: 100%; min-height: 120px; font-size: 17px; font-weight: 500; line-height: 1.5; resize: vertical; font-family: inherit; text-align: left; }
+.retour.neutre { background: var(--surface-2); border: 1px solid var(--bord); }
+.indices { list-style: none; padding: 0; margin: 8px 0 0; }
+.indices li { margin: 4px 0; }
+.indices .ok { color: var(--succes); }
+.indices .ko { color: var(--or); }
+.matiere-geographie { --accent: #22c55e; --accent-clair: #86efac; --accent-fond: rgba(34, 197, 94, 0.16); }
+.matiere-emc { --accent: #3b82f6; --accent-clair: #93c5fd; --accent-fond: rgba(59, 130, 246, 0.16); }
