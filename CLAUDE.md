@@ -19,6 +19,12 @@ Julien (le père, développeur autodidacte) définit les besoins dans une conver
 5. **Correction pédagogique** : chaque erreur affiche la correction pas à pas et, si possible, l'erreur probable (« tu as additionné les dénominateurs »).
 6. **Rédaction type brevet** : pour les exercices de démonstration (Pythagore, Thalès, angles…), montrer la rédaction modèle attendue par un prof.
 
+## Référence des épreuves 2027
+
+- **Tout format d'exercice ou de contrôle blanc doit respecter `docs/attendus-2027.md`** (synthèse des sujets de référence officiels rangés dans `doc/sujets-2027/`). On relit cette synthèse plutôt que les PDF.
+- Toute réponse rédigée est suivie de la checklist « maîtrise de la langue » (4 critères officiels : orthographe, syntaxe, lexique, organisation de la réflexion).
+- Choix faits en autonomie : `docs/decisions-a-valider.md`.
+
 ## Stack et contraintes techniques
 
 - **HTML / CSS / JavaScript vanilla**, modules ES natifs (`<script type="module">`). Aucun build, aucun framework, aucun npm en production.
