@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0e0e14">
+  <title>Contrôle blanc — Révision brevet</title>
+  <link rel="stylesheet" href="../assets/css/base.css">
+</head>
+<body class="matiere-sciences">
+  <main class="page" id="app">
+    <p class="doux">Chargement…</p>
+  </main>
+
+  <script type="module">
+    import { demarrerControle } from '../assets/js/ui/controle.js';
+    import { CHAPITRES } from './chapitres.js';
+
+    demarrerControle({
+      app: document.getElementById('app'),
+      chapitres: CHAPITRES,
+      urlMatiere: 'index.html',
+      matiere: 'sciences',
+      calculatrice: true,
+      minutes: { 1: 1, 2: 2, 3: 3 },
+      sansParDefaut: []
+    });
+  </script>
+</body>
+</html>

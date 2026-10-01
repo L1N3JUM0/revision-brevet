@@ -49,10 +49,11 @@
       <span class="corps"><strong>Maths</strong><span class="doux petit">Relatifs, fractions, Pythagore…</span></span>
       <span class="chevron">›</span>
     </a>
-    <div class="carte carte-lien inactive matiere-sciences">
+    <a class="carte carte-lien matiere-sciences" href="sciences/index.html">
       <span class="pastille">🧪</span>
-      <span class="corps"><strong>Sciences</strong><span class="doux petit">Bientôt</span></span>
-    </div>
+      <span class="corps"><strong>Sciences</strong><span class="doux petit">Physique-Chimie, SVT, Technologie</span></span>
+      <span class="chevron">›</span>
+    </a>
     <a class="carte carte-lien matiere-histoire" href="histoire/index.html">
       <span class="pastille">🏛️</span>
       <span class="corps"><strong>Histoire</strong><span class="doux petit">Dates, frises, personnages · Géo et EMC bientôt</span></span>
@@ -77,10 +78,12 @@
     import { niveauPourXp, flammeActuelle, pointsFaibles } from './assets/js/core/gamification.js';
     import { CHAPITRES as CH_MATHS } from './maths/chapitres.js';
     import { CHAPITRES as CH_HISTOIRE } from './histoire/chapitres.js';
+    import { CHAPITRES as CH_SCIENCES } from './sciences/chapitres.js';
 
     // Chapitres de toutes les matières, avec leur dossier (pour les points faibles)
     const CHAPITRES = [
       ...CH_MATHS.map(c => ({ ...c, dossier: 'maths', classe: 'matiere-maths' })),
+      ...CH_SCIENCES.map(c => ({ ...c, dossier: 'sciences', classe: 'matiere-sciences' })),
       ...CH_HISTOIRE.map(c => ({ ...c, dossier: 'histoire', classe: 'matiere-histoire' }))
     ];
     import { $, esc } from './assets/js/ui/dom.js';

@@ -477,6 +477,8 @@ li { margin-bottom: 10px; }
 .ordre button.place .rang { border-style: solid; border-color: var(--accent); background: var(--accent); color: #fff; }
 .btn-lien { min-height: 44px; padding: 8px 4px; border: none; background: none; color: var(--accent-clair); font: inherit; font-weight: 700; cursor: pointer; }
 .evenement { font-size: 22px; font-weight: 800; text-align: center; padding: 14px 10px; margin: 8px 0; border-radius: var(--rayon-petit); background: var(--surface-2); }
+/* Programme (sciences, numérique) */
+.code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 17px; line-height: 1.5; background: var(--surface-2); border-radius: var(--rayon-petit); padding: 12px 14px; margin: 8px 0; white-space: pre; overflow-x: auto; }
 .figure .frise-axe { stroke: var(--texte); stroke-width: 2.5; }
 .figure .frise-periode { fill: var(--accent); opacity: 0.55; }
 .figure .frise-segment { opacity: 0.22; }

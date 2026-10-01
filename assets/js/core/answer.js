@@ -155,7 +155,7 @@ const AIDE_SAISIE = {
   point: 'Écris des coordonnées, par exemple (3 ; −2).',
   qcm: 'Choisis une réponse.',
   'texte-court': 'Écris ta réponse.',
-  ordre: 'Touche tous les éléments, du plus ancien au plus récent.'
+  ordre: 'Touche tous les éléments, dans l\'ordre.'
 };
 
 // Lit la saisie selon le type d'exercice. Renvoie la valeur ou null.

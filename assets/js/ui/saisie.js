@@ -7,7 +7,8 @@ export function htmlSaisie(exo, valeur = '') {
   if (exo.type === 'ordre') {
     // On touche les éléments dans l'ordre : chacun reçoit son rang (1, 2, 3…)
     const deja = /^\d+(,\d+)*$/.test(valeur) ? valeur.split(',').map(Number) : [];
-    return `<p class="doux petit">Touche les éléments du <strong>plus ancien</strong> au <strong>plus récent</strong>.</p>
+    const consigne = exo.consigneOrdre || 'Touche les éléments du <strong>plus ancien</strong> au <strong>plus récent</strong>.';
+    return `<p class="doux petit">${consigne}</p>
       <div class="ordre" id="ordre">${exo.items.map((it, i) => {
         const rang = deja.indexOf(i);
         return `<button type="button" data-i="${i}" class="${rang >= 0 ? 'place' : ''}"><span class="rang">${rang >= 0 ? rang + 1 : ''}</span><span>${esc(it)}</span></button>`;

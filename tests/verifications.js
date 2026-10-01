@@ -268,3 +268,36 @@ export function testerBanquesHistoire(banques) {
   }
   return cas;
 }
+
+// Cohérence des banques de sciences (questions saisies à la main)
+export function testerBanquesSciences(banques) {
+  const cas = [];
+  const verif = (nom, ok, detail = '') => cas.push({ nom, obtenu: ok ? 'ok' : detail, attendu: 'ok', ok });
+  for (const b of banques) {
+    verif(`${b.id} : discipline connue`, ['pc', 'svt', 'techno'].includes(b.discipline), String(b.discipline));
+    for (const q of b.questions || []) {
+      const tous = [q.bonne, ...q.fausses];
+      verif(`${b.id} : « ${q.q} » au moins 3 mauvaises réponses`, q.fausses.length >= 3, String(q.fausses.length));
+      verif(`${b.id} : « ${q.q} » choix distincts`, new Set(tous).size === tous.length, 'doublon');
+      verif(`${b.id} : « ${q.q} » niveau valide`, [1, 2, 3].includes(q.niveau || 1), String(q.niveau));
+    }
+    const qs = (b.questions || []).map(q => q.q);
+    verif(`${b.id} : questions uniques`, new Set(qs).size === qs.length, 'doublon');
+    for (const v of b.vraiFaux || []) {
+      verif(`${b.id} : vrai/faux « ${v.texte} » complet`, typeof v.vrai === 'boolean' && !!v.explication, 'incomplet');
+    }
+    const mots = (b.vocabulaire || []).map(v => v.mot);
+    verif(`${b.id} : vocabulaire sans doublon`, new Set(mots).size === mots.length, 'doublon');
+    for (const v of b.vocabulaire || []) {
+      verif(`${b.id} : définition de « ${v.mot} » sans le mot`, !v.definition.toLowerCase().includes(v.mot.toLowerCase()), 'mot visible');
+    }
+    for (const s of b.sequences || []) {
+      verif(`${b.id} : séquence « ${s.titre} » sans doublon`, new Set(s.etapes).size === s.etapes.length && s.etapes.length >= 3, 'doublon ou trop courte');
+    }
+    for (const c of b.classements || []) {
+      const items = c.groupes.flatMap(g => g.items.map(i => (typeof i === 'string' ? i : i.nom)));
+      verif(`${b.id} : classement « ${c.question} » sans élément dans deux groupes`, new Set(items).size === items.length, 'doublon');
+    }
+  }
+  return cas;
+}

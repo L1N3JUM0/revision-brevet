@@ -188,6 +188,16 @@ Les points 1 à 8 et 12 sont prioritaires avant jeudi soir. Les points 9 à 11 p
 - Chapitre transversal « Les repères du brevet » : tous les événements marqués `repere: true`.
 - Type de réponse `ordre` : `exo.items` (libellés dans l'ordre affiché) et `exo.reponse` (indices dans l'ordre chronologique). On touche les éléments dans l'ordre (UI dans `ui/saisie.js`).
 
+## Sciences (Physique-Chimie, SVT, Technologie)
+
+- Structure : `sciences/chapitres.js` (registre, `theme` : `pc`, `svt`, `techno`), `sciences/index.html`, `sciences/chapitre.html` et `sciences/controle.html` (calculatrice autorisée, comme au brevet).
+- Un fichier par chapitre dans `sciences/generators/` : il exporte `banque` (notions) et `default` = `fabriquer(banque)` (`generators/fabrique.js`).
+- Banque : `{ id, titre, discipline, resume, essentiel, formules?, cartes?, vocabulaire, questions: [{ q, bonne, fausses (≥ 3), explication?, niveau, figure?, pieges? }], vraiFaux: [{ texte, vrai, explication }], sequences: [{ titre, consigne, aide?, etapes }], classements: [{ question, groupes: [{ nom, items, explication? }] }], calculs: { nom: (rng, ctx, niveau) => exo | null }, modeles: { 1: [['calc:nom', poids], ['qcm', poids]…] }, controler? }`.
+- Les calculs (masse volumique, loi d'Ohm, E = P × t, poids, écho, chromosomes, binaire…) sont générés avec `expression` recalculée par les tests ; les questions de connaissances sont tirées au hasard avec des distracteurs mélangés.
+- Figures : `generators/figures.js` (graphiques, chronophotographies, schémas électriques normalisés).
+- Type `ordre` : `exo.consigneOrdre` remplace la consigne par défaut (« du plus ancien au plus récent »).
+- Exactitude : valeurs usuelles des manuels (g = 9,8 N/kg, son 340 m/s, lumière 300 000 km/s), données réalistes associées à chaque situation (vitesses des plaques, puissances des appareils).
+
 ## Qualité et tests
 
 - `tests/generators.html` génère **1 000 exercices par générateur et par niveau** et vérifie que la réponse est définie et finie, sans NaN ni division par zéro, que les nombres restent dans des bornes raisonnables, que les fractions affichées sont correctes et que la vérification accepte la bonne réponse.
