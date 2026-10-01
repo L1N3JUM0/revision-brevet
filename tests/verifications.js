@@ -377,3 +377,22 @@ export function testerSujetsRediges(paires, analyser, n = 200) {
   }
   return cas;
 }
+
+// Images d'histoire : métadonnées complètes, et l'exercice construit est valide (même avant validation)
+export function testerImages(images, exoImage, fichierExiste) {
+  const cas = [];
+  const verif = (nom, ok, detail = '') => cas.push({ nom, obtenu: ok ? 'ok' : detail, attendu: 'ok', ok });
+  const rng = creerRng(7);
+  for (const im of images) {
+    verif(`${im.id} : statut connu`, ['a_rechercher', 'en_attente', 'validee', 'refusee'].includes(im.statut), im.statut);
+    verif(`${im.id} : ${im.distracteurs.length} distracteurs distincts de la réponse`, im.distracteurs.length >= 3 && !im.distracteurs.includes(im.reponse), 'distracteurs');
+    if (im.statut === 'validee' || im.statut === 'en_attente') {
+      verif(`${im.id} : fichier, licence et source`, !!(im.fichier && im.licence && im.url), 'métadonnées');
+      verif(`${im.id} : licence acceptée`, /^(public domain|pd|cc0|cc by(-sa)? \d)/i.test(im.licence || ''), im.licence);
+      if (fichierExiste) verif(`${im.id} : fichier présent`, fichierExiste(im.fichier), im.fichier);
+      const exo = exoImage(rng, im);
+      verif(`${im.id} : exercice valide`, exo.choix.includes(exo.reponse) && new Set(exo.choix).size === exo.choix.length && !exo.figure.includes(im.reponse), 'exercice');
+    }
+  }
+  return cas;
+}

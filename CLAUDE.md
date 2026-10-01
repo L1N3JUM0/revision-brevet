@@ -212,7 +212,8 @@ Les points 1 à 8 et 12 sont prioritaires avant jeudi soir. Les points 9 à 11 p
 
 - Source unique : Wikimedia Commons, domaine public, CC0, CC BY ou CC BY-SA. `credits.json` est la source de vérité ; `images.js` est généré par `node outils/images.mjs` (avec `docs/images-a-verifier.md`).
 - Statuts : `a_rechercher` → `en_attente` (téléchargée, WebP 800 px, < 120 Ko) → `validee` (par Julien : `--valider <id>`) ou `refusee`. **Une image non validée n'est jamais affichée** ; un document dont l'image n'est pas validée est écarté.
-- Crédit affiché sous chaque image : `credit(im)`.
+- Crédit affiché sous chaque image : `credit(im, sansDate)`. Noms de fichiers neutres (`doc-<empreinte>.webp`) pour ne pas donner la réponse. Exercices `exoImage` (« Qui est-ce ? », « Que représente ce symbole ? », « De quelle année date ce document ? ») dans `histoire/generators/fabrique.js`, seulement avec des images validées. Les images ne sont pas préchargées par le service worker : elles sont mises en cache à la première consultation.
+- `thumb.wikimedia.org` peut être filtré par le réseau de l'environnement : le script télécharge la vignette sur `upload.wikimedia.org`. Pause d'1,2 s entre deux appels (limite de débit de Commons).
 
 ## Géographie (programme de 3e)
 

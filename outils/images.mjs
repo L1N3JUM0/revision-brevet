@@ -9,8 +9,9 @@
 //
 // Source unique : Wikimedia Commons. Licences acceptées : domaine public, CC0, CC BY, CC BY-SA.
 // credits.json est la source de vérité ; histoire/images/images.js en est une copie lisible par le site.
-import { readFileSync, writeFileSync, existsSync, statSync, unlinkSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, statSync, unlinkSync, renameSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -21,21 +22,37 @@ const API = 'https://commons.wikimedia.org/w/api.php';
 const TAILLE_MAX = 120 * 1024;
 const LICENCES = [/^public domain/i, /^pd/i, /^cc0/i, /^cc by(-sa)? \d/i, /^cc-by(-sa)?-\d/i];
 
+// Nom de fichier neutre : il ne doit pas donner la réponse (« Qui est-ce ? », « Date ce document »)
+const nomFichier = id => `doc-${createHash('sha1').update(id).digest('hex').slice(0, 10)}.webp`;
 const lire = () => JSON.parse(readFileSync(CREDITS, 'utf8'));
 const ecrire = d => writeFileSync(CREDITS, JSON.stringify(d, null, 2) + '\n');
-const curl = (url, sortie) => execFileSync('curl', ['-sSL', '--fail', '-m', '60', '-A', 'revision-brevet/1.0 (outil de dev)', ...(sortie ? ['-o', sortie] : []), url], { maxBuffer: 50e6 }).toString();
+const UA = 'revision-brevet/1.0 (site de revision scolaire; https://github.com/L1N3JUM0/revision-brevet)';
+const pause = ms => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+// Wikimedia limite le débit : une pause entre deux appels, et on réessaie après une erreur 429
+function curl(url, sortie) {
+  for (let essai = 0; ; essai++) {
+    pause(1200);
+    try {
+      return execFileSync('curl', ['-sSL', '--fail', '-m', '60', '-A', UA, ...(sortie ? ['-o', sortie] : []), url], { maxBuffer: 50e6, stdio: ['ignore', 'pipe', 'pipe'] }).toString();
+    } catch (e) {
+      if (essai < 4 && /429/.test(String(e.stderr))) { pause(5000 * (essai + 1)); continue; }
+      throw e;
+    }
+  }
+}
 const api = params => JSON.parse(curl(`${API}?${new URLSearchParams({ format: 'json', ...params })}`));
 const texte = html => String(html || '').replace(/<[^>]+>/g, '').trim();
 
 function infos(titre) {
-  const r = api({ action: 'query', titles: titre.startsWith('File:') ? titre : `File:${titre}`, prop: 'imageinfo', iiprop: 'url|extmetadata', iiurlwidth: '1600' });
+  const r = api({ action: 'query', titles: titre.startsWith('File:') ? titre : `File:${titre}`, prop: 'imageinfo', iiprop: 'url|extmetadata', iiurlwidth: '1280' });
   const page = Object.values(r.query.pages)[0];
   const ii = page.imageinfo?.[0];
   if (!ii) throw new Error(`fichier introuvable : ${titre}`);
   const m = ii.extmetadata || {};
   return {
     url: ii.descriptionurl,
-    telechargement: ii.thumburl || ii.url,
+    // Même vignette, servie par upload.wikimedia.org (thumb.wikimedia.org peut être filtré par le réseau)
+    telechargement: (ii.thumburl || ii.url).replace('//thumb.wikimedia.org/', '//upload.wikimedia.org/').split('?')[0],
     licence: texte(m.LicenseShortName?.value),
     auteur: texte(m.Artist?.value) || 'inconnu',
     date: texte(m.DateTimeOriginal?.value) || null
@@ -75,9 +92,10 @@ function telecharger(d) {
       if (!LICENCES.some(re => re.test(i.licence))) throw new Error(`licence refusée : ${i.licence}`);
       const brut = join(DOSSIER, `${im.id}.source`);
       curl(i.telechargement, brut);
-      const q = convertir(brut, join(DOSSIER, `${im.id}.webp`));
+      const q = convertir(brut, join(DOSSIER, nomFichier(im.id)));
       unlinkSync(brut);
-      Object.assign(im, { fichier: `${im.id}.webp`, licence: i.licence, auteur: i.auteur, date: i.date, url: i.url, statut: 'en_attente' });
+      Object.assign(im, { fichier: nomFichier(im.id), licence: i.licence, auteur: i.auteur, date: i.date, url: i.url, statut: 'en_attente' });
+      nettoyer(im);
       console.log(`✓ ${im.id} : ${i.licence}, qualité ${q}, ${Math.round(statSync(join(DOSSIER, im.fichier)).size / 1024)} Ko`);
     } catch (e) {
       console.log(`✗ ${im.id} : ${e.message.split('\n')[0]}`);
@@ -103,9 +121,9 @@ export function imagesValidees(chapitre) {
   return IMAGES.filter(x => x.statut === 'validee' && x.fichier && (!chapitre || x.chapitre === chapitre));
 }
 
-// Légende de crédit affichée sous chaque image
-export function credit(im) {
-  return \`\${im.auteur || 'Auteur inconnu'}\${im.date ? \`, \${im.date}\` : ''} · \${im.licence} · Wikimedia Commons\`;
+// Légende de crédit affichée sous chaque image (sans la date quand on demande de dater le document)
+export function credit(im, sansDate = false) {
+  return \`\${im.auteur || 'Auteur inconnu'}\${im.date && !sansDate ? \`, \${im.date}\` : ''} · \${im.licence} · Wikimedia Commons\`;
 }
 `);
 }
@@ -126,7 +144,26 @@ Statuts : **a_rechercher** (fichier Commons pas encore choisi), **en_attente** (
 `);
 }
 
+// Métadonnées Commons lisibles : sans les restes Wikidata (« date QS:… »), auteur court
+function nettoyer(im) {
+  if (im.date) im.date = String(im.date).replace(/date QS:.*$/s, '').replace(/\s+/g, ' ').trim() || null;
+  if (im.auteur) {
+    let a = String(im.auteur).replace(/\s+/g, ' ').replace(/\[\d+\]/g, '').trim();
+    a = a.split(/(?<=[a-zé)])\. /)[0].replace(/\.$/, '');
+    if (a.length > 90) a = a.slice(0, 87).replace(/\s+\S*$/, '') + '…';
+    im.auteur = a;
+  }
+}
+
 const d = lire();
+d.images.forEach(nettoyer);
+// Renomme les fichiers téléchargés avant l'adoption des noms neutres
+for (const im of d.images) {
+  if (im.fichier && im.fichier !== nomFichier(im.id) && existsSync(join(DOSSIER, im.fichier))) {
+    renameSync(join(DOSSIER, im.fichier), join(DOSSIER, nomFichier(im.id)));
+    im.fichier = nomFichier(im.id);
+  }
+}
 const args = process.argv.slice(2);
 if (args[0] === '--chercher') chercher(d);
 if (args[0] === '--telecharger') telecharger(d);

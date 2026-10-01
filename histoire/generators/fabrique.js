@@ -3,6 +3,7 @@
 // Les énoncés sont tirés au hasard parmi plusieurs modèles de questions : jamais deux fois les mêmes.
 import { svg } from '../../assets/js/core/svg.js';
 import { DONNEES } from '../donnees/index.js';
+import { imagesValidees, credit } from '../images/images.js';
 
 const gras = s => `<strong>${s}</strong>`;
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -357,14 +358,34 @@ function cours(d) {
   return cartes;
 }
 
+// ---------- Images (« Qui est-ce ? », « Quel symbole ? », « Date ce document ») ----------
+// Seules les images validées par Julien (statut « validee » dans images/credits.json) sont utilisées.
+
+export function exoImage(rng, im) {
+  const QUESTIONS = { qui: 'Qui est cette personne ?', symbole: 'Que représente ce symbole ?', date: 'De quelle année date ce document ?' };
+  const choix = rng.melanger([im.reponse, ...rng.melanger(im.distracteurs).slice(0, 3)]);
+  return {
+    cle: `image:${im.id}`,
+    enonce: `<p><strong>${QUESTIONS[im.exercice]}</strong></p>`,
+    figure: `<figure class="doc-image"><img src="images/${im.fichier}" alt="Document à identifier" loading="lazy" decoding="async"><figcaption>${esc(credit(im, im.exercice === 'date'))}</figcaption></figure>`,
+    type: 'qcm',
+    choix: im.exercice === 'date' ? choix.sort() : choix,
+    reponse: im.reponse,
+    etapes: [`Réponse : <strong>${esc(im.reponse)}</strong>.`, esc(im.attendu) + '.'],
+    erreurs: []
+  };
+}
+
 // ---------- Générateur ----------
 
 export function fabriquer(d) {
   const faits = tousLesFaits();
+  const images = imagesValidees(d.id);
+  const avecImages = images.length ? [['image', 2]] : [];
   const modeles = {
-    1: [['dateQcm', 3], ['avant', 2], ['vocMot', 2]],
-    2: [['dateSaisie', 2], ['ordre4', 3], ['personnage', 2], ['frise', 2]],
-    3: [['ordre5', 2], ['intrus', 2], ['duree', 1], ['vocDef', 2], ['dateSaisie', 1], ['personnage', 1]]
+    1: [['dateQcm', 3], ['avant', 2], ['vocMot', 2], ...avecImages],
+    2: [['dateSaisie', 2], ['ordre4', 3], ['personnage', 2], ['frise', 2], ...avecImages],
+    3: [['ordre5', 2], ['intrus', 2], ['duree', 1], ['vocDef', 2], ['dateSaisie', 1], ['personnage', 1], ...avecImages]
   };
   const fabriquerUn = (type, rng) => {
     switch (type) {
@@ -379,6 +400,7 @@ export function fabriquer(d) {
       case 'vocDef': return exoVocabulaire(rng, d, faits, 'def');
       case 'intrus': return exoIntrus(rng, d, faits);
       case 'duree': return exoDuree(rng, d);
+      case 'image': return exoImage(rng, rng.choix(images));
       default: return null;
     }
   };

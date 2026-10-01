@@ -767,3 +767,8 @@ body.calc-ouverte .page { padding-bottom: calc(var(--calc-hauteur, 460px) + 24px
 .legende { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 6px; font-size: 15px; }
 .legende li { display: flex; align-items: center; gap: 10px; }
 .legende svg { flex: none; }
+
+/* Documents iconographiques (histoire) : image validée + crédit */
+.doc-image { margin: 8px 0; text-align: center; }
+.doc-image img { max-width: 100%; max-height: 360px; border-radius: 10px; background: #fff1; }
+.doc-image figcaption { font-size: 12px; color: var(--texte-doux, #9aa0b4); margin-top: 4px; }
