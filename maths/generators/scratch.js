@@ -107,7 +107,7 @@ function bloc(ins) {
   }
 }
 
-function script(prog) {
+export function script(prog) {
   return `<div class="scratch" role="img" aria-label="Script Scratch">
     <div class="sb evt">quand <span class="drapeau">⚑</span> est cliqué</div>
     ${prog.map(bloc).join('')}
@@ -117,7 +117,7 @@ function script(prog) {
 // ---------- Figures ----------
 
 // Scène Scratch (480 × 360) réduite, avec quadrillage de 20 en 20 et graduations
-function scene(depart, dir, chemin = null, arrivee = null) {
+export function scene(depart, dir, chemin = null, arrivee = null) {
   const k = 0.7, W = 480 * k, H = 360 * k;
   const X = x => (x + 240) * k, Y = y => (180 - y) * k;
   let c = '';

@@ -4,7 +4,7 @@
 // VERSION et FICHIERS sont mis à jour par : node tests/verifier-sw.mjs --maj
 // (à lancer avant chaque commit ; sans --maj, le script vérifie seulement).
 
-const VERSION = '7d7dc768f903';
+const VERSION = '534d010310dc';
 const CACHE = `revision-brevet-${VERSION}`;
 const DELAI_RESEAU = 4000; // ms avant de se rabattre sur le cache
 
@@ -59,8 +59,16 @@ const FICHIERS = [
   'histoire/generators/societe-1950-1980.js',
   'histoire/index.html',
   'index.html',
+  'maths/approfondir/angles.js',
+  'maths/approfondir/constructions.js',
+  'maths/approfondir/conversions-durees.js',
+  'maths/approfondir/conversions-longueurs.js',
+  'maths/approfondir/fractions.js',
   'maths/approfondir/pythagore.js',
+  'maths/approfondir/relatifs.js',
+  'maths/approfondir/scratch.js',
   'maths/approfondir/thales.js',
+  'maths/approfondir/vitesses.js',
   'maths/chapitre.html',
   'maths/chapitres.js',
   'maths/controle.html',

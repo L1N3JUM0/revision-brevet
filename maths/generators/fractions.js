@@ -722,7 +722,7 @@ function probleme(rng, ctx) {
 
 // ---------- Figure du cours ----------
 
-function barre(p, q) {
+export function barre(p, q) {
   const L = 300, H = 44, x0 = 20, y0 = 10;
   let c = '';
   for (let i = 0; i < q; i++) {

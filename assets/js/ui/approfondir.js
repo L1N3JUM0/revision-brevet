@@ -3,7 +3,7 @@
 // URL : chapitre.html?c=pythagore&mode=approfondir&carte=2#carte-2 (ouvre directement la section 2)
 //
 // Contenu d'une section : { idee, pourquoi (HTML), animation?: [{ texte, figure }], figure?,
-//   pieges: [{ faux, juste }], exemple: { niveau, filtre(cle) }, verif: { niveaux: [n, n], filtre(cle) }, recherche }
+//   pieges: [{ faux, juste }], exemple: { niveau, filtre(cle, exo) }, verif: { niveaux: [n, n], filtre(cle, exo) }, recherche }
 // L'exemple guidé et la mini-vérif sont produits par le générateur du chapitre (jamais figés)
 // et ne comptent ni dans les statistiques ni dans l'XP.
 import { creerRng, graineAleatoire } from '../core/rng.js';
@@ -22,7 +22,7 @@ export function exerciceFiltre(gen, niveau, rng, filtre, prof = {}) {
   let exo = null;
   for (let k = 0; k < ESSAIS; k++) {
     exo = gen.generer(niveau, rng, tirerContexte(rng, prof));
-    if (!filtre || filtre(exo.cle)) return exo;
+    if (!filtre || filtre(exo.cle, exo)) return exo;
   }
   return exo;
 }

@@ -304,7 +304,7 @@ function exoParallelisme(rng) {
 
 // ---------- Figures du cours ----------
 
-function figureCours(marques) {
+export function figureCours(marques) {
   return figure(60, 60, 0, marques).svg;
 }
 

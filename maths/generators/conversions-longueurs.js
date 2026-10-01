@@ -28,7 +28,7 @@ function decimales(x) {
  * Tableau km … mm : les chiffres de la longueur (en mm) sont placés à partir de la colonne mm.
  * La colonne de l'unité de départ est encadrée, celle d'arrivée est colorée et porte la virgule.
  */
-function tableau(mm, depart, arrivee) {
+export function tableau(mm, depart, arrivee) {
   const chiffres = String(mm).split('');
   const nbColonnes = Math.max(7, chiffres.length);
   const decal = nbColonnes - 7; // colonnes sans nom à gauche de km (très grandes longueurs)

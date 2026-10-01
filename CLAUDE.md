@@ -205,9 +205,10 @@ Les points 1 à 8 et 12 sont prioritaires avant jeudi soir. Les points 9 à 11 p
 ## « Explique-moi plus » (fiches détaillées)
 
 - Bouton sur chaque carte du cours flash, si le registre du chapitre a `approfondir: () => import('./approfondir/<chapitre>.js')`. Ouvre `chapitre.html?c=…&mode=approfondir&carte=k#carte-k` (défilement vers la section k).
-- Une fiche par chapitre (`<matiere>/approfondir/<chapitre>.js`), **une section par carte, dans le même ordre et avec le même titre**. Section : `{ titre, idee, pourquoi (HTML), animation? | figure?, pieges: [{ faux, juste }], exemple: { niveau, filtre(cle) }, verif: { niveaux: [n, n], filtre(cle) }, recherche }`.
+- Une fiche par chapitre (`<matiere>/approfondir/<chapitre>.js`), **une section par carte, dans le même ordre et avec le même titre**. Section : `{ titre, idee, pourquoi (HTML), animation? | figure?, pieges: [{ faux, juste }], exemple: { niveau, filtre(cle, exo) }, verif: { niveaux: [n, n], filtre(cle, exo) }, recherche }`.
 - Affichage (`ui/approfondir.js`) : l'idée en une phrase, pourquoi ça marche, exemple guidé (généré par le générateur du chapitre, étape par étape, bouton « Un autre exemple »), pièges, mini-vérif de 2 questions (hors statistiques et XP), lien de recherche vers les vidéos d'Yvan Monka.
-- Fait : Pythagore, Thalès (format à valider par Julien avant de généraliser).
+- Fait : tous les chapitres de maths (format validé par Julien). Les filtres reçoivent `(cle, exo)` : `exo.donnees` permet de distinguer des cas que la clé ne dit pas (ex. angles alternes-internes ou correspondants).
+- Les aides de figures des générateurs utilisées dans les fiches sont exportées (`figureCours`, `barre`, `tableau`, `scene`, `script`).
 
 ## Hors ligne (`sw.js`)
 
