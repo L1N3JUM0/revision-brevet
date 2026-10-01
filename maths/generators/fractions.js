@@ -1,5 +1,6 @@
 // Générateur : fractions (simplification, 4 opérations, priorités, fraction d'une quantité).
 // Tous les calculs sont faits en fractions exactes (numérateur et dénominateur entiers).
+import { choisirSelonTheme } from '../../assets/js/core/contexts.js';
 import { fmt, pgcd } from '../../assets/js/core/answer.js';
 import { svg } from '../../assets/js/core/svg.js';
 
@@ -234,6 +235,41 @@ function totalMultiple(rng, q, min, max, pas = 1) {
 
 const QUANTITES = [
   {
+    themes: ['foot', 'basket'],
+    creer(rng, ctx) {
+      const f = fractionPropre(rng, [2, 3, 4, 5, 6]);
+      const total = totalMultiple(rng, f.d, 12, 60);
+      const basket = ctx.themes.find(t => t === 'foot' || t === 'basket') === 'basket';
+      return {
+        f, total, unite: '',
+        texte: basket
+          ? `Pendant la saison de basket, ${ctx.prenom} tente ${total} lancers francs. ${cap(F(f))} des lancers sont réussis.`
+          : `Pendant la saison de foot, l'équipe ${ctx.de} tire ${total} fois au but. ${cap(F(f))} des tirs sont cadrés.`,
+        part: basket ? 'Combien de lancers sont réussis ?' : 'Combien de tirs sont cadrés ?',
+        reste: basket ? 'Combien de lancers sont ratés ?' : 'Combien de tirs ne sont pas cadrés ?',
+        concl: v => (basket ? `${v} lancers sont réussis.` : `${v} tirs sont cadrés.`),
+        conclReste: v => (basket ? `${v} lancers sont ratés.` : `${v} tirs ne sont pas cadrés.`)
+      };
+    }
+  },
+  {
+    themes: ['mangas', 'musique', 'voitures'],
+    creer(rng, ctx) {
+      const f = fractionPropre(rng, [2, 3, 4, 5, 8, 10]);
+      const total = totalMultiple(rng, f.d, 20, 200);
+      const t = ctx.themes.find(x => ['mangas', 'musique', 'voitures'].includes(x)) || 'mangas';
+      const objet = { mangas: ['mangas dans sa bibliothèque', 'des mangas sont des shōnen', 'shōnen'], musique: ['morceaux dans sa playlist', 'des morceaux sont en français', 'morceaux en français'], voitures: ['voitures miniatures dans sa collection', 'des voitures sont des modèles de course', 'modèles de course'] }[t];
+      return {
+        f, total, unite: '',
+        texte: `${ctx.prenom} a ${total} ${objet[0]}. ${cap(F(f))} ${objet[1]}.`,
+        part: `Combien y a-t-il de ${objet[2]} ?`,
+        reste: 'Combien y en a-t-il d\'autres ?',
+        concl: v => `Il y a ${v} ${objet[2]}.`,
+        conclReste: v => `Il y en a ${v} autres.`
+      };
+    }
+  },
+  {
     themes: ['handball', 'sport'],
     creer(rng, ctx) {
       const f = fractionPropre(rng, [2, 3, 4, 5, 6]);
@@ -376,8 +412,7 @@ function cap(s) {
 }
 
 function quantite(rng, ctx, { reste = false } = {}) {
-  const adaptes = QUANTITES.filter(m => m.themes.includes(ctx.theme));
-  const modele = rng.choix(adaptes.length ? adaptes : QUANTITES);
+  const modele = choisirSelonTheme(rng, ctx, QUANTITES);
   const p = modele.creer(rng, ctx);
   const { f, total } = p;
   const unPart = total / f.d;
@@ -606,6 +641,11 @@ const ACHATS = {
   'jeux-video': ['un jeu vidéo', 'une manette'],
   cuisine: ['un livre de recettes', 'un moule à gâteau'],
   grece: ['un guide sur la mythologie grecque', 'une maquette du Parthénon'],
+  foot: ['un maillot de foot', 'un ballon'],
+  basket: ['un maillot de basket', 'un ballon de basket'],
+  mangas: ['un coffret de mangas', 'une figurine'],
+  musique: ['une place de concert', 'des écouteurs'],
+  voitures: ['une maquette de voiture', 'un livre sur les voitures de course'],
   defaut: ['un livre', 'une place de cinéma']
 };
 
@@ -616,7 +656,7 @@ function probleme(rng, ctx) {
     f2 = fractionPropre(rng, [2, 3, 4, 5], 0.75);
     total = totalMultiple(rng, f1.d * f2.d, 30, 240);
   } while (total === null);
-  const [achat1, achat2] = ACHATS[ctx.theme] || ACHATS.defaut;
+  const [achat1, achat2] = ACHATS[ctx.themes.find(t => ACHATS[t] && (t !== 'rap' || ctx.pack === 'anna'))] || ACHATS.defaut;
   const d1 = (total / f1.d) * f1.n;
   const r1 = total - d1;
   const d2 = (r1 / f2.d) * f2.n;

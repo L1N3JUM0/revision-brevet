@@ -1,6 +1,18 @@
 // SVT — Nutrition et effort physique : digestion, respiration, circulation, adaptations à l'effort.
+import { choisirSelonTheme } from '../../assets/js/core/contexts.js';
 import { fmt } from '../../assets/js/core/answer.js';
 import { fabriquer, gras, erreursNombre, net } from './fabrique.js';
+
+// Situations d'effort, selon les thèmes du profil (sans thème = neutre)
+const EFFORTS = [
+  { texte: 'juste après un match de handball', themes: ['handball'] },
+  { texte: 'juste après un match de foot', themes: ['foot'] },
+  { texte: 'juste après un match de basket', themes: ['basket'] },
+  { texte: 'après une séance de galop', themes: ['chevaux'] },
+  { texte: 'après un sprint', themes: ['sport'] },
+  { texte: 'après avoir dansé sur toute une playlist', themes: ['musique'] },
+  { texte: 'après avoir monté les escaliers en courant' }
+];
 
 // Fréquence cardiaque à partir des battements comptés sur une durée courte
 function calcFrequence(rng, ctx, niveau) {
@@ -14,7 +26,7 @@ function calcFrequence(rng, ctx, niveau) {
   err.ajouter(compte, `Ça, c'est le nombre de battements en ${duree} s. On veut le nombre par <strong>minute</strong> (60 s).`);
   err.ajouter(compte + 60, 'On <strong>multiplie</strong> : il y a ' + k + ' fois ' + duree + ' s dans une minute.');
   const situation = effort
-    ? rng.choix([`juste après un match de handball`, `après un sprint`, `après avoir monté les escaliers en courant`, `après une séance de galop`])
+    ? choisirSelonTheme(rng, ctx, EFFORTS).texte
     : rng.choix(['au repos, assise sur une chaise', 'au réveil', 'au calme, avant le cours']);
   return {
     cle: `fc:${fc}:${duree}`,
@@ -62,7 +74,7 @@ function calcVentilation(rng, ctx) {
 // Fréquence cardiaque maximale théorique (formule usuelle : 220 − âge)
 function calcFcMax(rng, ctx) {
   const age = rng.int(12, 50);
-  const qui = age <= 16 ? ctx.prenom : age <= 25 ? 'Une handballeuse professionnelle' : rng.choix(['Le prof d\'EPS', 'Une cavalière', 'Un coureur de marathon']);
+  const qui = age <= 16 ? ctx.prenom : age <= 25 ? 'Une athlète de haut niveau' : rng.choix(['Le prof d\'EPS', 'Une professeure de danse', 'Un coureur de marathon']);
   const r = 220 - age;
   return {
     cle: `fcmax:${age}`,

@@ -1,5 +1,6 @@
 // Générateur : vitesses (v = d ÷ t, d = v × t, t = d ÷ v), conversions km/h ↔ m/s, problèmes de trajets.
 // Les durées sont des nombres entiers de minutes, choisis pour que les heures décimales soient exactes.
+import { choisirSelonTheme } from '../../assets/js/core/contexts.js';
 import { fmt } from '../../assets/js/core/answer.js';
 
 const gras = s => `<strong>${s}</strong>`;
@@ -50,14 +51,16 @@ const MOBILES = [
   { themes: ['voyages', 'records', 'espace'], nom: () => 'Un TGV', pronom: () => 'il', v: [240, 320, 10], t: [30, 45, 60, 90, 120, 150, 180, 72, 96] },
   { themes: ['sport', 'handball', 'famille', 'jeux-video'], nom: ctx => `${ctx.prenom}, à vélo,`, pronom: ctx => ctx.il(), v: [12, 24, 1], t: [30, 45, 60, 75, 90, 120, 36, 48, 72] },
   { themes: ['chevaux', 'animaux'], nom: ctx => `${ctx.prenom}, à cheval au trot,`, pronom: ctx => ctx.il(), v: [10, 15, 1], t: [30, 45, 60, 90, 36, 48, 72] },
+  { themes: ['voitures'], nom: () => 'Une voiture électrique', pronom: () => 'elle', v: [80, 130, 10], t: [30, 45, 60, 90, 120, 150, 72, 96] },
+  { themes: ['foot', 'basket', 'musique'], nom: () => 'Le car du club', pronom: () => 'il', v: [70, 90, 5], t: [60, 90, 120, 150, 180, 84, 132] },
+  { themes: ['mangas', 'voyages'], nom: () => 'Le Shinkansen (TGV japonais)', pronom: () => 'il', v: [240, 300, 10], t: [30, 45, 60, 90, 120, 72, 96] },
   { themes: ['grece', 'voyages'], nom: () => 'Le ferry du Pirée', pronom: () => 'il', v: [30, 45, 5], t: [60, 90, 120, 150, 180, 240, 96, 108] },
   { themes: ['cuisine', 'famille', 'animaux'], nom: ctx => `${ctx.prenom}, en randonnée,`, pronom: ctx => ctx.il(), v: [4, 6, 1], t: [30, 60, 90, 120, 150, 180, 45, 75] }
 ];
 
 function tirerMobile(rng, ctx, filtre = () => true) {
   const tous = MOBILES.filter(filtre);
-  const adaptes = tous.filter(m => m.themes.includes(ctx.theme));
-  return rng.choix(adaptes.length ? adaptes : tous);
+  return choisirSelonTheme(rng, ctx, tous);
 }
 
 function tirerVitesse(rng, m) {
@@ -225,7 +228,9 @@ function exoConversion(rng) {
 const VILLES = [['Lyon', 315], ['Montpellier', 170], ['Nice', 200], ['Toulouse', 405], ['Bordeaux', 645]];
 
 // Vitesse moyenne à partir des horaires (distances routières approximatives depuis Marseille)
-function exoHoraires(rng) {
+function exoHoraires(rng, ctx) {
+  // Le bus de la tournée de JUL n'apparaît que dans le pack Anna
+  const vehicule = ctx.pack === 'anna' ? 'Le bus de la tournée de JUL' : rng.choix(['Un car de voyage', 'Le car du club de sport', 'Un bus de touristes']);
   for (;;) {
     const [ville, d] = rng.choix(VILLES);
     const t = 15 * rng.int(8, 32);
@@ -239,7 +244,7 @@ function exoHoraires(rng) {
     err.ajouter(net(d / t), 'Le temps doit être en <strong>heures</strong> pour obtenir des km/h.');
     return {
       cle: `horaires:${ville}:${t}:${depart}`,
-      enonce: `<p>Le bus de la tournée de JUL part de Marseille à ${horaire(depart)} et arrive à ${ville} à ${horaire(arrivee)}. Le trajet fait ${d} km.</p>
+      enonce: `<p>${vehicule} part de Marseille à ${horaire(depart)} et arrive à ${ville} à ${horaire(arrivee)}. Le trajet fait ${d} km.</p>
         <p><strong>Quelle est sa vitesse moyenne, en km/h ?</strong></p>`,
       type: 'nombre',
       unite: 'km/h',
@@ -288,7 +293,9 @@ function exoArrivee(rng, ctx) {
 function exoTir(rng, ctx) {
   const kmh = rng.choix([72, 81, 90, 99, 108]);
   const ms = net(kmh / 3.6);
-  const dist = rng.int(6, 12);
+  // Tir au handball (6 à 12 m) ou frappe au foot (11 à 25 m), selon les thèmes du profil
+  const foot = ctx.themes.find(x => x === 'handball' || x === 'foot') === 'foot' || (!ctx.themes.includes('handball') && rng.bool());
+  const dist = foot ? rng.int(11, 25) : rng.int(6, 12);
   const exact = dist / ms;
   const r = d2(exact);
   const tolerance = Math.abs(exact - r) < 1e-9 ? 0 : 0.005;
@@ -296,8 +303,8 @@ function exoTir(rng, ctx) {
   err.ajouter(d2(dist / kmh), 'Convertis d\'abord la vitesse en <strong>m/s</strong> (÷ 3,6), puisque la distance est en mètres.', 0.005);
   err.ajouter(d2(ms / dist), 'Le temps, c\'est la <strong>distance ÷ la vitesse</strong>.', 0.005);
   return {
-    cle: `tir:${kmh}:${dist}`,
-    enonce: `<p>Au handball, ${ctx.prenom} tire à ${dist} m du but. Le ballon part à ${kmh} km/h.</p>
+    cle: `tir:${foot ? 'foot' : 'hand'}:${kmh}:${dist}`,
+    enonce: `<p>${foot ? `Au foot, ${ctx.prenom} frappe un coup franc à ${dist} m du but` : `Au handball, ${ctx.prenom} tire à ${dist} m du but`}. Le ballon part à ${kmh} km/h.</p>
       <p><strong>Combien de temps met-il pour arriver au but, en secondes ?</strong></p>
       <p class="doux petit">Arrondis au centième si besoin.</p>`,
     type: 'nombre',
@@ -307,7 +314,7 @@ function exoTir(rng, ctx) {
     etapes: [
       `La distance est en mètres : on convertit la vitesse en m/s. ${kmh} ÷ 3,6 = ${fmt(ms)} m/s.`,
       `t = d ÷ v = ${dist} ÷ ${fmt(ms)} ${tolerance ? '≈' : '='} ${gras(fmt(r))} s`,
-      'Moins d\'une demi-seconde : c\'est pour ça que les gardiennes doivent anticiper !'
+      'Ça va très vite : dans les buts, il faut anticiper !'
     ],
     erreurs: err.liste(),
     expression: `${dist} ÷ ${fmt(ms)}`,
@@ -386,8 +393,8 @@ export default {
       if (t === 't') return exoTemps(rng, ctx, 2);
       return exoConversion(rng);
     }
-    const t = rng.pondere([['horaires', 3], ['arrivee', 3], ['tir', ctx.theme === 'handball' ? 4 : 2], ['sprint', 2]]);
-    if (t === 'horaires') return exoHoraires(rng);
+    const t = rng.pondere([['horaires', 3], ['arrivee', 3], ['tir', ctx.themes.some(x => x === 'handball' || x === 'foot') ? 4 : 2], ['sprint', 2]]);
+    if (t === 'horaires') return exoHoraires(rng, ctx);
     if (t === 'arrivee') return exoArrivee(rng, ctx);
     if (t === 'tir') return exoTir(rng, ctx);
     return exoSprint(rng, ctx);

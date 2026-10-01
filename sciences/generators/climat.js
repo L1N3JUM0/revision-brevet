@@ -1,17 +1,26 @@
 // SVT — Climat, écosystèmes et environnement : météo et climat, effet de serre, réchauffement,
 // chaînes alimentaires, ressources, empreinte carbone.
+import { choisirSelonTheme } from '../../assets/js/core/contexts.js';
 import { fmt } from '../../assets/js/core/answer.js';
 import { fabriquer, gras, erreursNombre, net } from './fabrique.js';
 
+// Trajets en voiture, selon les thèmes du profil (sans thème = neutre)
+const TRAJETS = [
+  { dest: 'aller au concert de JUL à Marseille', km: [200, 300, 400, 500], themes: ['rap'] },
+  { dest: 'aller à un concert', km: [50, 100, 150, 200], themes: ['musique'] },
+  { dest: 'aller à un tournoi de handball', km: [50, 80, 100, 150], themes: ['handball'] },
+  { dest: 'aller à un tournoi', km: [50, 80, 100, 150], themes: ['foot', 'basket', 'sport'] },
+  { dest: 'aller au centre équestre', km: [20, 30, 40, 60], themes: ['chevaux'] },
+  { dest: 'aller à une convention manga', km: [100, 200, 300], themes: ['mangas'] },
+  { dest: 'aller voir une course automobile', km: [100, 200, 300], themes: ['voitures'] },
+  { dest: 'partir en vacances', km: [400, 600, 800], themes: ['voyages', 'famille'] },
+  { dest: 'aller chez ses grands-parents', km: [50, 100, 200] }
+];
+
 // Émissions d'un trajet en voiture (valeur d'émission donnée dans l'énoncé)
 function calcTrajet(rng, ctx, niveau) {
-  const dest = rng.choix([
-    ['aller au concert de JUL à Marseille', [200, 300, 400, 500]],
-    ['aller à un tournoi de handball', [50, 80, 100, 150]],
-    ['aller au centre équestre', [20, 30, 40, 60]],
-    ['partir en vacances', [400, 600, 800]]
-  ]);
-  const d = rng.choix(dest[1]);
+  const { dest, km } = choisirSelonTheme(rng, ctx, TRAJETS);
+  const d = rng.choix(km);
   const g = rng.choix([100, 110, 120, 130, 150]);
   const kg = net(d * g / 1000);
   if (niveau === 3 && rng.bool(0.6)) {
@@ -21,7 +30,7 @@ function calcTrajet(rng, ctx, niveau) {
     err.ajouter(kg, `Ça, ce sont les émissions de toute la voiture. Partage-les entre les ${n} passagers.`);
     return {
       cle: `covoit:${d}:${g}:${n}`,
-      enonce: `<p>Pour ${dest[0]}, ${ctx.prenom} fait ${d} km en voiture. La voiture émet ${g} g de CO₂ par km. Ils sont ${n} dans la voiture (covoiturage).</p>
+      enonce: `<p>Pour ${dest}, ${ctx.prenom} fait ${d} km en voiture. La voiture émet ${g} g de CO₂ par km. Ils sont ${n} dans la voiture (covoiturage).</p>
         <p><strong>Quelle masse de CO₂ cela représente-t-il par personne, en kg ?</strong></p>`,
       type: 'nombre',
       unite: 'kg',
@@ -39,7 +48,7 @@ function calcTrajet(rng, ctx, niveau) {
   err.ajouter(net(d * g), `${fmt(d * g)}, ce sont des <strong>grammes</strong>. 1 kg = 1 000 g.`);
   return {
     cle: `trajet:${d}:${g}`,
-    enonce: `<p>Pour ${dest[0]}, ${ctx.prenom} fait ${d} km en voiture. La voiture émet ${g} g de CO₂ par km.</p><p><strong>Quelle masse de CO₂ est rejetée, en kg ?</strong></p>`,
+    enonce: `<p>Pour ${dest}, ${ctx.prenom} fait ${d} km en voiture. La voiture émet ${g} g de CO₂ par km.</p><p><strong>Quelle masse de CO₂ est rejetée, en kg ?</strong></p>`,
     type: 'nombre',
     unite: 'kg',
     reponse: kg,
@@ -124,7 +133,7 @@ export const banque = {
     question: 'Cette phrase parle-t-elle de météo ou de climat ?',
     groupes: [
       { nom: 'Météo', items: ['Demain, il fera 25 °C à Marseille', 'Un orage a éclaté hier soir', 'Il neige ce matin sur les Alpes', 'Ce week-end sera venteux'], explication: 'Le temps qu\'il fait sur une courte période.' },
-      { nom: 'Climat', items: ['En Grèce, les étés sont chauds et secs', 'Le Sahara reçoit très peu de pluie chaque année', 'La température moyenne de la Terre augmente depuis 1900', 'En Bretagne, les hivers sont doux et humides'], explication: 'Une moyenne sur de longues périodes.' }
+      { nom: 'Climat', items: ['Autour de la Méditerranée, les étés sont chauds et secs', 'Le Sahara reçoit très peu de pluie chaque année', 'La température moyenne de la Terre augmente depuis 1900', 'En Bretagne, les hivers sont doux et humides'], explication: 'Une moyenne sur de longues périodes.' }
     ]
   }],
   calculs: { trajet: calcTrajet, chaine: calcChaine },

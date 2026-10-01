@@ -1,11 +1,12 @@
 // XP, niveaux mythologiques, série de jours (flamme), badges, messages.
 import { charger, sauver, chapitre } from './store.js';
 
+// nom : texte, ou { f, m } accordé selon le genre du profil (« peu importe » → masculin)
 export const NIVEAUX = [
-  { nom: 'Mortelle', seuil: 0, emoji: '🌱' },
-  { nom: 'Héroïne', seuil: 150, emoji: '🛡️' },
-  { nom: 'Nymphe', seuil: 400, emoji: '🌊' },
-  { nom: 'Muse', seuil: 800, emoji: '🎶' },
+  { nom: { f: 'Mortelle', m: 'Mortel' }, seuil: 0, emoji: '🌱' },
+  { nom: { f: 'Héroïne', m: 'Héros' }, seuil: 150, emoji: '🛡️' },
+  { nom: 'Oracle', seuil: 400, emoji: '🔮' },
+  { nom: 'Argonaute', seuil: 800, emoji: '⛵' },
   { nom: 'Hermès', seuil: 1500, emoji: '🪽' },
   { nom: 'Athéna', seuil: 2500, emoji: '🦉' },
   { nom: 'Zeus', seuil: 4000, emoji: '⚡' }
@@ -14,11 +15,17 @@ export const NIVEAUX = [
 export const BONNES_N3_POUR_BADGE = 10;
 
 // Niveau correspondant à un total d'XP, avec la progression vers le suivant
-export function niveauPourXp(xp) {
+// Nom d'un niveau accordé au genre ('f', 'm' ou 'n')
+export function nomNiveau(niveau, genre) {
+  return typeof niveau.nom === 'string' ? niveau.nom : genre === 'f' ? niveau.nom.f : niveau.nom.m;
+}
+
+export function niveauPourXp(xp, genre = charger().profil.genre) {
   let i = 0;
   while (i + 1 < NIVEAUX.length && xp >= NIVEAUX[i + 1].seuil) i++;
-  const actuel = NIVEAUX[i];
-  const suivant = NIVEAUX[i + 1] || null;
+  const accorde = n => (n ? { ...n, nom: nomNiveau(n, genre) } : null);
+  const actuel = accorde(NIVEAUX[i]);
+  const suivant = accorde(NIVEAUX[i + 1]);
   const progression = suivant ? (xp - actuel.seuil) / (suivant.seuil - actuel.seuil) : 1;
   return { ...actuel, index: i, suivant, progression, xp };
 }
@@ -145,7 +152,7 @@ export const MESSAGES_OUPS = [
   'Pas grave, regarde la correction.',
   'Presque ! On regarde ensemble ?',
   'Une erreur, c\'est une info en plus.',
-  'Ça arrive aux meilleures.',
+  'Ça arrive à tout le monde.',
   'On reprend calmement.',
   'Pas cette fois, mais tu progresses.',
   'Regarde bien l\'étape qui coince.',
@@ -158,7 +165,7 @@ export const MESSAGES_OUPS = [
 export const MESSAGES_SERIE = [
   '{n} d\'affilée !',
   'Série de {n} !',
-  '{n} de suite, tu es lancée !'
+  '{n} de suite, tu es sur ta lancée !'
 ];
 
 // Message au hasard ; les modèles dont une variable manque (ex. pas de prénom) sont écartés

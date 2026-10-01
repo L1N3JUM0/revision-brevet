@@ -1,6 +1,7 @@
 // Générateur : théorème de Pythagore (hypoténuse, côté de l'angle droit, réciproque, contraposée).
 // Les longueurs ont au plus un chiffre après la virgule : leurs carrés ont au plus deux décimales,
 // ce qui permet des calculs exacts (on arrondit à 2 décimales pour effacer le bruit des flottants).
+import { choisirSelonTheme } from '../../assets/js/core/contexts.js';
 import { fmt } from '../../assets/js/core/answer.js';
 import { figurePolygone, tourner } from '../../assets/js/core/svg.js';
 
@@ -235,6 +236,66 @@ function exoPur(rng, niveau) {
 // p est au bout de la jambe horizontale, q au bout de la jambe verticale.
 const PROBLEMES = [
   {
+    themes: ['foot'],
+    creer(rng, ctx) {
+      const L = 5 * rng.int(12, 21), l = 5 * rng.int(9, Math.min(14, L / 5 - 2));
+      return {
+        lettres: { droit: 'B', p: 'A', q: 'C' }, horiz: L, vert: l, inconnue: 'hyp', unite: 'm',
+        texte: `Le terrain de foot du club est un rectangle ABCD de ${L} m sur ${l} m. À l'échauffement, ${ctx.prenom} court en diagonale, de A à C.`,
+        question: 'Quelle distance parcourt-' + ctx.il() + ' ?',
+        conclusion: v => `${ctx.prenom} parcourt environ ${v} m.`
+      };
+    }
+  },
+  {
+    themes: ['basket'],
+    creer(rng, ctx) {
+      const x = pas(rng, 3, 9, 0.5), y = pas(rng, 2, 7, 0.5);
+      return {
+        lettres: { droit: 'H', p: 'P', q: 'R' }, horiz: x, vert: y, inconnue: 'hyp', unite: 'm',
+        texte: `Au basket, ${ctx.prenom} est au point P et fait une passe à ${ctx.ami}, au point R. Le point H est tel que PH = ${fmt(x)} m, HR = ${fmt(y)} m et (PH) est perpendiculaire à (HR).`,
+        question: 'Quelle est la longueur de la passe PR ?',
+        conclusion: v => `La passe mesure environ ${v} m.`
+      };
+    }
+  },
+  {
+    themes: ['mangas'],
+    creer(rng, ctx) {
+      const L = rng.int(40, 70), l = rng.int(28, Math.min(50, L - 5));
+      return {
+        lettres: { droit: 'B', p: 'A', q: 'C' }, horiz: L, vert: l, inconnue: 'hyp', unite: 'cm',
+        texte: `${ctx.prenom} veut encadrer une affiche de son manga préféré. L'affiche est un rectangle ABCD de ${L} cm sur ${l} cm.`,
+        question: 'Quelle est la longueur de sa diagonale [AC] ?',
+        conclusion: v => `La diagonale mesure environ ${v} cm.`
+      };
+    }
+  },
+  {
+    themes: ['musique'],
+    creer(rng) {
+      const h = pas(rng, 6, 14, 0.5), d = pas(rng, 3, 10, 0.5);
+      return {
+        lettres: { droit: 'S', p: 'A', q: 'H' }, horiz: d, vert: h, inconnue: 'hyp', unite: 'm',
+        texte: `Avant un concert, un technicien tend un câble entre le sommet H d'un pylône vertical de ${fmt(h)} m et un point A du sol, situé à ${fmt(d)} m du pied S du pylône.`,
+        question: 'Quelle est la longueur du câble ?',
+        conclusion: v => `Le câble mesure environ ${v} m.`
+      };
+    }
+  },
+  {
+    themes: ['voitures'],
+    creer(rng) {
+      const h = pas(rng, 0.6, 1.2, 0.1), r = pas(rng, 3, 5, 0.5);
+      return {
+        lettres: { droit: 'H', p: 'A', q: 'P' }, hyp: r, vert: h, inconnue: 'horiz', unite: 'm',
+        texte: `Pour monter une voiture sur une dépanneuse, on pose une rampe [AP] de ${fmt(r)} m. Le haut P de la rampe est à ${fmt(h)} m du sol (PH = ${fmt(h)} m, H au sol, à la verticale de P).`,
+        question: 'À quelle distance AH de la dépanneuse le bas de la rampe touche-t-il le sol ?',
+        conclusion: v => `Le bas de la rampe est à environ ${v} m.`
+      };
+    }
+  },
+  {
     themes: ['handball', 'sport'],
     creer(rng, ctx) {
       const y = pas(rng, 1, 8, 0.5), x = pas(rng, 6, 11, 0.5);
@@ -359,8 +420,7 @@ const PROBLEMES = [
 ];
 
 function exoProbleme(rng, ctx, niveau) {
-  const adaptes = PROBLEMES.filter(m => m.themes.includes(ctx.theme));
-  const modele = rng.choix(adaptes.length ? adaptes : PROBLEMES);
+  const modele = choisirSelonTheme(rng, ctx, PROBLEMES);
   const p = modele.creer(rng, ctx);
   const { droit, p: lp, q: lq } = p.lettres;
   const N = { noms: [lp, droit, lq], droit, p: lp, q: lq, nom: `${lp}${droit}${lq}` };
@@ -399,6 +459,7 @@ function exoProbleme(rng, ctx, niveau) {
 const CONTEXTES_RECIPROQUE = {
   chevaux: ctx => ({ unite: 'm', texte: `${ctx.prenom} veut vérifier qu'un coin de la carrière est bien un angle droit. ${cap(ctx.il())} plante trois piquets et mesure le triangle` }),
   handball: ctx => ({ unite: 'm', texte: `Pour retracer le terrain de hand, l'entraîneuse ${ctx.de} vérifie un coin avec trois plots. Elle mesure le triangle` }),
+  foot: ctx => ({ unite: 'm', texte: `Pour retracer le terrain de foot, ${ctx.prenom} vérifie un coin avec trois plots. On mesure le triangle` }),
   famille: ctx => ({ unite: 'cm', texte: `${ctx.prenom} fabrique une étagère pour sa chambre. Pour vérifier qu'elle est d'équerre, ${ctx.il()} mesure le triangle` }),
   mode: ctx => ({ unite: 'cm', texte: `Dans la boutique ${ctx.de}, on vérifie qu'un présentoir est bien d'équerre. On mesure le triangle` }),
   grece: () => ({ unite: 'm', texte: 'Les bâtisseurs de la Grèce antique vérifiaient les angles droits avec une corde à nœuds. Sur un chantier, on mesure le triangle' })
@@ -410,7 +471,8 @@ function cap(s) {
 
 function exoReciproque(rng, ctx) {
   const N = choisirNoms(rng);
-  const contexte = rng.bool(0.4) && CONTEXTES_RECIPROQUE[ctx.theme] ? CONTEXTES_RECIPROQUE[ctx.theme](ctx) : null;
+  const cleContexte = ctx.themes.find(t => CONTEXTES_RECIPROQUE[t]);
+  const contexte = rng.bool(0.4) && cleContexte ? CONTEXTES_RECIPROQUE[cleContexte](ctx) : null;
   const unite = contexte ? contexte.unite : rng.choix(['cm', 'cm', 'm']);
   const rectangle = rng.bool(0.5);
 

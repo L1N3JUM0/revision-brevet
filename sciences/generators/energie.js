@@ -1,4 +1,5 @@
 // Physique-Chimie — L'énergie : formes et conversions, sources, E = P × t, coût, énergie cinétique.
+import { choisirSelonTheme, permis } from '../../assets/js/core/contexts.js';
 import { fmt } from '../../assets/js/core/answer.js';
 import { fabriquer, gras, erreursNombre, net } from './fabrique.js';
 
@@ -12,6 +13,7 @@ const APPAREILS = [
   { nom: 'une télévision', P: 100, min: [], h: [2, 3, 4, 5] },
   { nom: 'un ordinateur portable', P: 60, min: [], h: [2, 3, 4, 5, 6] },
   { nom: 'une enceinte pour écouter JUL', P: 50, min: [], h: [2, 3, 4, 6], themes: ['rap'] },
+  { nom: 'une enceinte pour écouter de la musique', P: 50, min: [], h: [2, 3, 4, 6], themes: ['musique'] },
   { nom: 'une lampe LED', P: 10, min: [], h: [3, 4, 5, 6, 8, 10] },
   { nom: 'un lave-linge', P: 2000, min: [], h: [1, 1.5, 2] },
   { nom: 'un fer à lisser', P: 50, min: [10, 15, 20], h: [], themes: ['mode'] }
@@ -19,8 +21,7 @@ const APPAREILS = [
 
 function tirerAppareil(rng, ctx, filtre) {
   const tous = APPAREILS.filter(filtre);
-  const adaptes = tous.filter(a => (a.themes || []).includes(ctx.theme));
-  return rng.choix(adaptes.length && rng.bool(0.6) ? adaptes : tous);
+  return rng.bool(0.6) ? choisirSelonTheme(rng, ctx, tous) : rng.choix(permis(ctx, tous));
 }
 
 // E = P × t en kWh (ou Wh), avec éventuellement le coût
@@ -115,13 +116,14 @@ function calcEnergieJoules(rng, ctx) {
 const MOBILES = [
   { nom: 'Un ballon de handball', m: [0.45], v: [10, 15, 20, 25], themes: ['handball', 'sport'] },
   { nom: 'Un cheval au galop', m: [400, 450, 500, 550, 600], v: [10, 12, 14, 15], themes: ['chevaux', 'animaux'] },
-  { nom: 'Une voiture', m: [800, 1000, 1200, 1500], v: [10, 15, 20, 25, 30], themes: ['famille', 'voyages', 'commerce', 'mode'] },
+  { nom: 'Une voiture', m: [800, 1000, 1200, 1500], v: [10, 15, 20, 25, 30], themes: ['voitures', 'famille', 'voyages', 'commerce', 'mode'] },
   { nom: 'Un scooter avec son conducteur', m: [150, 180, 200], v: [10, 12, 14], themes: ['rap', 'famille'] },
+  { nom: 'Un ballon de foot frappé fort', m: [0.43], v: [20, 25, 30], themes: ['foot'] },
+  { nom: 'Un ballon de basket', m: [0.6], v: [5, 6, 8, 10], themes: ['basket'] },
   { nom: 'Une joueuse qui sprinte', m: [50, 55, 60, 65], v: [5, 6, 7, 8], themes: ['handball', 'sport'] }
 ];
 function calcCinetique(rng, ctx, niveau) {
-  const adaptes = MOBILES.filter(x => x.themes.includes(ctx.theme));
-  const mob = rng.choix(adaptes.length ? adaptes : MOBILES);
+  const mob = choisirSelonTheme(rng, ctx, MOBILES);
   const m = rng.choix(mob.m);
   const v = rng.choix(mob.v);
   const kmh = net(v * 3.6);
@@ -155,7 +157,7 @@ const CONVERTISSEURS = [
   { nom: 'Une lampe', entree: 'électrique', sortie: 'lumineuse' },
   { nom: 'Un radiateur électrique', entree: 'électrique', sortie: 'thermique' },
   { nom: 'Une pile', entree: 'chimique', sortie: 'électrique' },
-  { nom: 'Les muscles d\'une cavalière', entree: 'chimique', sortie: 'mécanique' },
+  { nom: 'Les muscles d\'une personne qui court', entree: 'chimique', sortie: 'mécanique' },
   { nom: 'Une batterie de téléphone en charge', entree: 'électrique', sortie: 'chimique' },
   { nom: 'Un alternateur de barrage', entree: 'mécanique', sortie: 'électrique' },
   { nom: 'Un haut-parleur', entree: 'électrique', sortie: 'sonore (mécanique)' }
@@ -216,7 +218,7 @@ export const banque = {
     { q: 'Le kilowattheure (kWh) est une unité…', bonne: 'D\'énergie', fausses: ['De puissance', 'De tension', 'De durée'], explication: 'C\'est l\'énergie consommée par un appareil de 1 000 W pendant 1 heure. Le compteur électrique la mesure.', niveau: 2 },
     { q: 'Si la vitesse d\'une voiture double, son énergie cinétique est…', bonne: 'Multipliée par 4', fausses: ['Multipliée par 2', 'Divisée par 2', 'Inchangée'], explication: 'Ec = ½ m v² : la vitesse est au carré. (2v)² = 4 v². La distance de freinage augmente beaucoup.', niveau: 3 },
     { q: 'Que devient l\'énergie cinétique d\'une voiture qui freine ?', bonne: 'Elle est convertie en énergie thermique', fausses: ['Elle disparaît', 'Elle est convertie en énergie lumineuse', 'Elle se transforme en masse'], explication: 'Les freins chauffent : l\'énergie cinétique devient de la chaleur.', niveau: 3 },
-    { q: 'Une cavalière saute un obstacle : en haut du saut, quelle énergie du cheval est maximale ?', bonne: 'L\'énergie de position', fausses: ['L\'énergie cinétique', 'L\'énergie électrique', 'L\'énergie lumineuse'], explication: 'Plus l\'objet est haut, plus son énergie de position est grande.', niveau: 2 },
+    { q: 'On lance un ballon vers le haut : au sommet de sa trajectoire, quelle énergie est maximale ?', bonne: 'L\'énergie de position', fausses: ['L\'énergie cinétique', 'L\'énergie électrique', 'L\'énergie lumineuse'], explication: 'Plus l\'objet est haut, plus son énergie de position est grande.', niveau: 2 },
     { q: 'Combien de joules vaut 1 kWh ?', bonne: '3 600 000 J', fausses: ['1 000 J', '3 600 J', '60 000 J'], explication: '1 kWh = 1 000 W × 3 600 s = 3 600 000 J.', niveau: 3 },
     { q: 'Quelle est la source d\'énergie d\'une centrale nucléaire ?', bonne: 'L\'uranium', fausses: ['Le charbon', 'Le vent', 'Le soleil'], explication: 'L\'uranium est extrait de mines : c\'est une ressource non renouvelable.', niveau: 1 },
     { q: 'Pourquoi une ampoule LED est-elle plus économe qu\'une ampoule à incandescence ?', bonne: 'Elle perd moins d\'énergie en chaleur', fausses: ['Elle produit plus de chaleur', 'Elle ne consomme pas d\'électricité', 'Elle est plus grosse'], explication: 'Pour la même lumière, la LED consomme beaucoup moins : moins d\'énergie est perdue sous forme thermique.', niveau: 2 }

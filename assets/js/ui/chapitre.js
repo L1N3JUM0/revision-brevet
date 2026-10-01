@@ -9,6 +9,7 @@ import { rebond, secousse, confettis } from './fx.js';
 import { flammeActuelle } from '../core/gamification.js';
 import { monterCalculatrice } from './calculatrice.js';
 import { htmlSaisie, brancherSaisie, lireSaisie } from './saisie.js';
+import { brancherAnimation, htmlAnimation } from './animation.js';
 
 const NOMS_NIVEAUX = ['Facile', 'Moyen', 'Type brevet'];
 
@@ -39,9 +40,10 @@ export async function demarrerChapitre({ app, trouverChapitre, urlMatiere, nomMa
   const graine = graineDepuisUrl() ?? graineAleatoire();
   const rng = creerRng(graine);
   const urlChap = m => `chapitre.html?c=${encodeURIComponent(gen.id)}${m ? `&mode=${m}` : ''}`;
-  const ctx = { app, gen, rng, urlChap, urlMatiere, graine, calculatrice };
+  const ctx = { app, gen, rng, urlChap, urlMatiere, graine, calculatrice, entree, params };
 
   if (mode === 'cours') ecranCours(ctx);
+  else if (mode === 'approfondir' && entree.approfondir) (await import('./approfondir.js')).ecranApprofondir(ctx);
   else if (mode === 'entrainement' || mode === 'chrono') ecranSession(ctx, mode);
   else ecranModes(ctx);
 }
@@ -83,60 +85,9 @@ function ecranModes({ app, gen, urlChap, urlMatiere }) {
 
 // ---------- Cours flash ----------
 
-// Animation étape par étape d'une carte de cours : c.animation = [{ texte, figure }]
-function brancherAnimation(zone, etapes) {
-  let k = 0;
-  let minuteur = null;
-  const figure = zone.querySelector('.anim-figure');
-  const texte = zone.querySelector('.anim-texte');
-  const compteur = zone.querySelector('.anim-compteur');
-  const montrer = () => {
-    figure.innerHTML = etapes[k].figure;
-    texte.innerHTML = etapes[k].texte;
-    compteur.textContent = `Étape ${k + 1}/${etapes.length}`;
-    zone.querySelector('[data-anim="prec"]').disabled = k === 0;
-    zone.querySelector('[data-anim="suiv"]').disabled = k === etapes.length - 1;
-  };
-  const stop = () => { clearInterval(minuteur); minuteur = null; zone.querySelector('[data-anim="lecture"]').textContent = '▶'; };
-  zone.addEventListener('click', e => {
-    const b = e.target.closest('[data-anim]');
-    if (!b) return;
-    e.stopPropagation();
-    if (b.dataset.anim === 'prec' && k > 0) { stop(); k--; }
-    else if (b.dataset.anim === 'suiv' && k < etapes.length - 1) { stop(); k++; }
-    else if (b.dataset.anim === 'lecture') {
-      if (minuteur) { stop(); return; }
-      if (k === etapes.length - 1) k = 0;
-      b.textContent = '⏸';
-      minuteur = setInterval(() => {
-        if (k < etapes.length - 1) { k++; montrer(); } else stop();
-      }, 1600);
-    }
-    montrer();
-  });
-  // Les gestes de balayage dans l'animation ne changent pas de carte
-  zone.addEventListener('touchstart', e => e.stopPropagation(), { passive: true });
-  zone.addEventListener('touchend', e => e.stopPropagation());
-  montrer();
-  return stop;
-}
-
-function htmlAnimation() {
-  return `<div class="anim">
-      <div class="anim-figure"></div>
-      <p class="anim-texte"></p>
-      <div class="anim-nav">
-        <button type="button" class="btn-icone" data-anim="prec" aria-label="Étape précédente">‹</button>
-        <span class="anim-compteur doux petit"></span>
-        <button type="button" class="btn-icone" data-anim="lecture" aria-label="Lecture automatique">▶</button>
-        <button type="button" class="btn-icone" data-anim="suiv" aria-label="Étape suivante">›</button>
-      </div>
-    </div>`;
-}
-
-function ecranCours({ app, gen, urlChap }) {
-  let i = 0;
+function ecranCours({ app, gen, urlChap, entree, params }) {
   const n = gen.cours.length;
+  let i = Math.min(Math.max(Number(params.get('carte')) || 0, 0), n - 1);
   let arreterAnimation = null;
 
   function afficher() {
@@ -153,6 +104,7 @@ function ecranCours({ app, gen, urlChap }) {
         <h2>${c.titre}</h2>
         <div>${c.contenu}</div>
         ${c.animation ? htmlAnimation() : c.figure || ''}
+        ${entree.approfondir ? `<a class="btn btn-secondaire btn-plus" href="${urlChap('approfondir')}&carte=${i}#carte-${i}">🔎 Explique-moi plus</a>` : ''}
       </article>
       <div class="points">${gen.cours.map((_, k) => `<span class="${k === i ? 'actif' : ''}"></span>`).join('')}</div>
       <div class="nav-cours">

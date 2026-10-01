@@ -42,7 +42,7 @@ function calcEcho(rng, ctx) {
   const t = eau ? rng.choix([0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.6, 2, 3, 4]) : rng.choix([1, 2, 3, 4, 5]);
   const d = net(v * t / 2);
   const situation = eau
-    ? rng.choix([`Le sonar d'un bateau envoie des ultrasons vers le fond de la mer, près des côtes grecques.`, 'Un sonar de pêche envoie des ultrasons vers un banc de poissons.', 'Un dauphin envoie des ultrasons vers un obstacle.'])
+    ? rng.choix(['Le sonar d\'un bateau envoie des ultrasons vers le fond de la mer.', 'Un sonar de pêche envoie des ultrasons vers un banc de poissons.', 'Un dauphin envoie des ultrasons vers un obstacle.'])
     : rng.choix([`En randonnée, ${ctx.prenom} crie face à une falaise.`, `Dans un canyon, ${ctx.prenom} crie face à la paroi d'en face.`]);
   const err = erreursNombre(d);
   err.ajouter(net(v * t), 'Le son fait un <strong>aller-retour</strong> : il faut diviser la distance parcourue par 2.');
@@ -177,7 +177,7 @@ export const banque = {
     { q: 'L\'année-lumière est une unité…', bonne: 'De distance', fausses: ['De durée', 'De vitesse', 'De luminosité'], explication: 'C\'est la distance parcourue par la lumière en un an.', niveau: 2 },
     { q: 'La Lune est…', bonne: 'Un objet diffusant', fausses: ['Une source primaire de lumière', 'Une étoile', 'Une source de lumière qui brûle'], explication: 'La Lune ne produit pas de lumière : elle renvoie celle du Soleil.', niveau: 2 },
     { q: 'À partir de quel niveau sonore l\'oreille risque-t-elle d\'être abîmée ?', bonne: 'Environ 85 dB', fausses: ['Environ 20 dB', 'Environ 40 dB', 'Seulement au-delà de 200 dB'], explication: 'Au-delà de 85 dB, une exposition longue est dangereuse. Le seuil de douleur est vers 120 dB.', niveau: 2 },
-    { q: 'À un concert de JUL, près des enceintes, le niveau sonore peut dépasser 100 dB. Que faire ?', bonne: 'Porter des bouchons d\'oreilles et s\'éloigner des enceintes', fausses: ['Se rapprocher des enceintes', 'Rien, l\'oreille s\'habitue', 'Monter le son de son téléphone'], explication: 'Les dégâts de l\'oreille interne ne se réparent pas : on se protège et on fait des pauses au calme.', niveau: 1 },
+    { q: 'À un concert, près des enceintes, le niveau sonore peut dépasser 100 dB. Que faire ?', bonne: 'Porter des bouchons d\'oreilles et s\'éloigner des enceintes', fausses: ['Se rapprocher des enceintes', 'Rien, l\'oreille s\'habitue', 'Monter le son de son téléphone'], explication: 'Les dégâts de l\'oreille interne ne se réparent pas : on se protège et on fait des pauses au calme.', niveau: 1 },
     { q: 'Comment se propage la lumière dans un milieu homogène ?', bonne: 'En ligne droite', fausses: ['En zigzag', 'En cercle', 'Seulement vers le bas'], explication: 'On représente son trajet par un rayon lumineux : une droite avec une flèche.', niveau: 1 },
     { q: 'Plus la fréquence d\'un son est grande, plus il est…', bonne: 'Aigu', fausses: ['Grave', 'Fort', 'Lent'], explication: 'Grande fréquence = son aigu ; petite fréquence = son grave. Le niveau sonore (fort ou faible), c\'est autre chose.', niveau: 2 },
     { q: 'Quel animal se repère grâce aux ultrasons (écholocation) ?', bonne: 'La chauve-souris', fausses: ['Le cheval', 'Le chat', 'La poule'], explication: 'Elle émet des ultrasons et écoute leur écho pour repérer obstacles et insectes. Le dauphin fait de même.', niveau: 1 }
@@ -192,7 +192,7 @@ export const banque = {
     question: 'Source primaire de lumière ou objet diffusant ?',
     groupes: [
       { nom: 'Source primaire', items: ['Le Soleil', 'Une lampe allumée', 'La flamme d\'une bougie', 'Un écran de téléphone allumé', 'Une étoile'], explication: 'Elle produit sa propre lumière.' },
-      { nom: 'Objet diffusant', items: ['La Lune', 'Une feuille de papier', 'Un cheval dans un pré', 'Un mur blanc', 'La planète Mars'], explication: 'Il renvoie la lumière qu\'il reçoit.' }
+      { nom: 'Objet diffusant', items: ['La Lune', 'Une feuille de papier', 'Un arbre dans un pré', 'Un mur blanc', 'La planète Mars'], explication: 'Il renvoie la lumière qu\'il reçoit.' }
     ]
   }],
   calculs: { orage: calcOrage, echo: calcEcho, lumiere: calcLumiere, frequence: calcFrequence, periode: calcPeriode },

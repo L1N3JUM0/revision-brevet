@@ -41,7 +41,7 @@ function calcSeisme(rng, ctx) {
   const v = rng.choix([6, 7, 8]);
   const t = rng.int(5, 40);
   const d = v * t;
-  const ville = rng.choix(['une station sismique d\'Athènes', 'une station sismique de Nice', 'un sismographe du collège', 'une station sismique de Corinthe']);
+  const ville = rng.choix(['une station sismique de Nice', 'un sismographe du collège', 'une station sismique de Grenoble', 'une station sismique des Pyrénées']);
   const err = erreursNombre(d);
   err.ajouter(net(t / v), 'Distance = vitesse <strong>×</strong> durée.');
   err.ajouter(net(v + t), 'On <strong>multiplie</strong> la vitesse par la durée.');

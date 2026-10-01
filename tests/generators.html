@@ -31,9 +31,9 @@
   </main>
 
   <script type="module">
-    import { testerGenerateur, testerSaisie, testerCalculatrice, testerBanquesHistoire, testerBanquesSciences } from './verifications.js';
+    import { testerGenerateur, testerSaisie, testerCalculatrice, testerBanquesHistoire, testerBanquesSciences, testerFiches } from './verifications.js';
     import { evaluer, formaterResultat } from '../assets/js/ui/calculatrice.js';
-    import { chargerTous } from '../maths/chapitres.js';
+    import { chargerTous, CHAPITRES as CH_MATHS } from '../maths/chapitres.js';
     import { chargerTous as chargerHistoire } from '../histoire/chapitres.js';
     import { chargerTous as chargerSciences, chargerBanques as banquesSciences } from '../sciences/chapitres.js';
     import { DONNEES as BANQUES_HISTOIRE } from '../histoire/donnees/index.js';
@@ -60,7 +60,9 @@
       blocUnitaire('Saisie', testerSaisie()) +
       blocUnitaire('Calculatrice', testerCalculatrice(evaluer, formaterResultat)) +
       blocUnitaire('Banques d’histoire', testerBanquesHistoire(BANQUES_HISTOIRE)) +
-      blocUnitaire('Banques de sciences', testerBanquesSciences(await banquesSciences()));
+      blocUnitaire('Banques de sciences', testerBanquesSciences(await banquesSciences())) +
+      blocUnitaire('Fiches « Explique-moi plus »', testerFiches(await Promise.all(CH_MATHS.filter(c => c.approfondir)
+        .map(async c => ({ gen: (await c.charger()).default, fiche: (await c.approfondir()).default })))));
 
     // Générateurs
     const gens = [...await chargerTous(), ...await chargerSciences(), ...await chargerHistoire()];

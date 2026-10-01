@@ -6,6 +6,15 @@ import {
   verifier, formaterReponse, lireNombre, lireFraction, lireDuree, lirePoint, fmt, pgcd
 } from '../assets/js/core/answer.js';
 
+// Profils de test : pack Anna, « peu importe » sans thème, et deux profils avec les nouveaux thèmes.
+// Elouan (genre « peu importe ») ne doit jamais apparaître dans un énoncé.
+export const PROFILS_TEST = [
+  { prenom: 'Anna', genre: 'f' },
+  { prenom: 'Elouan', genre: 'n', themes: [] },
+  { prenom: 'Zoé', genre: 'f', themes: ['foot', 'mangas', 'voitures'] },
+  { prenom: 'Tom', genre: 'm', themes: ['basket', 'musique', 'animaux', 'cuisine'] }
+];
+
 // Texte visible d'un morceau de HTML (les espaces fines des milliers sont conservées)
 const sansBalises = html => html.replace(/<[^>]+>/g, '').replace(/[ \t\n\r]+/g, ' ');
 
@@ -53,9 +62,10 @@ export function testerGenerateur(gen, n = 1000, graine = 12345) {
     };
 
     for (let i = 0; i < n; i++) {
-      let exo;
+      let exo, profilTest;
       try {
-        exo = gen.generer(niveau, rng, tirerContexte(rng, i % 3 ? '' : 'Zoé'));
+        profilTest = PROFILS_TEST[i % PROFILS_TEST.length];
+        exo = gen.generer(niveau, rng, tirerContexte(rng, profilTest));
       } catch (e) {
         signaler(i, null, 'exception : ' + e.message);
         continue;
@@ -71,6 +81,11 @@ export function testerGenerateur(gen, n = 1000, graine = 12345) {
       if (/NaN|undefined|Infinity|null/.test(exo.enonce + (exo.etapes || []).join(' '))) {
         signaler(i, exo, 'NaN / undefined / Infinity dans le texte');
       }
+
+      // Personnalisation : JUL seulement dans le pack Anna, le prénom « peu importe » jamais à la 3e personne
+      const texteExo = sansBalises(exo.enonce + ' ' + (exo.etapes || []).join(' ') + ' ' + (exo.choix || []).join(' '));
+      if (profilTest.prenom !== 'Anna' && /JUL/.test(texteExo)) signaler(i, exo, 'JUL hors du pack Anna');
+      if (profilTest.genre === 'n' && texteExo.includes(profilTest.prenom)) signaler(i, exo, 'prénom « peu importe » utilisé dans un énoncé');
 
       const v = valeurNumerique(exo);
       if (v !== null) {
@@ -298,6 +313,31 @@ export function testerBanquesSciences(banques) {
       const items = c.groupes.flatMap(g => g.items.map(i => (typeof i === 'string' ? i : i.nom)));
       verif(`${b.id} : classement « ${c.question} » sans élément dans deux groupes`, new Set(items).size === items.length, 'doublon');
     }
+  }
+  return cas;
+}
+
+// Fiches « Explique-moi plus » : une section par carte du cours, dans le même ordre,
+// et des filtres d'exemples et de mini-vérif qui trouvent bien des exercices.
+export function testerFiches(paires) {
+  const cas = [];
+  const verif = (nom, ok, detail = '') => cas.push({ nom, obtenu: ok ? 'ok' : detail, attendu: 'ok', ok });
+  for (const { gen, fiche } of paires) {
+    verif(`${gen.id} : une section par carte`, fiche.sections.length === gen.cours.length, `${fiche.sections.length} sections, ${gen.cours.length} cartes`);
+    fiche.sections.forEach((s, k) => {
+      verif(`${gen.id} : section ${k + 1} « ${s.titre} » = carte`, gen.cours[k]?.titre === s.titre, gen.cours[k]?.titre || 'carte absente');
+      verif(`${gen.id} : section ${k + 1} complète`, !!(s.idee && s.pourquoi && s.pieges?.length && s.recherche && s.verif?.niveaux?.length === 2), 'champ manquant');
+      const rng = creerRng(1000 + k);
+      const demandes = [[s.exemple.niveau, s.exemple.filtre], ...s.verif.niveaux.map(n => [n, s.verif.filtre])];
+      for (const [niveau, filtre] of demandes) {
+        let trouves = 0;
+        for (let i = 0; i < 200; i++) {
+          const exo = gen.generer(niveau, rng, tirerContexte(rng, PROFILS_TEST[i % PROFILS_TEST.length]));
+          if (filtre(exo.cle)) trouves++;
+        }
+        verif(`${gen.id} : section ${k + 1}, filtre niveau ${niveau} assez fréquent`, trouves >= 10, `${trouves}/200`);
+      }
+    });
   }
   return cas;
 }

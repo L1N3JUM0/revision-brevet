@@ -1,4 +1,5 @@
 // SVT — Génétique : chromosomes, ADN, gènes et allèles, mitose, méiose, fécondation.
+import { choisirSelonTheme } from '../../assets/js/core/contexts.js';
 import { fmt } from '../../assets/js/core/answer.js';
 import { fabriquer, gras, erreursNombre } from './fabrique.js';
 
@@ -27,8 +28,7 @@ const CELLULES = [
 ];
 
 function calcChromosomes(rng, ctx, niveau) {
-  const adaptes = ESPECES.filter(e => e.themes.includes(ctx.theme));
-  const e = rng.choix(adaptes.length && rng.bool(0.6) ? adaptes : ESPECES);
+  const e = rng.bool(0.6) ? choisirSelonTheme(rng, ctx, ESPECES) : rng.choix(ESPECES);
   if (rng.bool(niveau === 1 ? 0.4 : 0.2)) {
     const paires = e.n2 / 2;
     return {

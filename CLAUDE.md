@@ -114,7 +114,8 @@ Les chapitres sont déclarés dans `maths/chapitres.js` (`charger: () => import(
 - **Nombres « propres »** : les valeurs doivent donner des calculs faisables (triplets pythagoriciens au niveau 1, arrondi au dixième ensuite, fractions simplifiables sans nombres énormes).
 - **Saisie** : accepter la virgule **et** le point, les espaces, les fractions `3/4`, les nombres négatifs. `inputmode="decimal"` sur iOS. Pour les fractions, accepter toute forme équivalente, mais demander la forme simplifiée quand l'énoncé l'exige.
 - **Vérification** des arrondis avec tolérance. Pour les durées, accepter `1h45`, `1 h 45 min` et `105 min` selon ce qui est demandé.
-- **Contexte** : `ctx` fournit un contexte (prénom, thème) tiré de `contexts.js`. Répartition : environ 70 % des énoncés sur les centres d'intérêt, 30 % neutres ou d'autres thèmes pour varier. Utiliser `ctx.de` (« d'Anna », « de Louise ») plutôt que `de ${ctx.prenom}`.
+- **Contexte** : `ctx` fournit un contexte tiré de `contexts.js` à partir du profil (prénom, genre, thèmes, amis, pack). Répartition : environ 70 % des énoncés sur les thèmes favoris, 30 % sur des thèmes neutres. Utiliser `ctx.de` (« d'Anna », « de Louise ») plutôt que `de ${ctx.prenom}`.
+- **Choisir un énoncé selon le thème** : toujours `choisirSelonTheme(rng, ctx, liste)` (jamais `filter(… ctx.theme)`). Repli : thème tiré → autres favoris → énoncés neutres (sans `themes` ou thème neutre). Les éléments portant un thème réservé (`rap`, donc JUL) ne sortent que dans le pack Anna ; `permis(ctx, liste)` donne la liste autorisée.
 
 ### Contrôle blanc (`maths/controle.html`, `assets/js/ui/controle.js`)
 
@@ -136,13 +137,16 @@ Les chapitres sont déclarés dans `maths/chapitres.js` (`charger: () => import(
 - Au clavier (ordinateur), les touches sont captées seulement quand le panneau est ouvert et qu'aucun champ n'a le focus ; Entrée calcule sans passer à la question suivante.
 - Tests du parseur dans `tests/generators.html` (`testerCalculatrice`).
 
-## Banque de contextes (`contexts.js`)
+## Profils et contextes (`contexts.js`, `store.js`, `ui/onboarding.js`)
 
-- **Prénoms** : Anna, Louise, Léona, Soléa, Ayline, Basile, Maud, Julien. Remplacer « Anna » par le prénom saisi sur le profil si ce n'est pas Anna (les copines utiliseront le site).
-- **Thèmes centraux** : handball (terrain 40 × 20 m, but 3 × 2 m, zone des 6 m, ailière), JUL et le rap (concerts, trajets, streams, ventes d'albums), mode (soldes, boutique, remises, marges), commerce (prix, bénéfices, stock), chevaux (galop, carrière, obstacles, clôtures), Grèce et mythologie grecque (Athènes, Parthénon, dieux, Thalès et Pythagore eux-mêmes), famille et amies.
-- **Thèmes de respiration** : espace, sport en général, jeux vidéo, cuisine et food truck, voyages, records, animaux.
-- Les données doivent rester réalistes (vitesses, distances, prix plausibles).
-- Aucun contenu moqueur envers une personne réelle. JUL et les personnalités publiques uniquement dans des situations neutres (concert, trajet, statistiques).
+- **Profil** (`store.profil`) : `{ prenom, genre: 'f' | 'm' | 'n', themes: [3 à 5 ids], amis: [{ prenom, genre }], pack: 'anna' | null, packUrl? }`. `profil()` renvoie le profil normalisé, `profilComplet()` dit si l'onboarding est fini, `definirProfil()` l'enregistre.
+- **Onboarding** (accueil, puis bouton ✏️) : prénom → accords (féminin, masculin, peu importe) → thèmes (3 à 5) → amis (facultatif, avec elle/il). Une idée par écran.
+- **Thèmes** (`THEMES`) : handball, foot, basket, sport, chevaux, animaux, musique, mangas, jeux vidéo, mode, commerce, voitures, cuisine, voyages, Grèce et mythologie, espace, records, famille et amis. Neutres (`THEMES_NEUTRES`) : espace, sport, jeux vidéo, cuisine, voyages, records, animaux.
+- **Pack Anna** : activé si le prénom est Anna ou avec `?profil=anna`. Prénoms Louise, Léona, Soléa, Ayline, Basile, Maud, Julien ; thèmes handball, rap (JUL), mode, commerce, chevaux, Grèce, famille. Sinon : prénoms mixtes (Camille, Sacha, Inès, Hugo…) et amis du profil.
+- **Genre « peu importe »** : le prénom du profil n'apparaît jamais à la 3e personne dans un énoncé (on prend un autre prénom). Pas de point médian dans les exercices.
+- **Migration** : `lire()` garde toute la progression (XP, flamme, stats, records, badges, contrôles). Un ancien profil « Anna » passe en pack Anna (genre f) sans repasser par l'onboarding. Ne jamais changer `version: 1` sans migration.
+- Les données doivent rester réalistes (vitesses, distances, prix plausibles). Aucun contenu moqueur envers une personne réelle. JUL et les personnalités publiques uniquement dans des situations neutres, et seulement dans le pack Anna.
+- Sciences : pas de thème écrit en dur dans les banques ; les décors (sport, musique…) passent par `choisirSelonTheme`. Les faits scientifiques restent (chromosomes du cheval, séismes en Grèce).
 
 ## Modes de session
 
@@ -154,10 +158,10 @@ Les chapitres sont déclarés dans `maths/chapitres.js` (`charger: () => import(
 ## Gamification
 
 - **XP** par bonne réponse, avec un bonus de série et de niveau de difficulté.
-- **Niveaux mythologiques** : Mortelle → Héroïne → Nymphe → Muse → Hermès → Athéna → Zeus (seuils à calibrer).
+- **Niveaux mythologiques** : Mortelle/Mortel → Héroïne/Héros → Oracle → Argonaute → Hermès → Athéna → Zeus, accordés au genre du profil (« peu importe » → Mortel, Héros). `nomNiveau(niveau, genre)`.
 - **Série de jours** consécutifs de révision (flamme).
 - **Badges** par chapitre (chapitre maîtrisé = 10 bonnes réponses au niveau 3).
-- Messages de feedback variés (au moins 15 pour les bonnes réponses, 10 pour les erreurs), encourageants, jamais culpabilisants.
+- Messages de feedback variés (au moins 15 pour les bonnes réponses, 10 pour les erreurs), encourageants, jamais culpabilisants, et épicènes (aucun accord au féminin ou au masculin).
 - Écran « Mes points faibles » : les chapitres avec le plus faible taux de réussite.
 
 ## Programme Maths — V1 (priorité : contrôle du vendredi 2 octobre 2026)
@@ -198,11 +202,25 @@ Les points 1 à 8 et 12 sont prioritaires avant jeudi soir. Les points 9 à 11 p
 - Type `ordre` : `exo.consigneOrdre` remplace la consigne par défaut (« du plus ancien au plus récent »).
 - Exactitude : valeurs usuelles des manuels (g = 9,8 N/kg, son 340 m/s, lumière 300 000 km/s), données réalistes associées à chaque situation (vitesses des plaques, puissances des appareils).
 
+## « Explique-moi plus » (fiches détaillées)
+
+- Bouton sur chaque carte du cours flash, si le registre du chapitre a `approfondir: () => import('./approfondir/<chapitre>.js')`. Ouvre `chapitre.html?c=…&mode=approfondir&carte=k#carte-k` (défilement vers la section k).
+- Une fiche par chapitre (`<matiere>/approfondir/<chapitre>.js`), **une section par carte, dans le même ordre et avec le même titre**. Section : `{ titre, idee, pourquoi (HTML), animation? | figure?, pieges: [{ faux, juste }], exemple: { niveau, filtre(cle) }, verif: { niveaux: [n, n], filtre(cle) }, recherche }`.
+- Affichage (`ui/approfondir.js`) : l'idée en une phrase, pourquoi ça marche, exemple guidé (généré par le générateur du chapitre, étape par étape, bouton « Un autre exemple »), pièges, mini-vérif de 2 questions (hors statistiques et XP), lien de recherche vers les vidéos d'Yvan Monka.
+- Fait : Pythagore, Thalès (format à valider par Julien avant de généraliser).
+
+## Hors ligne (`sw.js`)
+
+- Service worker à la racine, enregistré par `core/hors-ligne.js` (importé par `store.js`). « Réseau d'abord » avec délai de 4 s, sinon cache ; tout le site est préchargé à l'installation.
+- Cache versionné `revision-brevet-<VERSION>` ; les anciens caches sont supprimés à l'activation (`skipWaiting` + `clients.claim`).
+- **Avant chaque commit** : `node tests/verifier-sw.mjs --maj` (liste des fichiers et VERSION = empreinte du contenu). Sans `--maj`, le script vérifie seulement.
+
 ## Qualité et tests
 
-- `tests/generators.html` génère **1 000 exercices par générateur et par niveau** et vérifie que la réponse est définie et finie, sans NaN ni division par zéro, que les nombres restent dans des bornes raisonnables, que les fractions affichées sont correctes et que la vérification accepte la bonne réponse.
+- `tests/generators.html` génère **1 000 exercices par générateur et par niveau**, avec plusieurs profils (pack Anna, « peu importe », nouveaux thèmes : JUL interdit hors pack, prénom « peu importe » interdit dans les énoncés), et vérifie que la réponse est définie et finie, sans NaN ni division par zéro, que les nombres restent dans des bornes raisonnables, que les fractions affichées sont correctes et que la vérification accepte la bonne réponse.
 - Vérifier chaque calcul mathématique : **une erreur dans une correction est le pire bug possible** sur ce site.
 - Tester sur une largeur de 390 px et en mode sombre avant chaque commit.
+- `tests/generators.html` vérifie aussi les fiches « Explique-moi plus » (une section par carte, filtres d'exemples efficaces).
 
 ## Conventions
 
@@ -213,7 +231,7 @@ Les points 1 à 8 et 12 sont prioritaires avant jeudi soir. Les points 9 à 11 p
 
 ## Déploiement
 
-- GitHub Pages sur `main` (racine). Un `git push` suffit à publier.
+- GitHub Pages sur `main` (racine). Un `git push` suffit à publier, après `node tests/verifier-sw.mjs --maj` et une page de tests entièrement verte.
 - Vérifier que les chemins sont **relatifs**, puisque le site est servi sous `/revision-brevet/`.
 
 ## Roadmap

@@ -1,6 +1,7 @@
 // Générateur : conversions de durées (h, min, s), heures décimales, calculs d'horaires.
 // Toutes les durées sont manipulées en minutes entières (ou en secondes) : calculs exacts.
 // Les réponses de type 'duree' sont en secondes (voir answer.js, lireDuree).
+import { choisirSelonTheme } from '../../assets/js/core/contexts.js';
 import { fmt, fmtDuree } from '../../assets/js/core/answer.js';
 
 const gras = s => `<strong>${s}</strong>`;
@@ -236,6 +237,37 @@ function etapesAjout(debut, duree) {
 
 const PROBLEMES = [
   {
+    themes: ['foot'],
+    creer(rng, ctx) {
+      const debut = rng.int(14 * 4, 21 * 4) * 15;
+      return { sorte: 'arrivee', debut, duree: 105, detail: '2 mi-temps de 45 min et 15 min de pause', texte: `Le match de foot ${ctx.de} commence à ${horaire(debut)}. Il y a 2 mi-temps de 45 min et une pause de 15 min.`, question: 'À quelle heure se termine le match (sans arrêts de jeu) ?', concl: t => `Le match se termine à ${t}.` };
+    }
+  },
+  {
+    themes: ['basket', 'mangas'],
+    creer(rng, ctx) {
+      const n = rng.int(3, 8);
+      const duree = rng.choix([22, 23, 24, 25]);
+      return { sorte: 'total', durees: Array(n).fill(duree), texte: `${ctx.prenom} regarde ${n} épisodes d'un animé à la suite. Chaque épisode dure ${duree} min.`, question: 'Combien de temps dure ce marathon d\'épisodes ?', concl: t => `Le marathon dure ${t}.` };
+    }
+  },
+  {
+    themes: ['musique'],
+    creer(rng) {
+      const debut = rng.int(19 * 4, 21 * 4) * 15 + rng.choix([0, 5, 10]);
+      const duree = rng.int(18, 30) * 5;
+      return { sorte: 'arrivee', debut, duree, texte: `Un concert commence à ${horaire(debut)} et dure ${hm(duree)}.`, question: 'À quelle heure se termine-t-il ?', concl: t => `Le concert se termine à ${t}.` };
+    }
+  },
+  {
+    themes: ['voitures'],
+    creer(rng) {
+      const debut = rng.int(13 * 4, 15 * 4) * 15;
+      const fin = debut + rng.int(18, 26) * 5;
+      return { sorte: 'ecart', debut, fin, texte: `Un Grand Prix de Formule 1 part à ${horaire(debut)}. Le vainqueur franchit la ligne d'arrivée à ${horaire(fin)}.`, question: 'Combien de temps a duré la course ?', concl: t => `La course a duré ${t}.` };
+    }
+  },
+  {
     themes: ['rap'],
     creer(rng) {
       const debut = rng.int(19 * 4, 21 * 4) * 15 + rng.choix([0, 5, 10]);
@@ -318,8 +350,7 @@ const PROBLEMES = [
 ];
 
 function exoProbleme(rng, ctx) {
-  const adaptes = PROBLEMES.filter(p => p.themes.includes(ctx.theme));
-  const modele = rng.choix(adaptes.length ? adaptes : PROBLEMES);
+  const modele = choisirSelonTheme(rng, ctx, PROBLEMES);
   const p = modele.creer(rng, ctx);
   let r, etapes, attendu;
   const erreurs = [];

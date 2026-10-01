@@ -1,7 +1,7 @@
 // Contrôle blanc : sujet mélangé sur plusieurs chapitres, barème affiché, durée indicative,
 // calculatrice autorisée, correction complète à la fin seulement.
 import { creerRng, graineDepuisUrl, graineAleatoire } from '../core/rng.js';
-import { charger, sauver, prenom as prenomProfil } from '../core/store.js';
+import { charger, sauver, profil as profilStocke } from '../core/store.js';
 import { genererExercice } from '../core/engine.js';
 import { verifier, formaterReponse, fmt, lireOrdre } from '../core/answer.js';
 import { enregistrerResultat } from '../core/gamification.js';
@@ -96,11 +96,11 @@ export function demarrerControle({
     const niveaux = rng.melanger([...Array(n1).fill(1), ...Array(nb - n1 - n3).fill(2), ...Array(n3).fill(3)]);
     // Répartition équilibrée entre les chapitres
     const ordre = rng.melanger(gens.map((_, k) => k));
-    const prenom = prenomProfil();
+    const profil = profilStocke();
     const questions = niveaux.map((niveau, q) => {
       const k = ordre[q % ordre.length];
       const gen = gens[k];
-      const exo = genererExercice(gen, Math.min(niveau, gen.niveaux), rng, { prenom });
+      const exo = genererExercice(gen, Math.min(niveau, gen.niveaux), rng, { profil });
       return { gen, rang: k, exo, niveau: exo.niveau, points: POINTS[exo.niveau], saisie: '' };
     });
     // Comme un vrai sujet : regroupé par chapitre (exercices), dans l'ordre du programme

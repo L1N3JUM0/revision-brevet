@@ -1,4 +1,5 @@
 // Physique-Chimie — Mouvements et interactions : nature d'un mouvement, vitesse, forces, poids.
+import { choisirSelonTheme } from '../../assets/js/core/contexts.js';
 import { fmt } from '../../assets/js/core/answer.js';
 import { fabriquer, gras, erreursNombre, net } from './fabrique.js';
 import { chronophoto } from './figures.js';
@@ -16,6 +17,9 @@ const OBJETS = [
   { themes: ['chevaux', 'animaux'], nom: 'Un cheval', m: [400, 600, 10] },
   { themes: ['chevaux'], nom: 'Une selle', m: [8, 14, 1] },
   { themes: ['handball', 'sport'], nom: 'Un sac de ballons de handball', m: [3, 6, 0.5] },
+  { themes: ['foot', 'basket'], nom: 'Un filet de ballons', m: [3, 8, 0.5] },
+  { themes: ['voitures'], nom: 'Une voiture', m: [900, 1500, 50] },
+  { themes: ['mangas', 'musique'], nom: 'Un carton de livres et de CD', m: [5, 15, 1] },
   { themes: ['rap', 'commerce'], nom: 'Une enceinte de concert', m: [20, 60, 5] },
   { themes: ['famille', 'mode', 'voyages'], nom: 'Une valise', m: [10, 23, 1] },
   { themes: ['cuisine'], nom: 'Un sac de farine', m: [1, 25, 1] },
@@ -23,22 +27,33 @@ const OBJETS = [
 ];
 
 function tirerObjet(rng, ctx) {
-  const adaptes = OBJETS.filter(o => o.themes.includes(ctx.theme));
-  const o = rng.choix(adaptes.length ? adaptes : OBJETS);
+  const o = choisirSelonTheme(rng, ctx, OBJETS);
   const [min, max, p] = o.m;
   return { nom: o.nom, m: net(min + p * rng.int(0, Math.round((max - min) / p))) };
 }
 
 // ---------- Nature du mouvement (chronophotographie) ----------
 
-function calcNature(rng) {
+// Objets filmés en chronophotographie, selon les thèmes du profil (sans thème = neutre)
+const MOBILES_CHRONO = [
+  { nom: 'Un ballon de handball', themes: ['handball'] },
+  { nom: 'Un ballon de foot', themes: ['foot'] },
+  { nom: 'Un ballon de basket', themes: ['basket'] },
+  { nom: 'Une voiture', themes: ['voitures', 'famille'] },
+  { nom: 'Un cheval au galop', themes: ['chevaux', 'animaux'] },
+  { nom: 'Une fusée au décollage', themes: ['espace'] },
+  { nom: 'Un skateur', themes: ['sport'] },
+  { nom: 'Une bille' }
+];
+
+function calcNature(rng, ctx) {
   const nature = rng.choix(['uniforme', 'accéléré', 'ralenti']);
   const n = 6;
   const d0 = rng.int(3, 6);
   const pas = rng.int(2, 3);
   const ecarts = Array.from({ length: n - 1 }, (_, k) => (nature === 'uniforme' ? d0 + 2 : nature === 'accéléré' ? d0 + k * pas : d0 + (n - 2 - k) * pas));
   const positions = ecarts.reduce((acc, e) => [...acc, acc[acc.length - 1] + e], [0]);
-  const objet = rng.choix(['Un ballon de handball', 'Une voiture', 'Un cheval au galop', 'Une bille', 'Un skateur', 'Une fusée au décollage']);
+  const objet = choisirSelonTheme(rng, ctx, MOBILES_CHRONO).nom;
   return {
     cle: `nature:${nature}:${ecarts.join(',')}`,
     enonce: `<p>Voici la chronophotographie d'un objet (${objet.toLowerCase()}) : ses positions sont prises à intervalles de temps égaux.</p><p><strong>Le mouvement est…</strong></p>`,
@@ -197,7 +212,7 @@ export const banque = {
   classements: [{
     question: 'Action de contact ou à distance ?',
     groupes: [
-      { nom: 'De contact', items: ['Le pied qui frappe le ballon', 'Le sol qui soutient un cheval', 'Le vent qui pousse un voilier', 'La main qui lance le ballon de handball', 'La corde qui tire un seau'], explication: 'Les deux objets se touchent.' },
+      { nom: 'De contact', items: ['Le pied qui frappe le ballon', 'Le sol qui soutient une voiture', 'Le vent qui pousse un voilier', 'La main qui lance le ballon de handball', 'La corde qui tire un seau'], explication: 'Les deux objets se touchent.' },
       { nom: 'À distance', items: ['La Terre qui attire une pomme', 'Un aimant qui attire un clou', 'La Terre qui attire la Lune', 'Un ballon frotté qui attire des cheveux', 'Le Soleil qui attire la Terre'], explication: 'Les objets agissent l\'un sur l\'autre sans se toucher.' }
     ]
   }],

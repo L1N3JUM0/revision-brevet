@@ -1,5 +1,6 @@
 // Générateur : conversions de longueurs (mm → km), avec tableau de conversion dans la correction.
 // Chaque longueur est d'abord un nombre entier de millimètres : les conversions sont exactes.
+import { choisirSelonTheme } from '../../assets/js/core/contexts.js';
 import { fmt } from '../../assets/js/core/answer.js';
 
 const UNITES = ['km', 'hm', 'dam', 'm', 'dm', 'cm', 'mm'];
@@ -170,8 +171,7 @@ const SOMMES = [
 ];
 
 function exoSomme(rng, ctx) {
-  const adaptes = SOMMES.filter(m => m.themes.includes(ctx.theme));
-  const m = rng.choix(adaptes.length ? adaptes : SOMMES);
+  const m = choisirSelonTheme(rng, ctx, SOMMES);
   const [min, max] = m.plage; // ordre de grandeur réaliste de chaque terme, en mm
   let termes;
   for (;;) {
@@ -218,6 +218,8 @@ function exoSomme(rng, ctx) {
 
 // Tours d'un terrain rectangulaire, résultat en km
 const TERRAINS = [
+  { themes: ['foot'], nom: 'du terrain de foot', L: 105, l: 68, qui: ctx => `À l'échauffement, ${ctx.prenom} fait` },
+  { themes: ['basket'], nom: 'du terrain de basket', L: 28, l: 15, qui: ctx => `À l'entraînement de basket, ${ctx.prenom} fait` },
   { themes: ['handball', 'sport'], nom: 'du terrain de handball', L: 40, l: 20, qui: ctx => `À l'échauffement, ${ctx.prenom} fait` },
   { themes: ['chevaux'], nom: 'de la carrière', L: 60, l: 20, qui: ctx => `Au trot, ${ctx.prenom} et son cheval font` },
   { themes: ['chevaux', 'animaux'], nom: 'du paddock', L: 45, l: 30, qui: ctx => `${ctx.prenom} promène le poney et fait` },
@@ -225,8 +227,7 @@ const TERRAINS = [
 ];
 
 function exoTours(rng, ctx) {
-  const adaptes = TERRAINS.filter(t => t.themes.includes(ctx.theme));
-  const t = rng.choix(adaptes.length ? adaptes : TERRAINS);
+  const t = choisirSelonTheme(rng, ctx, TERRAINS);
   const n = rng.int(3, t.L > 100 ? 6 : 15);
   const perimetre = 2 * (t.L + t.l);
   const totalM = n * perimetre;

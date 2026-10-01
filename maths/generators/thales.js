@@ -1,6 +1,7 @@
 // Générateur : théorème de Thalès (configuration classique et papillon, réciproque, problèmes d'ombre).
 // Les longueurs sont construites à partir d'un rapport k = AM/AB exact : la longueur cherchée est
 // connue avant d'être cachée, et le calcul affiché (produit en croix) est vérifié contre elle.
+import { choisirSelonTheme } from '../../assets/js/core/contexts.js';
 import { fmt, fracHtml } from '../../assets/js/core/answer.js';
 import { svg, segment, point, ajuster, tourner, angleDroit } from '../../assets/js/core/svg.js';
 
@@ -347,6 +348,11 @@ function exoReciproque(rng) {
 // ---------- Problèmes d'ombre (niveaux 2 et 3) ----------
 
 const OMBRES = [
+  { themes: ['foot'], objet: 'le mât d\'éclairage du stade', court: 'le mât', h: [15, 30], texte: ctx => `Au stade, ${ctx.prenom} veut connaître la hauteur d'un mât d'éclairage.` },
+  { themes: ['basket', 'sport'], objet: 'le lampadaire du terrain', court: 'le lampadaire', h: [5, 9], texte: ctx => `Sur le terrain de basket du quartier, ${ctx.prenom} veut connaître la hauteur d'un lampadaire.` },
+  { themes: ['musique'], objet: 'le pylône de la scène', court: 'le pylône', h: [12, 25], texte: () => 'Avant un concert, un technicien veut connaître la hauteur du pylône de la scène.' },
+  { themes: ['voitures'], objet: 'le portique d\'arrivée du circuit', court: 'le portique', h: [6, 12], texte: ctx => `Sur un circuit automobile, ${ctx.prenom} veut connaître la hauteur du portique d'arrivée.` },
+  { themes: ['mangas'], objet: 'la statue géante du parc', court: 'la statue', h: [10, 20], texte: ctx => `Dans un parc à thème manga, ${ctx.prenom} veut connaître la hauteur d'une statue géante de robot.` },
   { themes: ['grece'], objet: 'la pyramide de Khéops', court: 'la pyramide', h: [140, 146], texte: ctx => `On raconte que Thalès a mesuré la hauteur de la pyramide de Khéops grâce aux ombres. ${ctx.prenom} refait l'expérience en maquette géante :` },
   { themes: ['grece'], objet: 'la colonne du temple', court: 'la colonne', h: [8, 12], texte: ctx => `En visite à Athènes, ${ctx.prenom} veut connaître la hauteur d'une colonne du temple.` },
   { themes: ['rap'], objet: 'le pylône de la scène', court: 'le pylône', h: [12, 25], texte: () => 'Avant le concert de JUL, un technicien veut connaître la hauteur du pylône de la scène.' },
@@ -357,8 +363,7 @@ const OMBRES = [
 ];
 
 function exoOmbre(rng, ctx) {
-  const adaptes = OMBRES.filter(m => m.themes.includes(ctx.theme));
-  const m = rng.choix(adaptes.length ? adaptes : OMBRES);
+  const m = choisirSelonTheme(rng, ctx, OMBRES);
   const h = pas(rng, 1, 2, 0.1);             // bâton
   const s = pas(rng, 0.8, 3, 0.1);           // ombre du bâton
   const cible = rng.int(m.h[0], m.h[1]);
@@ -418,7 +423,7 @@ function exoOmbre(rng, ctx) {
 
 // ---------- Figure du cours ----------
 
-function figureCours(papillon) {
+export function figureCours(papillon) {
   const L = LETTRES[0];
   const P = coordonnees(6, 5, 5.5, papillon ? 0.6 : 0.5, papillon);
   return figure({ int: () => 0, bool: () => false }, P, L, { papillon, tourne: false });

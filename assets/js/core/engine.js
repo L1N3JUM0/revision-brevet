@@ -1,6 +1,6 @@
 // Déroulé d'une session : génération (anti-doublon), modes, score, adaptation du niveau.
 // Aucune manipulation du DOM ici : l'affichage est dans assets/js/ui/.
-import { dejaVue, memoriserCle, chapitre, sauver, prenom as prenomProfil } from './store.js';
+import { dejaVue, memoriserCle, chapitre, sauver, profil as profilStocke } from './store.js';
 import { verifier } from './answer.js';
 import { tirerContexte } from './contexts.js';
 import {
@@ -17,10 +17,10 @@ export const ERREURS_POUR_DESCENDRE = 2;
  * Génère un exercice en évitant les clés déjà vues (20 essais au maximum).
  * Renvoie l'exercice complété par { niveau, idChapitre }.
  */
-export function genererExercice(gen, niveau, rng, { prenom = '', memoriser = true } = {}) {
+export function genererExercice(gen, niveau, rng, { profil = {}, memoriser = true } = {}) {
   let exo = null;
   for (let essai = 0; essai < MAX_ESSAIS_ANTI_DOUBLON; essai++) {
-    const ctx = tirerContexte(rng, prenom);
+    const ctx = tirerContexte(rng, profil);
     exo = gen.generer(niveau, rng, ctx);
     if (!memoriser || !dejaVue(gen.id, exo.cle)) break;
   }
@@ -41,7 +41,8 @@ export class Session {
     this.gen = generateur;
     this.mode = mode;
     this.rng = rng;
-    this.prenom = prenomProfil();
+    this.profil = profilStocke();
+    this.prenom = this.profil.prenom;
     const stats = chapitre(generateur.id);
     this.niveau = Math.min(Math.max(niveauDepart ?? stats.niveau ?? 1, 1), generateur.niveaux);
     this.plan = mode === 'chrono' ? planChrono(generateur.niveaux) : null;
@@ -73,7 +74,7 @@ export class Session {
     if (this.estTerminee()) return null;
     if (!this.debut) this.debut = Date.now();
     const niveau = this.plan ? this.plan[this.index] : this.niveau;
-    this.exo = genererExercice(this.gen, niveau, this.rng, { prenom: this.prenom });
+    this.exo = genererExercice(this.gen, niveau, this.rng, { profil: this.profil });
     return this.exo;
   }
 

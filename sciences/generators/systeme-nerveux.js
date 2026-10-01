@@ -95,7 +95,7 @@ export const banque = {
     { texte: 'Une synapse est un type de muscle.', vrai: false, explication: 'C\'est la zone de communication entre deux neurones.' }
   ],
   sequences: [
-    { titre: 'message', consigne: 'Remets dans l\'ordre le trajet du message nerveux quand une gardienne de handball voit le ballon arriver.', etapes: ['L\'œil capte la lumière (récepteur)', 'Le nerf optique (nerf sensitif) transmet le message', 'Le cerveau analyse et décide', 'Un nerf moteur transmet l\'ordre', 'Les muscles du bras se contractent'] },
+    { titre: 'message', consigne: 'Remets dans l\'ordre le trajet du message nerveux quand tu vois un ballon arriver et que tu l\'attrapes.', etapes: ['L\'œil capte la lumière (récepteur)', 'Le nerf optique (nerf sensitif) transmet le message', 'Le cerveau analyse et décide', 'Un nerf moteur transmet l\'ordre', 'Les muscles du bras se contractent'] },
     { titre: 'chaud', consigne: 'Remets dans l\'ordre ce qui se passe quand ta main touche une plaque chaude.', etapes: ['Les récepteurs de la peau captent la chaleur', 'Un nerf sensitif conduit le message', 'La moelle épinière élabore une réponse', 'Un nerf moteur conduit le message', 'Les muscles du bras retirent la main'] }
   ],
   calculs: { reaction: calcReaction, message: calcMessage },

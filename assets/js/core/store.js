@@ -1,6 +1,8 @@
 // Persistance locale : profil, XP, progression par chapitre, anti-doublon.
 // Tout passe par try/catch : si localStorage est bloqué (navigation privée),
 // le site fonctionne quand même, sans rien retenir.
+import { normaliserProfil, packActif, THEMES } from './contexts.js';
+import './hors-ligne.js';
 
 const CLE = 'revision-brevet.v1';
 const MAX_CLES_VUES = 200;
@@ -8,7 +10,8 @@ const MAX_CLES_VUES = 200;
 function etatParDefaut() {
   return {
     version: 1,
-    profil: { prenom: '' },
+    // genre : 'f' | 'm' | 'n' (peu importe) ; themes : 3 à 5 ids ; amis : [{ prenom, genre }] ; pack : 'anna' | null
+    profil: { prenom: '', genre: '', themes: [], amis: [], pack: null },
     xp: 0,
     flamme: { jours: 0, dernier: null }, // dernier = 'AAAA-MM-JJ'
     badges: [],                          // ids de chapitres maîtrisés
@@ -30,6 +33,7 @@ export function statsParDefaut() {
 }
 
 let etat = null;
+let aSauver = false; // vrai si l'ancien état a été migré (à réécrire tout de suite)
 
 function lire() {
   try {
@@ -39,7 +43,8 @@ function lire() {
     if (!obj || obj.version !== 1) return etatParDefaut();
     // Fusion avec les valeurs par défaut (champs ajoutés plus tard)
     const base = etatParDefaut();
-    return {
+    aSauver = !obj.profil || !('pack' in obj.profil);
+    return migrer({
       ...base,
       ...obj,
       profil: { ...base.profil, ...(obj.profil || {}) },
@@ -50,14 +55,45 @@ function lire() {
         historique: Array.isArray(obj.calculatrice?.historique) ? obj.calculatrice.historique.slice(-3) : [],
         ans: Number.isFinite(obj.calculatrice?.ans) ? obj.calculatrice.ans : 0
       }
-    };
+    });
   } catch {
     return etatParDefaut();
   }
 }
 
+// Migration des anciens profils (prénom seul) : la progression est gardée telle quelle.
+// Un ancien profil « Anna » active le pack Anna et passe l'onboarding.
+export function migrer(e) {
+  const p = e.profil;
+  if (!Array.isArray(p.themes)) p.themes = [];
+  if (!Array.isArray(p.amis)) p.amis = [];
+  if (packActif(p)) {
+    p.pack = 'anna';
+    if (!p.genre) p.genre = 'f';
+  }
+  return e;
+}
+
+// ?profil=anna active le pack Anna (et le garde en mémoire)
+function lireUrl(e) {
+  try {
+    const v = new URLSearchParams(location.search).get('profil');
+    if (v && v.toLowerCase() === 'anna') {
+      e.profil.pack = 'anna';
+      e.profil.packUrl = true;
+      if (!e.profil.prenom) e.profil.prenom = 'Anna';
+      if (!e.profil.genre) e.profil.genre = 'f';
+      return true;
+    }
+  } catch { /* pas de location (tests sous Node) */ }
+  return false;
+}
+
 export function charger() {
-  if (!etat) etat = lire();
+  if (!etat) {
+    etat = lire();
+    if (lireUrl(etat) || aSauver) sauver();
+  }
   return etat;
 }
 
@@ -90,6 +126,33 @@ export function prenom() {
 
 export function definirPrenom(p) {
   maj(e => { e.profil.prenom = String(p || '').trim().slice(0, 30); });
+}
+
+// Profil normalisé (pack Anna, genre et thèmes par défaut), pour tirerContexte
+export function profil() {
+  return normaliserProfil(charger().profil);
+}
+
+// Onboarding terminé : prénom, genre et 3 à 5 thèmes (le pack Anna fournit ses thèmes)
+export function profilComplet() {
+  const p = charger().profil;
+  if (!p.prenom || !p.genre) return false;
+  return packActif(p) || (p.themes || []).length >= 3;
+}
+
+export function definirProfil({ prenom: pr, genre, themes, amis }) {
+  maj(e => {
+    const p = e.profil;
+    p.prenom = String(pr || '').trim().slice(0, 30);
+    p.genre = ['f', 'm', 'n'].includes(genre) ? genre : 'n';
+    p.themes = (themes || []).filter(t => THEMES.some(x => x.id === t)).slice(0, 5);
+    p.amis = (amis || [])
+      .map(a => ({ prenom: String(a.prenom || '').trim().slice(0, 30), genre: a.genre === 'm' ? 'm' : 'f' }))
+      .filter(a => a.prenom)
+      .slice(0, 6);
+    // Pack Anna : prénom Anna, ou demandé par l'URL (?profil=anna)
+    p.pack = p.prenom.toLowerCase() === 'anna' || p.packUrl ? 'anna' : null;
+  });
 }
 
 // Anti-doublon

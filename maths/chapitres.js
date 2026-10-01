@@ -6,8 +6,8 @@ export const MATIERE = { id: 'maths', titre: 'Maths', emoji: '📐' };
 export const CHAPITRES = [
   { id: 'relatifs', titre: 'Nombres relatifs', emoji: '±', charger: () => import('./generators/relatifs.js') },
   { id: 'fractions', titre: 'Fractions', emoji: '½', charger: () => import('./generators/fractions.js') },
-  { id: 'pythagore', titre: 'Théorème de Pythagore', emoji: '📐', charger: () => import('./generators/pythagore.js') },
-  { id: 'thales', titre: 'Théorème de Thalès', emoji: '🔺', charger: () => import('./generators/thales.js') },
+  { id: 'pythagore', titre: 'Théorème de Pythagore', emoji: '📐', charger: () => import('./generators/pythagore.js'), approfondir: () => import('./approfondir/pythagore.js') },
+  { id: 'thales', titre: 'Théorème de Thalès', emoji: '🔺', charger: () => import('./generators/thales.js'), approfondir: () => import('./approfondir/thales.js') },
   { id: 'conversions-longueurs', titre: 'Conversions de longueurs', emoji: '📏', charger: () => import('./generators/conversions-longueurs.js') },
   { id: 'conversions-durees', titre: 'Conversions de durées', emoji: '⏱️', charger: () => import('./generators/conversions-durees.js') },
   { id: 'vitesses', titre: 'Vitesses', emoji: '🏎️', charger: () => import('./generators/vitesses.js') },

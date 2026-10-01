@@ -1,4 +1,5 @@
 // Physique-Chimie — La matière : états, changements d'état, masse volumique, mélanges.
+import { choisirSelonTheme } from '../../assets/js/core/contexts.js';
 import { fmt } from '../../assets/js/core/answer.js';
 import { fabriquer, gras, erreursNombre, net } from './fabrique.js';
 import { graphe } from './figures.js';
@@ -32,8 +33,7 @@ const OBJETS = [
 ];
 
 function tirerObjet(rng, ctx) {
-  const adaptes = OBJETS.filter(o => o.themes.includes(ctx.theme));
-  const o = rng.choix(adaptes.length ? adaptes : OBJETS);
+  const o = choisirSelonTheme(rng, ctx, OBJETS);
   const metal = o.metal ? METAUX.find(m => m.nom === o.metal) : rng.choix(METAUX);
   return { nom: o.nom, metal };
 }

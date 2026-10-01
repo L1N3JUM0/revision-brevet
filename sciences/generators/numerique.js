@@ -1,4 +1,5 @@
 // Technologie — Le numérique : codage binaire, unités de stockage, débit, réseaux, algorithmes.
+import { choisirSelonTheme } from '../../assets/js/core/contexts.js';
 import { fmt } from '../../assets/js/core/answer.js';
 import { fabriquer, gras, erreursNombre, net } from './fabrique.js';
 
@@ -49,14 +50,18 @@ function calcBinaire(rng, ctx, niveau) {
 }
 
 // Unités de stockage (1 Ko = 1 000 octets, 1 Mo = 1 000 Ko, 1 Go = 1 000 Mo)
+// Fichiers selon les thèmes du profil (sans thème = neutre) ; fem : accord de « chacun »
 const FICHIERS = [
-  { nom: 'photos', taille: [2, 3, 4, 5, 8], unite: 'Mo' },
-  { nom: 'morceaux de JUL en MP3', taille: [4, 5, 8, 10], unite: 'Mo' },
-  { nom: 'vidéos de match de handball', taille: [200, 250, 400, 500], unite: 'Mo' },
-  { nom: 'jeux vidéo', taille: [20, 40, 50, 80], unite: 'Go' }
+  { nom: 'photos', taille: [2, 3, 4, 5, 8], unite: 'Mo', fem: true },
+  { nom: 'morceaux de JUL en MP3', taille: [4, 5, 8, 10], unite: 'Mo', themes: ['rap'] },
+  { nom: 'morceaux de musique en MP3', taille: [4, 5, 8, 10], unite: 'Mo', themes: ['musique'] },
+  { nom: 'vidéos de match de handball', taille: [200, 250, 400, 500], unite: 'Mo', fem: true, themes: ['handball'] },
+  { nom: 'vidéos de match', taille: [200, 250, 400, 500], unite: 'Mo', fem: true, themes: ['foot', 'basket', 'sport'] },
+  { nom: 'épisodes d\'animé', taille: [200, 250, 400, 500], unite: 'Mo', themes: ['mangas'] },
+  { nom: 'jeux vidéo', taille: [20, 40, 50, 80], unite: 'Go', themes: ['jeux-video'] }
 ];
 function calcStockage(rng, ctx, niveau) {
-  const f = rng.choix(FICHIERS.filter(x => x.unite === 'Mo' || niveau === 3));
+  const f = choisirSelonTheme(rng, ctx, FICHIERS.filter(x => x.unite === 'Mo' || niveau === 3));
   const t = rng.choix(f.taille);
   if (f.unite === 'Go') {
     const disque = rng.choix([500, 1000, 2000]);
@@ -79,7 +84,7 @@ function calcStockage(rng, ctx, niveau) {
   err.ajouter(Math.floor(cle * 1024 / t), 'Au collège, on utilise 1 Go = 1 000 Mo.');
   return {
     cle: `stock:${f.nom}:${t}:${cle}`,
-    enonce: `<p>Une clé USB de ${cle} Go est vide. Combien de ${f.nom} de ${t} Mo chacun${f.nom.startsWith('photos') || f.nom.startsWith('vidéos') ? 'e' : ''} peut-on y enregistrer au maximum ?</p>`,
+    enonce: `<p>Une clé USB de ${cle} Go est vide. Combien de ${f.nom} de ${t} Mo chacun${f.fem ? 'e' : ''} peut-on y enregistrer au maximum ?</p>`,
     type: 'nombre',
     reponse: r,
     etapes: [

@@ -1,6 +1,7 @@
 // Générateur : nombres relatifs (4 opérations, priorités, parenthèses).
 // Les calculs sont représentés par un petit arbre : le texte affiché, la valeur
 // et la correction pas à pas en sont déduits automatiquement, donc toujours cohérents.
+import { choisirSelonTheme } from '../../assets/js/core/contexts.js';
 import { fmt } from '../../assets/js/core/answer.js';
 import { droiteGraduee } from '../../assets/js/core/svg.js';
 
@@ -232,6 +233,27 @@ const MODELES_N1 = {
       };
     }
   },
+  foot: {
+    themes: ['foot', 'basket'],
+    creer(rng, ctx) {
+      const basket = ctx.themes.find(t => t === 'foot' || t === 'basket') === 'basket';
+      const a = basket ? rng.intSauf(-40, 40, [0]) : rng.intSauf(-8, 8, [0]);
+      let x, y;
+      do {
+        x = basket ? rng.int(55, 95) : rng.int(0, 5);
+        y = basket ? rng.int(55, 95) : rng.int(0, 5);
+      } while (x === y || abs(x - y) > (basket ? 25 : 4));
+      const b = x - y;
+      const sport = basket ? 'basket' : 'foot';
+      const points = basket ? 'points' : 'buts';
+      return {
+        a, o: '+', b, unite: '',
+        enonce: `Au ${sport}, la différence de ${points} de l'équipe ${ctx.de} est de ${fmt(a)}. Au match suivant, l'équipe ${x > y ? 'gagne' : 'perd'} ${x} à ${y}.<br>Quelle est sa nouvelle différence de ${points} ?`,
+        avantCalcul: `Le match rapporte ${x} − ${y} = ${fmt(b)} à la différence de ${points}.`,
+        conclusion: r => `La nouvelle différence de ${points} est ${fmt(r)}.`
+      };
+    }
+  },
   boutique: {
     themes: ['mode', 'commerce'],
     creer(rng, ctx) {
@@ -287,8 +309,7 @@ const MODELES_N1 = {
 };
 
 function niveau1Probleme(rng, ctx) {
-  const adaptes = Object.entries(MODELES_N1).filter(([, m]) => m.themes.includes(ctx.theme));
-  const [id, modele] = adaptes.length ? rng.choix(adaptes) : rng.choix(Object.entries(MODELES_N1));
+  const { id, modele } = choisirSelonTheme(rng, ctx, Object.entries(MODELES_N1).map(([id, modele]) => ({ id, modele, themes: modele.themes })));
   const p = modele.creer(rng, ctx);
   const arbre = op(p.o, N(p.a), N(p.b));
   const y = p.o === '+' ? p.b : -p.b;
