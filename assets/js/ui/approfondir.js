@@ -15,7 +15,7 @@ import { rebond, secousse } from './fx.js';
 import { htmlSaisie, brancherSaisie, lireSaisie } from './saisie.js';
 import { brancherAnimation, htmlAnimation } from './animation.js';
 
-const ESSAIS = 80;
+const ESSAIS = 200; // essais pour trouver un exercice du bon type (filtre de la section)
 
 // Exercice du générateur dont la clé correspond à la section (ex. /^pur:\d:hyp/)
 export function exerciceFiltre(gen, niveau, rng, filtre, prof = {}) {
@@ -27,9 +27,13 @@ export function exerciceFiltre(gen, niveau, rng, filtre, prof = {}) {
   return exo;
 }
 
-// Lien de recherche vers les vidéos d'Yvan Monka (YouTube)
+// Lien « Pour aller plus loin » : par défaut, recherche des vidéos d'Yvan Monka (maths).
+// Une fiche peut fournir son propre lien : fiche.lien(recherche) → { texte, url } (ex. sciences).
 export function lienMonka(recherche) {
   return `https://www.youtube.com/results?search_query=${encodeURIComponent(`Yvan Monka ${recherche}`)}`;
+}
+export function lienParDefaut(recherche) {
+  return { texte: `Vidéos d'Yvan Monka : « ${recherche} »`, url: lienMonka(recherche) };
 }
 
 export async function ecranApprofondir({ app, gen, urlChap, entree, params }) {
@@ -71,7 +75,7 @@ export async function ecranApprofondir({ app, gen, urlChap, entree, params }) {
           <button type="button" class="btn" data-verif="${k}">Je vérifie (2 questions)</button>
         </div>
         <h3>▶️ Pour aller plus loin</h3>
-        <a class="lien-externe" href="${lienMonka(s.recherche)}" target="_blank" rel="noopener">Vidéos d'Yvan Monka : « ${esc(s.recherche)} » ↗</a>
+        <a class="lien-externe" href="${(fiche.lien || lienParDefaut)(s.recherche).url}" target="_blank" rel="noopener">${esc((fiche.lien || lienParDefaut)(s.recherche).texte)} ↗</a>
         <p class="doux petit">S'ouvre sur YouTube (il faut être en ligne).</p>
         <a class="btn btn-secondaire" href="${urlChap('cours')}&carte=${k}">‹ Retour à la carte</a>
       </section>`).join('')}

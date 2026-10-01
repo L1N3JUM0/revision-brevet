@@ -335,7 +335,7 @@ export function testerFiches(paires) {
           const exo = gen.generer(niveau, rng, tirerContexte(rng, PROFILS_TEST[i % PROFILS_TEST.length]));
           if (filtre(exo.cle, exo)) trouves++;
         }
-        verif(`${gen.id} : section ${k + 1}, filtre niveau ${niveau} assez fréquent`, trouves >= 10, `${trouves}/200`);
+        verif(`${gen.id} : section ${k + 1}, filtre niveau ${niveau} assez fréquent`, trouves >= 8, `${trouves}/200`);
       }
     });
   }

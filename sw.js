@@ -4,7 +4,7 @@
 // VERSION et FICHIERS sont mis à jour par : node tests/verifier-sw.mjs --maj
 // (à lancer avant chaque commit ; sans --maj, le script vérifie seulement).
 
-const VERSION = '534d010310dc';
+const VERSION = 'dd65434f705a';
 const CACHE = `revision-brevet-${VERSION}`;
 const DELAI_RESEAU = 4000; // ms avant de se rabattre sur le cache
 
@@ -83,6 +83,24 @@ const FICHIERS = [
   'maths/generators/thales.js',
   'maths/generators/vitesses.js',
   'maths/index.html',
+  'sciences/approfondir/acides-bases.js',
+  'sciences/approfondir/atomes.js',
+  'sciences/approfondir/climat.js',
+  'sciences/approfondir/commun.js',
+  'sciences/approfondir/electricite.js',
+  'sciences/approfondir/energie.js',
+  'sciences/approfondir/evolution.js',
+  'sciences/approfondir/genetique.js',
+  'sciences/approfondir/immunite.js',
+  'sciences/approfondir/matiere.js',
+  'sciences/approfondir/mouvements-forces.js',
+  'sciences/approfondir/numerique.js',
+  'sciences/approfondir/nutrition.js',
+  'sciences/approfondir/objets-techniques.js',
+  'sciences/approfondir/signaux.js',
+  'sciences/approfondir/systeme-nerveux.js',
+  'sciences/approfondir/terre.js',
+  'sciences/approfondir/transformations.js',
   'sciences/chapitre.html',
   'sciences/chapitres.js',
   'sciences/controle.html',

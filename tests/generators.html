@@ -35,7 +35,7 @@
     import { evaluer, formaterResultat } from '../assets/js/ui/calculatrice.js';
     import { chargerTous, CHAPITRES as CH_MATHS } from '../maths/chapitres.js';
     import { chargerTous as chargerHistoire } from '../histoire/chapitres.js';
-    import { chargerTous as chargerSciences, chargerBanques as banquesSciences } from '../sciences/chapitres.js';
+    import { chargerTous as chargerSciences, chargerBanques as banquesSciences, CHAPITRES as CH_SCIENCES } from '../sciences/chapitres.js';
     import { DONNEES as BANQUES_HISTOIRE } from '../histoire/donnees/index.js';
     import { formaterReponse } from '../assets/js/core/answer.js';
     import { esc } from '../assets/js/ui/dom.js';
@@ -61,7 +61,7 @@
       blocUnitaire('Calculatrice', testerCalculatrice(evaluer, formaterResultat)) +
       blocUnitaire('Banques d’histoire', testerBanquesHistoire(BANQUES_HISTOIRE)) +
       blocUnitaire('Banques de sciences', testerBanquesSciences(await banquesSciences())) +
-      blocUnitaire('Fiches « Explique-moi plus »', testerFiches(await Promise.all(CH_MATHS.filter(c => c.approfondir)
+      blocUnitaire('Fiches « Explique-moi plus »', testerFiches(await Promise.all([...CH_MATHS, ...CH_SCIENCES].filter(c => c.approfondir)
         .map(async c => ({ gen: (await c.charger()).default, fiche: (await c.approfondir()).default })))));
 
     // Générateurs
