@@ -58,6 +58,11 @@
       <span class="corps"><strong>Géographie</strong><span class="doux petit">Cartes, croquis, développement construit</span></span>
       <span class="chevron">›</span>
     </a>
+    <a class="carte carte-lien matiere-emc" href="emc/index.html">
+      <span class="pastille">⚖️</span>
+      <span class="corps"><strong>EMC</strong><span class="doux petit">Principes, citoyenneté, situations pratiques</span></span>
+      <span class="chevron">›</span>
+    </a>
     <div class="carte carte-lien inactive matiere-francais">
       <span class="pastille">📚</span>
       <span class="corps"><strong>Français</strong><span class="doux petit">Bientôt</span></span>
@@ -81,13 +86,15 @@
     import { CHAPITRES as CH_HISTOIRE } from './histoire/chapitres.js';
     import { CHAPITRES as CH_SCIENCES } from './sciences/chapitres.js';
     import { CHAPITRES as CH_GEO } from './geographie/chapitres.js';
+    import { CHAPITRES as CH_EMC } from './emc/chapitres.js';
 
     // Chapitres de toutes les matières, avec leur dossier (pour les points faibles)
     const CHAPITRES = [
       ...CH_MATHS.map(c => ({ ...c, dossier: 'maths', classe: 'matiere-maths' })),
       ...CH_SCIENCES.map(c => ({ ...c, dossier: 'sciences', classe: 'matiere-sciences' })),
       ...CH_HISTOIRE.map(c => ({ ...c, dossier: 'histoire', classe: 'matiere-histoire' })),
-      ...CH_GEO.map(c => ({ ...c, dossier: 'geographie', classe: 'matiere-geographie' }))
+      ...CH_GEO.map(c => ({ ...c, dossier: 'geographie', classe: 'matiere-geographie' })),
+      ...CH_EMC.map(c => ({ ...c, dossier: 'emc', classe: 'matiere-emc' }))
     ];
     import { $, esc } from './assets/js/ui/dom.js';
 

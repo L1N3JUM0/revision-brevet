@@ -34,3 +34,10 @@ Format : **question** → choix fait / alternative.
 13. **Croquis** : le coloriage est remplacé par « où placer ce figuré ? » (zones A à D) et « que représente le figuré n° k ? ». Les tracés (diagonale des faibles densités, littoraux attractifs, frontière dynamique) sont schématiques, comme sur un croquis de manuel.
 14. **Développement construit** : un sujet par chapitre pour 4 chapitres (aires urbaines, faible densité — le sujet de référence —, outre-mer, Union européenne). Espaces productifs, aménagement et « France dans le monde » n'en ont pas encore. Le compteur estime 10 mots par ligne manuscrite (au lieu de 12 prévu au départ) : à ajuster si les copies d'Anna sont plus denses.
 15. **Chiffres prudents** : « une vingtaine de pays » dans la zone euro (le nombre change), « plus de 300 millions de francophones », « environ trois emplois sur quatre dans les services ».
+
+### EMC
+
+16. **Chapitres** : je n'avais pas le texte exact du programme d'EMC 2024 de 3e. J'ai retenu cinq chapitres couvrant les notions du sujet de référence et du programme de cycle 4 : valeurs et principes de la République, être citoyen, faire vivre la démocratie, s'informer (désinformation, ingérences), défense et paix. Alternative : les renommer d'après le programme officiel quand tu me le transmets.
+17. **Situations pratiques inventées** (7 au total : fausse information, vidéo truquée, laïcité, égalité filles-garçons, vote, engagement, cyberharcèlement), clairement signalées comme telles. Je n'ai pas repris d'articles de presse réels (droits d'auteur, exactitude à vérifier). Les textes de loi sont cités exactement ; pour la loi de 2022 sur le harcèlement, j'ai écrit un résumé signalé comme tel plutôt qu'une citation.
+18. **« Défense et paix »** n'a pas de situation pratique (questions d'entraînement seulement).
+19. Le chapitre « Faire vivre la démocratie » utilise la situation sur le cyberharcèlement (droits, règles et justice). Alternative : créer un chapitre « Droit et justice » à part.

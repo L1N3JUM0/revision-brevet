@@ -1,0 +1,18 @@
+// Situations pratiques · Droits, règles et justice : le harcèlement
+import { fabriquerSituations, SITUATION_INVENTEE } from './fabrique-situation.js';
+
+export default fabriquerSituations([
+  {
+    id: 'cyberharcelement',
+    titre: 'Le cyberharcèlement',
+    documents: [
+      { titre: 'Un groupe de discussion', html: '<p>Dans un groupe de discussion de classe, des élèves publient chaque soir des moqueries et des photos retouchées d\'une camarade. Beaucoup d\'élèves lisent sans rien dire ; certains ajoutent des émojis qui se moquent. La victime n\'ose plus venir au collège. Une élève finit par prévenir le CPE, qui rassemble les captures d\'écran et contacte les familles.</p>', source: SITUATION_INVENTEE },
+      { titre: 'Ce que dit la loi', html: '<p>Depuis la loi du 2 mars 2022, le <u>harcèlement scolaire est un délit</u> puni par le Code pénal. Le harcèlement, ce sont des propos ou des comportements répétés qui dégradent les conditions de vie de la victime. Il est puni plus sévèrement quand il passe par internet ou les réseaux sociaux. Le numéro national <strong>3018</strong>, gratuit et anonyme, aide les victimes et les témoins.</p>', source: 'Texte de synthèse rédigé pour l\'entraînement, d\'après la loi du 2 mars 2022 visant à combattre le harcèlement scolaire.' }
+    ],
+    definition: { consigne: 'Qu\'est-ce que le harcèlement ?', mots: [['répét'], ['propos', 'moqueries', 'violences', 'comportements'], ['victime']], corrige: 'Le harcèlement est le fait de faire subir à une personne des propos ou des comportements blessants de manière répétée, qui dégradent ses conditions de vie.' },
+    analyse: { consigne: 'Pourquoi les élèves qui ajoutent des émojis participent-ils au harcèlement ?', mots: [['particip', 'encourag'], ['moqueries', 'moquer'], ['victime']], corrige: 'En ajoutant des émojis moqueurs, ils encouragent les auteurs et augmentent la souffrance de la victime. Ils participent donc au harcèlement.' },
+    principe: { consigne: 'Identifie et définis la valeur de la République remise en cause par ce harcèlement.', mots: [['fraternité', 'dignité', 'respect'], ['personne', 'autres'], ['protéger', 'respect']], corrige: 'C\'est la fraternité, qui suppose le respect de la dignité de chaque personne : chacun doit être traité avec respect et protégé.' },
+    explication: { consigne: 'Explique pourquoi les témoins ont un rôle important. Illustre par deux exemples tirés des documents.', mots: [['témoin'], ['adulte', 'cpe'], ['3018'], ['silence', 'rien dire']], corrige: 'Les témoins ont un rôle essentiel, car le harcèlement continue souvent grâce à leur silence. Dans le document 1, beaucoup d\'élèves lisent les messages sans rien dire. L\'élève qui prévient le CPE permet enfin d\'agir et de protéger la victime. Le document 2 rappelle que le 3018 aide aussi les témoins, de manière gratuite et anonyme. Parler à un adulte n\'est donc pas « balancer » : c\'est protéger quelqu\'un.' },
+    texte: { consigne: 'Écris un texte pour convaincre tes camarades de ne pas rester silencieux face au harcèlement.', lignes: 8, mots: [['harcèlement'], ['témoin', 'silence'], ['adulte', '3018'], ['délit', 'loi']], corrige: 'Le harcèlement peut détruire la vie d\'un élève, et nous pouvons l\'arrêter. D\'abord, il faut savoir que ce n\'est pas un jeu : depuis 2022, le harcèlement scolaire est un délit puni par la loi, encore plus sévèrement sur les réseaux sociaux. Ensuite, si tu en es témoin, ne participe pas, même avec un simple émoji, car cela encourage les auteurs. Surtout, ne reste pas silencieux : parle à un adulte du collège ou appelle le 3018, gratuit et anonyme. Enfin, soutiens la victime, car un geste de solidarité peut tout changer.' }
+  }
+]);

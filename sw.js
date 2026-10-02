@@ -4,7 +4,7 @@
 // VERSION et FICHIERS sont mis à jour par : node tests/verifier-sw.mjs --maj
 // (à lancer avant chaque commit ; sans --maj, le script vérifie seulement).
 
-const VERSION = 'ff4a7f767270';
+const VERSION = '773560c2cc7b';
 const CACHE = `revision-brevet-${VERSION}`;
 const DELAI_RESEAU = 4000; // ms avant de se rabattre sur le cache
 
@@ -31,6 +31,20 @@ const FICHIERS = [
   'assets/js/ui/onboarding.js',
   'assets/js/ui/redige.js',
   'assets/js/ui/saisie.js',
+  'emc/chapitre.html',
+  'emc/chapitres.js',
+  'emc/controle.html',
+  'emc/generators/citoyennete.js',
+  'emc/generators/defense.js',
+  'emc/generators/democratie.js',
+  'emc/generators/information.js',
+  'emc/generators/principes.js',
+  'emc/index.html',
+  'emc/situations/citoyennete.js',
+  'emc/situations/droits.js',
+  'emc/situations/fabrique-situation.js',
+  'emc/situations/information.js',
+  'emc/situations/principes.js',
   'geographie/cartes/carte.js',
   'geographie/cartes/france.js',
   'geographie/chapitre.html',

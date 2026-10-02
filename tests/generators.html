@@ -36,6 +36,7 @@
     import { exoImage } from '../histoire/generators/fabrique.js';
     import { analyserReponse } from '../assets/js/core/redaction.js';
     import { CHAPITRES as CH_HISTOIRE } from '../histoire/chapitres.js';
+    import { chargerTous as chargerEmc, chargerBanques as banquesEmc, CHAPITRES as CH_EMC } from '../emc/chapitres.js';
     import { chargerTous as chargerGeo, chargerBanques as banquesGeo, CHAPITRES as CH_GEO } from '../geographie/chapitres.js';
     import { evaluer, formaterResultat } from '../assets/js/ui/calculatrice.js';
     import { chargerTous, CHAPITRES as CH_MATHS } from '../maths/chapitres.js';
@@ -68,13 +69,14 @@
       blocUnitaire('Banques de sciences', testerBanquesSciences(await banquesSciences())) +
       blocUnitaire('Images d’histoire', testerImages(IMAGES, exoImage)) +
       blocUnitaire('Banques de géographie', testerBanquesSciences(await banquesGeo(), ['reperes', 'g1', 'g2', 'g3'])) +
+      blocUnitaire('Banques d’EMC', testerBanquesSciences(await banquesEmc(), ['emc'])) +
       blocUnitaire('Fiches « Explique-moi plus »', testerFiches(await Promise.all([...CH_MATHS, ...CH_SCIENCES].filter(c => c.approfondir)
         .map(async c => ({ gen: (await c.charger()).default, fiche: (await c.approfondir()).default }))))) +
-      blocUnitaire('Sujets rédigés (étude de document…)', testerSujetsRediges(await Promise.all([...CH_HISTOIRE, ...CH_GEO].filter(c => c.redige)
+      blocUnitaire('Sujets rédigés (étude de document…)', testerSujetsRediges(await Promise.all([...CH_HISTOIRE, ...CH_GEO, ...CH_EMC].filter(c => c.redige)
         .map(async c => ({ id: c.id, module: (await c.redige()).default, evenements: BANQUES_HISTOIRE.flatMap(b => b.evenements) }))), analyserReponse));
 
     // Générateurs
-    const gens = [...await chargerTous(), ...await chargerSciences(), ...await chargerHistoire(), ...await chargerGeo()];
+    const gens = [...await chargerTous(), ...await chargerSciences(), ...await chargerHistoire(), ...await chargerGeo(), ...await chargerEmc()];
     const zone = document.getElementById('generateurs');
     let total = 0;
     for (const gen of gens) {

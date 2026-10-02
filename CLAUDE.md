@@ -7,7 +7,7 @@ Julien (le père, développeur autodidacte) définit les besoins dans une conver
 
 - Repo : `https://github.com/L1N3JUM0/revision-brevet`
 - Site : `https://l1n3jum0.github.io/revision-brevet/` (GitHub Pages, branche `main`, racine)
-- Matières prévues : Maths (en cours), puis Histoire-Géo, Français, Sciences (SVT, Physique-Chimie, Techno)
+- Matières : Maths, Sciences (SVT, Physique-Chimie, Techno), Histoire, Géographie, EMC ; puis Français
 - Langue : **tout le contenu visible est en français**
 
 ## Principes non négociables
@@ -222,6 +222,12 @@ Les points 1 à 8 et 12 sont prioritaires avant jeudi soir. Les points 9 à 11 p
 - **Cartes** : `outils/cartes.mjs` (script de dev, données ouvertes : contour IGN Admin Express via france-geojson, licence ouverte Etalab ; fleuves, massifs, pays voisins : Natural Earth, domaine public) écrit `geographie/cartes/france.js`. Ne jamais modifier ce fichier à la main. Rendu : `geographie/cartes/carte.js` (`carte({ villes, fleuves, massifs, zones, traits, etiquettes })`, échelle 200 km et nord comme sur l'annexe du brevet).
 - Exercices de carte (`generators/exos-cartes.js`) : nommer ou localiser (lettres A à D) une aire urbaine, un fleuve, un massif, une mer ; croquis : légende à compléter, emplacement d'un figuré. Les tracés du croquis (diagonale, littoraux, frontière) sont schématiques.
 - **Développement construit** (mode `redige`) : `geographie/developpements/<chapitre>.js` = `fabriquerDeveloppement(titre, { sujets, definitions })`. Une définition (1 à 2 phrases), puis le développement d'au moins 30 lignes avec les mots imposés et un plan possible. Corrigé modèle d'au moins 30 lignes (10 mots par ligne manuscrite). Checklists propres (`checklist`) + critères de langue.
+
+## EMC (« Faire vivre la démocratie »)
+
+- Structure : `emc/chapitres.js`, `index.html`, `chapitre.html`, `controle.html` (sans calculatrice). Banques au format des sciences, `discipline: 'emc'`.
+- **Situation pratique** (mode `redige`, format du sujet de référence) : `emc/situations/<fichier>.js` = `fabriquerSituations([...])`. Ordre : définir (1 à 2 phrases) → analyser la situation (1 à 2 phrases) → identifier et définir un principe ou une valeur (1 à 2 phrases) → expliquer avec deux exemples (au moins 4 phrases) → texte argumenté de 8 à 10 lignes, anonyme (checklist dédiée).
+- Les situations sont inventées et le disent (« Situation inventée pour l'entraînement ») ; les textes officiels (DDHC 1789, lois de 1881, 1901, 1905, 2004, Constitution) sont cités exactement avec leur source. Un texte de synthèse rédigé par nous est signalé comme tel.
 
 ## Sciences (Physique-Chimie, SVT, Technologie)
 

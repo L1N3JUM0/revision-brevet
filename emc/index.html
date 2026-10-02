@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0e0e14">
+  <title>EMC — Révision brevet</title>
+  <link rel="stylesheet" href="../assets/css/base.css">
+</head>
+<body class="matiere-emc">
+  <main class="page">
+    <header class="barre-haut">
+      <a class="btn-icone" href="../index.html" aria-label="Accueil">‹</a>
+      <div class="titre">⚖️ EMC</div>
+    </header>
+
+    <a class="carte carte-lien carte-controle" href="controle.html">
+      <span class="pastille">📝</span>
+      <span class="corps"><strong>Contrôle blanc</strong><span class="doux petit">Sujet mélangé, barème, correction à la fin</span></span>
+      <span class="chevron">›</span>
+    </a>
+    <p class="doux">Au brevet (20 points) : une situation pratique, des questions courtes rédigées, puis un texte argumenté de 8 à 10 lignes.</p>
+    <div id="liste"></div>
+  </main>
+
+  <script type="module">
+    import { CHAPITRES, THEMES } from './chapitres.js';
+    import { charger } from '../assets/js/core/store.js';
+    import { esc } from '../assets/js/ui/dom.js';
+
+    const { chapitres, badges } = charger();
+    let html = '';
+    let theme = null;
+    for (const ch of CHAPITRES) {
+      if (ch.theme !== theme) {
+        theme = ch.theme;
+        html += `<h3 class="titre-theme">${esc(THEMES[theme])}</h3>`;
+      }
+      const dispo = !!ch.charger;
+      const st = chapitres[ch.id];
+      let info = dispo ? 'Pas encore commencé' : 'Bientôt';
+      if (dispo && st && st.total > 0) {
+        info = `${st.bonnes} bonne${st.bonnes > 1 ? 's' : ''} réponse${st.bonnes > 1 ? 's' : ''} · ${Math.round((st.bonnes / st.total) * 100)} % de réussite`;
+      }
+      const badge = badges.includes(ch.id) ? ' <span class="badge badge-or">🏅 Maîtrisé</span>' : '';
+      const balise = dispo ? 'a' : 'div';
+      const href = dispo ? ` href="chapitre.html?c=${encodeURIComponent(ch.id)}"` : '';
+      html += `<${balise} class="carte carte-lien${dispo ? '' : ' inactive'}"${href}>
+        <span class="pastille">${esc(ch.emoji)}</span>
+        <span class="corps"><strong>${esc(ch.titre)}${badge}</strong><span class="doux petit">${info}</span></span>
+        ${dispo ? '<span class="chevron">›</span>' : ''}
+      </${balise}>`;
+    }
+    document.getElementById('liste').innerHTML = html;
+  </script>
+</body>
+</html>
