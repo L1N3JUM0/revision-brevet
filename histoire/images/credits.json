@@ -19,7 +19,7 @@
       "auteur": "Office of War Information, Overseas Picture Division",
       "date": "circa 1942",
       "url": "https://commons.wikimedia.org/wiki/File:De_Gaulle-OWI.jpg",
-      "statut": "en_attente"
+      "statut": "validee"
     },
     {
       "id": "petain-portrait",
@@ -39,7 +39,7 @@
       "auteur": "Imprimerie Draeger (Montrouge)",
       "date": "1941",
       "url": "https://commons.wikimedia.org/wiki/File:P%C3%A9tain_-_Portrait_photographique_1941_(3x4_cropped).jpg",
-      "statut": "en_attente"
+      "statut": "validee"
     },
     {
       "id": "jean-moulin",
@@ -79,7 +79,7 @@
       "auteur": "Contributeurs de Wikimedia Commons",
       "date": "1940-1944",
       "url": "https://commons.wikimedia.org/wiki/File:Flag_of_Free_France_(1940-1944).svg",
-      "statut": "en_attente"
+      "statut": "validee"
     },
     {
       "id": "clemenceau",
@@ -99,7 +99,7 @@
       "auteur": "Paul Nadar",
       "date": "1904",
       "url": "https://commons.wikimedia.org/wiki/File:Georges_Clemenceau_par_Nadar.jpg",
-      "statut": "en_attente"
+      "statut": "validee"
     },
     {
       "id": "affiche-mobilisation-1914",
@@ -119,7 +119,7 @@
       "auteur": "French Government",
       "date": "1914-08-01",
       "url": "https://commons.wikimedia.org/wiki/File:Ordre_de_Mobilisation_g%C3%A9n%C3%A9rale_2_ao%C3%BBt_1914.jpg",
-      "statut": "en_attente"
+      "statut": "validee"
     },
     {
       "id": "churchill",
@@ -139,7 +139,7 @@
       "auteur": "J. Russell and Sons",
       "date": "1941",
       "url": "https://commons.wikimedia.org/wiki/File:Winston_Churchill_cph.3a49758_(cropped).jpg",
-      "statut": "en_attente"
+      "statut": "validee"
     },
     {
       "id": "drapeau-urss",
@@ -159,7 +159,7 @@
       "auteur": "URSS (domaine public)",
       "date": "1955 (modèle officiel)",
       "url": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Soviet_Union.svg",
-      "statut": "en_attente"
+      "statut": "validee"
     },
     {
       "id": "mur-berlin-1989",
@@ -179,7 +179,7 @@
       "auteur": "Unknown photographer, Reproduction by Lear 21 at English Wikipedia",
       "date": "1989",
       "url": "https://commons.wikimedia.org/wiki/File:West_and_East_Germans_at_the_Brandenburg_Gate_in_1989.jpg",
-      "statut": "en_attente"
+      "statut": "validee"
     },
     {
       "id": "drapeau-europe",
@@ -199,7 +199,7 @@
       "auteur": "Contributeurs de Wikimedia Commons",
       "date": null,
       "url": "https://commons.wikimedia.org/wiki/File:Flag_of_Europe.svg",
-      "statut": "en_attente"
+      "statut": "validee"
     },
     {
       "id": "simone-veil",
@@ -219,7 +219,7 @@
       "auteur": "Rob Croes for Anefo",
       "date": "1984-06-23",
       "url": "https://commons.wikimedia.org/wiki/File:Simone_Veil_(1984).jpg",
-      "statut": "en_attente"
+      "statut": "validee"
     },
     {
       "id": "de-gaulle-president",
@@ -239,7 +239,7 @@
       "auteur": "Ludwig Wegmann",
       "date": "1963-07-04",
       "url": "https://commons.wikimedia.org/wiki/File:Charles_de_Gaulle-1963.jpg",
-      "statut": "en_attente"
+      "statut": "validee"
     }
   ]
 }

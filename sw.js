@@ -4,7 +4,7 @@
 // VERSION et FICHIERS sont mis à jour par : node tests/verifier-sw.mjs --maj
 // (à lancer avant chaque commit ; sans --maj, le script vérifie seulement).
 
-const VERSION = '773560c2cc7b';
+const VERSION = '779bd56b6825';
 const CACHE = `revision-brevet-${VERSION}`;
 const DELAI_RESEAU = 4000; // ms avant de se rabattre sur le cache
 
@@ -31,6 +31,7 @@ const FICHIERS = [
   'assets/js/ui/onboarding.js',
   'assets/js/ui/redige.js',
   'assets/js/ui/saisie.js',
+  'derniere-image.png',
   'emc/chapitre.html',
   'emc/chapitres.js',
   'emc/controle.html',

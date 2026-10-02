@@ -12,11 +12,10 @@ Format : **question** → choix fait / alternative.
 
 ### Étude de document (histoire)
 
-4. **Wikimedia Commons** : d'abord bloqué (403), puis autorisé par Julien pendant la nuit. 11 images sur 12 sont téléchargées, converties (WebP, 800 px max, de 2 à 71 Ko) et au statut **en_attente** : voir `docs/images-a-verifier.md`. Le domaine `thumb.wikimedia.org` reste bloqué : le script prend la même vignette sur `upload.wikimedia.org`.
+4. **Wikimedia Commons** : d'abord bloqué (403), puis autorisé par Julien pendant la nuit. 11 images sur 12 sont téléchargées et converties (WebP, 800 px max, de 2 à 71 Ko). **Toutes les 11 ont été validées par Julien le 2 octobre** : elles sont en ligne (voir `docs/images-a-verifier.md`). Le domaine `thumb.wikimedia.org` reste bloqué : le script prend la même vignette sur `upload.wikimedia.org`.
    - **Jean Moulin** : pas trouvé de photo sous licence libre sûre (la célèbre photo à l'écharpe, de Marcel Bernard, 1939, n'est pas clairement dans le domaine public). Laissée « a_rechercher ».
    - **Pétain** : j'ai écarté la version « (AI) » (retouchée par IA) et pris le recadrage de la photo de 1941.
    - Les fichiers ont des **noms neutres** (`doc-xxxxxxxxxx.webp`) pour ne pas souffler la réponse ; la date n'est pas affichée dans le crédit d'un exercice « Date ce document ».
-   - Les fichiers sont dans le dépôt (donc techniquement en ligne), mais **aucune page ne les affiche** tant qu'ils ne sont pas validés. Alternative : les garder hors du dépôt jusqu'à la validation.
    - Pour valider : `node outils/images.mjs --valider <id>` (ou passer le statut à `validee` dans `credits.json`), puis `node outils/images.mjs`.
 5. **Documents textuels uniquement pour l'instant** : extraits courts de textes officiels (traités, constitutions, lois, Charte de l'ONU) et de discours célèbres (Pétain, de Gaulle, Churchill, Truman, Jdanov, Kennedy, Schuman, Nehru, Simone Veil), toujours sourcés. Pour les discours encore protégés, citation courte à but pédagogique (droit de courte citation). Quand je résume un passage, c'est écrit dans la source (« articles suivants résumés »).
    → Alternative : n'utiliser que des textes officiels (domaine public).
