@@ -6,6 +6,7 @@ export default fabriquerEtude(donnees, {
   documents: [
     {
       id: 'churchill-1940',
+      reperes: ['Invasion de la Pologne par l\'Allemagne', 'Armistice franco-allemand'],
       titre: 'Churchill devant les députés britanniques',
       html: '<p>« Je n\'ai à offrir que <u>du sang, du labeur, des larmes et de la sueur</u>. »</p>',
       source: 'Winston Churchill, Premier ministre du Royaume-Uni, discours à la Chambre des communes, 13 mai 1940.',
@@ -19,6 +20,7 @@ export default fabriquerEtude(donnees, {
     },
     {
       id: 'charte-onu',
+      reperes: ['Capitulation de l\'Allemagne', 'Fin de la Seconde Guerre mondiale (capitulation du Japon)'],
       titre: 'La Charte des Nations unies',
       html: '<p>« Nous, peuples des Nations unies, résolus à <u>préserver les générations futures du fléau de la guerre</u> qui deux fois en l\'espace d\'une vie humaine a infligé à l\'humanité d\'indicibles souffrances… »</p>',
       source: 'Préambule de la Charte des Nations unies, signée à San Francisco le 26 juin 1945.',
@@ -32,6 +34,7 @@ export default fabriquerEtude(donnees, {
     },
     {
       id: 'tribunal-nuremberg',
+      reperes: ['Capitulation de l\'Allemagne', 'Bombardements atomiques d\'Hiroshima et Nagasaki'],
       titre: 'Le statut du tribunal de Nuremberg',
       html: '<p>« Les <u>crimes contre l\'humanité</u> : c\'est-à-dire l\'assassinat, l\'extermination, la réduction en esclavage, la déportation, et tout autre acte inhumain commis contre toutes populations civiles, avant ou pendant la guerre, ou bien les persécutions pour des motifs politiques, raciaux ou religieux… »</p>',
       source: 'Statut du tribunal militaire international de Nuremberg, article 6c, 8 août 1945.',
@@ -45,7 +48,6 @@ export default fabriquerEtude(donnees, {
     }
   ],
   syntheses: [
-    { docs: ['charte-onu', 'tribunal-nuremberg'], consigne: 'Montre qu\'en 1945, les vainqueurs veulent tirer les leçons de la Seconde Guerre mondiale.', mots: [['paix'], ['onu'], ['juger', 'procès'], ['crime contre l\'humanité'], ['génocide', 'extermin']], corrige: 'En 1945, la Seconde Guerre mondiale se termine après avoir fait plus de 60 millions de morts. Pour éviter une nouvelle guerre, les vainqueurs créent l\'ONU, qui doit préserver la paix (document 1). Ils veulent aussi juger les crimes des nazis, en particulier le génocide des Juifs et des Tsiganes. Le statut du tribunal de Nuremberg définit pour cela le crime contre l\'humanité (document 2). Ainsi, ils cherchent à protéger la paix et les droits humains.' }
-  ],
-  reperes: []
+    { docs: ['charte-onu', 'tribunal-nuremberg'], reperes: ['Capitulation de l\'Allemagne', 'Fin de la Seconde Guerre mondiale (capitulation du Japon)'], consigne: 'Montre qu\'en 1945, les vainqueurs veulent tirer les leçons de la Seconde Guerre mondiale.', mots: [['paix'], ['onu'], ['juger', 'procès'], ['crime contre l\'humanité'], ['génocide', 'extermin']], corrige: 'En 1945, la Seconde Guerre mondiale se termine après avoir fait plus de 60 millions de morts. Pour éviter une nouvelle guerre, les vainqueurs créent l\'ONU, qui doit préserver la paix (document 1). Ils veulent aussi juger les crimes des nazis, en particulier le génocide des Juifs et des Tsiganes. Le statut du tribunal de Nuremberg définit pour cela le crime contre l\'humanité (document 2). Ainsi, ils cherchent à protéger la paix et les droits humains.' }
+  ]
 });

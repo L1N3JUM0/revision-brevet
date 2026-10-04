@@ -83,7 +83,7 @@ export async function ecranRedige({ app, gen, urlChap, entree }) {
         ${question.partie !== partiePrecedente || q === 0 ? `<p class="badge">${esc(question.partie)}</p>` : `<p class="doux petit">${esc(question.partie)}</p>`}
         <p class="consigne"><strong>${question.consigne}</strong></p>
         ${question.type === 'date'
-          ? `<input class="champ" id="rep" type="text" inputmode="text" autocomplete="off" placeholder="Par exemple : 8 mai 1945" value="${esc(reponses[q])}" ${etat ? 'readonly' : ''}>`
+          ? `<input class="champ" id="rep" type="text" inputmode="text" autocomplete="off" placeholder="jour mois année" value="${esc(reponses[q])}" ${etat ? 'readonly' : ''}>`
           : `<textarea class="champ zone-redaction" id="rep" rows="${question.lignes ? 12 : question.phrases?.[0] >= 4 ? 8 : 4}" placeholder="Rédige ta réponse ici…" ${etat ? 'readonly' : ''}>${esc(reponses[q])}</textarea>
              <p class="doux petit" id="compteur"></p>`}
         <p class="aide-saisie" id="aide"></p>

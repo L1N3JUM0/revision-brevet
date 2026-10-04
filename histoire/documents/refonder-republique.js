@@ -6,6 +6,7 @@ export default fabriquerEtude(donnees, {
   documents: [
     {
       id: 'cnr',
+      reperes: ['Création du Conseil national de la Résistance', 'Création de la Sécurité sociale'],
       titre: 'Le programme du Conseil national de la Résistance',
       html: '<p>Les résistants veulent, une fois le territoire libéré :</p><p>« le retour à la nation des grands moyens de production monopolisés, fruits du travail commun, des sources d\'énergie, des richesses du sous-sol, des compagnies d\'assurances et des grandes banques ; […]</p><p><u>un plan complet de sécurité sociale</u>, visant à assurer à tous les citoyens des moyens d\'existence, dans tous les cas où ils sont incapables de se les procurer par le travail. »</p>',
       source: 'Programme du Conseil national de la Résistance, adopté le 15 mars 1944.',
@@ -19,6 +20,7 @@ export default fabriquerEtude(donnees, {
     },
     {
       id: 'vote-femmes',
+      reperes: ['Libération de Paris', 'Premier vote des femmes'],
       titre: 'Le droit de vote des femmes',
       html: '<p>« Article 17. <u>Les femmes sont électrices et éligibles</u> dans les mêmes conditions que les hommes. »</p>',
       source: 'Ordonnance du Gouvernement provisoire de la République française, 21 avril 1944.',
@@ -32,6 +34,7 @@ export default fabriquerEtude(donnees, {
     },
     {
       id: 'preambule-1946',
+      reperes: ['Création de la Sécurité sociale', 'Référendum qui met fin à la IIIe République'],
       titre: 'Le préambule de la Constitution de 1946',
       html: '<p>« <u>La loi garantit à la femme</u>, dans tous les domaines, <u>des droits égaux</u> à ceux de l\'homme. […]</p><p>Chacun a le devoir de travailler et le droit d\'obtenir un emploi. […]</p><p>Elle garantit à tous, notamment à l\'enfant, à la mère et aux vieux travailleurs, la protection de la santé, la sécurité matérielle, le repos et les loisirs. »</p>',
       source: 'Préambule de la Constitution de la IV<sup>e</sup> République, 27 octobre 1946 (extraits).',
@@ -45,7 +48,6 @@ export default fabriquerEtude(donnees, {
     }
   ],
   syntheses: [
-    { docs: ['cnr', 'preambule-1946'], consigne: 'Montre qu\'entre 1944 et 1946, la France refonde une République plus sociale.', mots: [['résistance', 'cnr'], ['sécurité sociale'], ['nationalisation'], ['femmes', 'égaux'], ['1945', '1946']], corrige: 'À la Libération, la France doit refonder la République. Dès 1944, le programme du Conseil national de la Résistance prévoit des nationalisations et un plan de sécurité sociale (document 1). Le gouvernement provisoire l\'applique : la Sécurité sociale est créée en 1945. En 1946, le préambule de la Constitution de la IVe République garantit des droits sociaux comme la protection de la santé et l\'égalité entre les femmes et les hommes (document 2). La nouvelle République est donc plus démocratique et plus sociale.' }
-  ],
-  reperes: []
+    { docs: ['cnr', 'preambule-1946'], reperes: ['Droit de vote des femmes', 'Création de la Sécurité sociale'], consigne: 'Montre qu\'entre 1944 et 1946, la France refonde une République plus sociale.', mots: [['résistance', 'cnr'], ['sécurité sociale'], ['nationalisation'], ['femmes', 'égaux'], ['1945', '1946']], corrige: 'À la Libération, la France doit refonder la République. Dès 1944, le programme du Conseil national de la Résistance prévoit des nationalisations et un plan de sécurité sociale (document 1). Le gouvernement provisoire l\'applique : la Sécurité sociale est créée en 1945. En 1946, le préambule de la Constitution de la IVe République garantit des droits sociaux comme la protection de la santé et l\'égalité entre les femmes et les hommes (document 2). La nouvelle République est donc plus démocratique et plus sociale.' }
+  ]
 });

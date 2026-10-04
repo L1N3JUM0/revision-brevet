@@ -6,6 +6,7 @@ export default fabriquerEtude(donnees, {
   documents: [
     {
       id: 'article-1',
+      reperes: ['Retour au pouvoir du général de Gaulle', 'Fondation de la Ve République'],
       titre: 'Les principes de la République',
       html: '<p>« La France est une République <u>indivisible, laïque, démocratique et sociale</u>. Elle assure l\'égalité devant la loi de tous les citoyens sans distinction d\'origine, de race ou de religion. Elle respecte toutes les croyances. »</p>',
       source: 'Constitution de la V<sup>e</sup> République, 4 octobre 1958, article 1<sup>er</sup> (numéroté article 2 en 1958).',
@@ -19,6 +20,7 @@ export default fabriquerEtude(donnees, {
     },
     {
       id: 'article-3',
+      reperes: ['Retour au pouvoir du général de Gaulle', 'Fondation de la Ve République'],
       titre: 'La souveraineté nationale',
       html: '<p>« <u>La souveraineté nationale appartient au peuple</u> qui l\'exerce par ses représentants et par la voie du référendum. »</p>',
       source: 'Constitution de la V<sup>e</sup> République, 4 octobre 1958, article 3.',
@@ -32,6 +34,7 @@ export default fabriquerEtude(donnees, {
     },
     {
       id: 'article-6',
+      reperes: ['Élection du président au suffrage universel direct', 'Première élection présidentielle au suffrage universel direct'],
       titre: 'L\'élection du président de la République',
       html: '<p>« <u>Le Président de la République est élu pour sept ans au suffrage universel direct</u>. »</p>',
       source: 'Constitution de la V<sup>e</sup> République, article 6, dans sa rédaction issue du référendum du 28 octobre 1962.',
@@ -46,7 +49,6 @@ export default fabriquerEtude(donnees, {
     }
   ],
   syntheses: [
-    { docs: ['article-3', 'article-6'], consigne: 'Montre que la Ve République donne une place importante au peuple et au président.', mots: [['peuple'], ['référendum'], ['suffrage universel direct'], ['président'], ['1958', '1962']], corrige: 'La Ve République est fondée en 1958 par le général de Gaulle. Sa Constitution affirme que la souveraineté appartient au peuple, qui l\'exerce par ses représentants et par le référendum (document 1). En 1962, un référendum décide que le président sera élu au suffrage universel direct (document 2). Le président tient donc son pouvoir directement des citoyens, ce qui renforce son rôle. Le peuple peut aussi être consulté directement par référendum.' }
-  ],
-  reperes: []
+    { docs: ['article-3', 'article-6'], reperes: ['Fondation de la Ve République', 'Élection du président au suffrage universel direct'], consigne: 'Montre que la Ve République donne une place importante au peuple et au président.', mots: [['peuple'], ['référendum'], ['suffrage universel direct'], ['président'], ['1958', '1962']], corrige: 'La Ve République est fondée en 1958 par le général de Gaulle. Sa Constitution affirme que la souveraineté appartient au peuple, qui l\'exerce par ses représentants et par le référendum (document 1). En 1962, un référendum décide que le président sera élu au suffrage universel direct (document 2). Le président tient donc son pouvoir directement des citoyens, ce qui renforce son rôle. Le peuple peut aussi être consulté directement par référendum.' }
+  ]
 });

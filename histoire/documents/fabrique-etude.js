@@ -5,16 +5,28 @@
 // Les sujets sont tirés au hasard : documents, questions et repères changent à chaque fois.
 //
 // Banque de documents d'un chapitre :
-// { documents: [{ id, titre, html, source, image?, prelevement: [{ consigne, mots, corrige }],
+// { documents: [{ id, titre, html, source, image?, reperes: [nom, nom?], prelevement: [{ consigne, mots, corrige }],
 //                 analyse: [{ consigne, mots, corrige, repere? }] }],
-//   syntheses: [{ docs: [id, id], consigne, mots, corrige }],
-//   reperes?: [noms d'événements d'autres chapitres à proposer aussi] }
+//   syntheses: [{ docs: [id, id], reperes: [nom, nom?], consigne, mots, corrige }] }
+// reperes : 1 ou 2 noms d'événements (de n'importe quelle banque d'histoire) qui situent ce jeu de documents
+// (même période, même événement ou cadre immédiat). Les questions de repères sont tirées UNIQUEMENT là
+// (sujet de référence 2027 : les repères demandés sont liés aux documents).
+// Un document seul utilise ses propres repères ; un sujet à deux documents utilise ceux de la synthèse.
 // mots : [[variante, variante…], …] — mots-clés attendus (indices automatiques, jamais une note).
 // image : identifiant dans histoire/images/credits.json ; un document dont l'image n'est pas « validee » est écarté.
 import { DONNEES } from '../donnees/index.js';
 import { imageValidee } from '../images/images.js';
 
 const tousEvenements = () => DONNEES.flatMap(d => d.evenements);
+
+// Un repère associé doit être un événement daté ponctuel (ni période, ni nom qui contient déjà la date)
+export const repereUtilisable = e => !!e && !e.fin && !e.nomDate;
+
+// Événements correspondant aux noms déclarés (la banque du chapitre d'abord, puis les autres)
+export function reperesDuJeu(donnees, noms = []) {
+  const tous = [...donnees.evenements, ...tousEvenements()];
+  return noms.map(nom => tous.find(e => e.nom === nom));
+}
 
 function questionRepere(e) {
   return {
@@ -33,22 +45,23 @@ export function fabriquerEtude(donnees, banque) {
   return {
     libelle: 'Étude de document',
     documents,
+    tousDocuments: banque.documents,
+    syntheses: banque.syntheses || [],
+    reperesDe: noms => reperesDuJeu(donnees, noms),
+    // Nombre de sujets différents possibles (les repères sont fixés par le jeu de documents)
+    variantes: documents.reduce((t, d) => t + d.prelevement.length * d.analyse.length, 0)
+      + (banque.syntheses || []).filter(s => s.docs.every(id => documents.some(d => d.id === id)))
+        .reduce((t, s) => t + s.docs.reduce((p, id) => { const d = documents.find(x => x.id === id); return p * d.prelevement.length * d.analyse.length; }, 1), 0),
     generer(rng) {
       // Un sujet à deux documents (avec question de synthèse) si possible, sinon un seul document
       const syntheses = (banque.syntheses || []).filter(s => s.docs.every(id => documents.some(d => d.id === id)));
       const synthese = syntheses.length && rng.bool(0.75) ? rng.choix(syntheses) : null;
       const docs = synthese ? synthese.docs.map(id => documents.find(d => d.id === id)) : [rng.choix(documents)];
 
-      // Repères : deux dates, de préférence des repères du brevet du chapitre (et des repères liés)
-      const candidats = [...donnees.evenements, ...tousEvenements().filter(e => (banque.reperes || []).includes(e.nom))]
-        .filter(e => !e.fin && !e.nomDate);
-      const prioritaires = candidats.filter(e => e.repere);
-      const reperes = [];
-      for (const e of rng.melanger([...rng.melanger(prioritaires), ...rng.melanger(candidats)])) {
-        if (reperes.length === 2) break;
-        if (!reperes.some(r => r.nom === e.nom || r.annee === e.annee)) reperes.push(e);
-      }
-      reperes.sort((a, b) => a.annee - b.annee);
+      // Repères : ceux déclarés pour ce jeu de documents, jamais tirés ailleurs dans la banque
+      const reperes = reperesDuJeu(donnees, synthese ? synthese.reperes : docs[0].reperes).filter(repereUtilisable);
+      const chrono = e => e.annee * 10000 + (e.mois || 0) * 100 + (e.jour || 0);
+      reperes.sort((a, b) => chrono(a) - chrono(b));
 
       const choisis = docs.map(d => ({ d, p: rng.int(0, d.prelevement.length - 1), a: rng.int(0, d.analyse.length - 1) }));
       const avecNum = (k, q) => (docs.length > 1 ? `<span class="doux">Document ${k + 1}</span> · ${q}` : q);
@@ -61,6 +74,7 @@ export function fabriquerEtude(donnees, banque) {
       return {
         cle: `etude:${docs.map(d => d.id).join('+')}:${choisis.map(c => `${c.p}${c.a}`).join('')}:${reperes.map(r => r.annee).join(',')}`,
         titre: `${donnees.titre}`,
+        idsDocuments: docs.map(d => d.id),
         intro: 'Lis les documents, puis réponds dans l\'ordre : repères, prélèvement d\'informations, analyse.',
         documents: docs.map(d => ({ titre: d.titre, html: d.html, source: d.source })),
         questions

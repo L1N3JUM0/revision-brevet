@@ -378,6 +378,40 @@ export function testerSujetsRediges(paires, analyser, n = 200) {
   return cas;
 }
 
+// Étude de document : chaque jeu de documents (document seul ou paire de la synthèse) déclare 1 ou 2 repères
+// qui existent dans les banques d'histoire, et les questions de repères ne sortent que de cette liste.
+export function testerReperesEtudes(paires, repereUtilisable, n = 200) {
+  const cas = [];
+  const verif = (nom, ok, detail = '') => cas.push({ nom, obtenu: ok ? 'ok' : detail, attendu: 'ok', ok });
+  for (const { id, module } of paires) {
+    const jeux = [
+      ...module.tousDocuments.map(d => ({ nom: d.id, ids: [d.id], reperes: d.reperes })),
+      ...module.syntheses.map(s => ({ nom: s.docs.join(' + '), ids: s.docs, reperes: s.reperes }))
+    ];
+    for (const j of jeux) {
+      const noms = j.reperes || [];
+      verif(`${id} · ${j.nom} : 1 ou 2 repères associés`, noms.length >= 1 && noms.length <= 2, `${noms.length} repère(s)`);
+      const evs = module.reperesDe(noms);
+      noms.forEach((nom, k) => {
+        verif(`${id} · ${j.nom} : « ${nom} » existe dans la banque de repères`, !!evs[k], 'introuvable');
+        if (evs[k]) verif(`${id} · ${j.nom} : « ${nom} » est un événement daté`, repereUtilisable(evs[k]), 'période ou nom daté');
+      });
+    }
+    const hors = [];
+    let sansRepere = 0;
+    for (let i = 0; i < n; i++) {
+      const s = module.generer(creerRng(3000 + i));
+      const jeu = jeux.find(j => j.ids.join('+') === s.idsDocuments.join('+'));
+      const dates = s.questions.filter(q => q.type === 'date');
+      if (!dates.length) sansRepere++;
+      for (const q of dates) if (!jeu || !jeu.reperes.includes(q.evenement)) hors.push(`${s.idsDocuments.join('+')} → ${q.evenement}`);
+    }
+    verif(`${id} : repères tirés uniquement dans la liste du jeu (${n} sujets)`, !hors.length, hors.slice(0, 3).join(' | '));
+    verif(`${id} : chaque sujet a au moins un repère`, !sansRepere, `${sansRepere} sujet(s) sans repère`);
+  }
+  return cas;
+}
+
 // Images d'histoire : métadonnées complètes, et l'exercice construit est valide (même avant validation)
 export function testerImages(images, exoImage, fichierExiste) {
   const cas = [];

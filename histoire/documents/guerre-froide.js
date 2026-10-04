@@ -6,6 +6,7 @@ export default fabriquerEtude(donnees, {
   documents: [
     {
       id: 'fulton',
+      reperes: ['Capitulation de l\'Allemagne', 'Début de la guerre froide'],
       titre: 'Le « rideau de fer »',
       html: '<p>« De Stettin dans la Baltique jusqu\'à Trieste dans l\'Adriatique, <u>un rideau de fer est descendu</u> à travers le continent. »</p>',
       source: 'Winston Churchill, ancien Premier ministre britannique, discours à Fulton (États-Unis), 5 mars 1946.',
@@ -19,6 +20,7 @@ export default fabriquerEtude(donnees, {
     },
     {
       id: 'truman',
+      reperes: ['Début de la guerre froide', 'Création de l\'OTAN'],
       titre: 'La doctrine Truman',
       html: '<p>« Je crois que les États-Unis doivent pratiquer une politique d\'<u>aide aux peuples libres</u> qui résistent à des tentatives d\'asservissement, qu\'elles soient le fait de minorités armées ou de pressions extérieures. »</p>',
       source: 'Harry Truman, président des États-Unis, discours au Congrès, 12 mars 1947.',
@@ -32,6 +34,7 @@ export default fabriquerEtude(donnees, {
     },
     {
       id: 'jdanov',
+      reperes: ['Début de la guerre froide', 'Création de l\'OTAN'],
       titre: 'La doctrine Jdanov',
       html: '<p>« <u>Deux camps se sont formés</u> : le camp impérialiste et antidémocratique d\'une part, le camp anti-impérialiste et démocratique d\'autre part. »</p>',
       source: 'Andreï Jdanov, dirigeant soviétique, rapport présenté à la réunion des partis communistes, septembre 1947.',
@@ -45,6 +48,7 @@ export default fabriquerEtude(donnees, {
     },
     {
       id: 'kennedy-berlin',
+      reperes: ['Construction du mur de Berlin', 'Crise de Cuba'],
       titre: 'Kennedy à Berlin',
       html: '<p>« Tous les hommes libres, où qu\'ils vivent, sont des citoyens de Berlin. Et en conséquence, en tant qu\'homme libre, je suis fier de dire : <u>« Ich bin ein Berliner ! »</u> »</p>',
       source: 'John F. Kennedy, président des États-Unis, discours à Berlin-Ouest, 26 juin 1963.',
@@ -58,7 +62,6 @@ export default fabriquerEtude(donnees, {
     }
   ],
   syntheses: [
-    { docs: ['truman', 'jdanov'], consigne: 'Montre qu\'en 1947, le monde se divise en deux blocs opposés.', mots: [['états-unis'], ['urss'], ['blocs', 'camps'], ['communis'], ['guerre froide'], ['1947']], corrige: 'Après 1945, les États-Unis et l\'URSS, alliés contre l\'Allemagne, deviennent rivaux. En mars 1947, Truman annonce que les États-Unis aideront les « peuples libres » contre le communisme (document 1). En septembre 1947, Jdanov répond qu\'il existe deux camps et accuse les États-Unis d\'impérialisme (document 2). Le monde se divise donc en deux blocs : c\'est le début de la guerre froide. Chaque camp défend un modèle opposé : démocratie libérale ou communisme.' }
-  ],
-  reperes: []
+    { docs: ['truman', 'jdanov'], reperes: ['Début de la guerre froide', 'Création de l\'OTAN'], consigne: 'Montre qu\'en 1947, le monde se divise en deux blocs opposés.', mots: [['états-unis'], ['urss'], ['blocs', 'camps'], ['communis'], ['guerre froide'], ['1947']], corrige: 'Après 1945, les États-Unis et l\'URSS, alliés contre l\'Allemagne, deviennent rivaux. En mars 1947, Truman annonce que les États-Unis aideront les « peuples libres » contre le communisme (document 1). En septembre 1947, Jdanov répond qu\'il existe deux camps et accuse les États-Unis d\'impérialisme (document 2). Le monde se divise donc en deux blocs : c\'est le début de la guerre froide. Chaque camp défend un modèle opposé : démocratie libérale ou communisme.' }
+  ]
 });

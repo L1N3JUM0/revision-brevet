@@ -21,6 +21,7 @@ export default {
     { nom: 'Débarquement en Normandie', annee: 1944, mois: 6, jour: 6, date: '6 juin 1944', explication: 'Les Alliés débarquent en Normandie et ouvrent un nouveau front à l\'Ouest.' },
     { nom: 'Capitulation de l\'Allemagne', annee: 1945, mois: 5, jour: 8, date: '8 mai 1945', repere: true, explication: 'Fin de la Seconde Guerre mondiale en Europe.' },
     { nom: 'Bombardements atomiques d\'Hiroshima et Nagasaki', annee: 1945, mois: 8, jour: 6, date: '6 et 9 août 1945', repere: true, explication: 'Les États-Unis larguent deux bombes atomiques sur le Japon, qui capitule le 2 septembre 1945.' },
+    { nom: 'Fin de la Seconde Guerre mondiale (capitulation du Japon)', annee: 1945, mois: 9, jour: 2, date: '2 septembre 1945', explication: 'Le Japon signe sa capitulation : la guerre est terminée dans le monde entier.' },
     { nom: 'Procès de Nuremberg', annee: 1945, mois: 11, jour: 20, fin: 1946, explication: 'Les principaux dirigeants nazis encore vivants sont jugés ; la notion de crime contre l\'humanité est utilisée pour la première fois.' }
   ],
   personnages: [

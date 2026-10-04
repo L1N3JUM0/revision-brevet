@@ -31,10 +31,11 @@
   </main>
 
   <script type="module">
-    import { testerGenerateur, testerSaisie, testerCalculatrice, testerBanquesHistoire, testerBanquesSciences, testerFiches, testerSujetsRediges, testerImages } from './verifications.js';
+    import { testerGenerateur, testerSaisie, testerCalculatrice, testerBanquesHistoire, testerBanquesSciences, testerFiches, testerSujetsRediges, testerReperesEtudes, testerImages } from './verifications.js';
     import { IMAGES } from '../histoire/images/images.js';
     import { exoImage } from '../histoire/generators/fabrique.js';
     import { analyserReponse } from '../assets/js/core/redaction.js';
+    import { repereUtilisable } from '../histoire/documents/fabrique-etude.js';
     import { CHAPITRES as CH_HISTOIRE } from '../histoire/chapitres.js';
     import { chargerTous as chargerEmc, chargerBanques as banquesEmc, CHAPITRES as CH_EMC } from '../emc/chapitres.js';
     import { chargerTous as chargerGeo, chargerBanques as banquesGeo, CHAPITRES as CH_GEO } from '../geographie/chapitres.js';
@@ -73,7 +74,9 @@
       blocUnitaire('Fiches « Explique-moi plus »', testerFiches(await Promise.all([...CH_MATHS, ...CH_SCIENCES].filter(c => c.approfondir)
         .map(async c => ({ gen: (await c.charger()).default, fiche: (await c.approfondir()).default }))))) +
       blocUnitaire('Sujets rédigés (étude de document…)', testerSujetsRediges(await Promise.all([...CH_HISTOIRE, ...CH_GEO, ...CH_EMC].filter(c => c.redige)
-        .map(async c => ({ id: c.id, module: (await c.redige()).default, evenements: BANQUES_HISTOIRE.flatMap(b => b.evenements) }))), analyserReponse));
+        .map(async c => ({ id: c.id, module: (await c.redige()).default, evenements: BANQUES_HISTOIRE.flatMap(b => b.evenements) }))), analyserReponse)) +
+      blocUnitaire('Étude de document : repères liés aux documents', testerReperesEtudes(await Promise.all(CH_HISTOIRE.filter(c => c.redige)
+        .map(async c => ({ id: c.id, module: (await c.redige()).default }))), repereUtilisable));
 
     // Générateurs
     const gens = [...await chargerTous(), ...await chargerSciences(), ...await chargerHistoire(), ...await chargerGeo(), ...await chargerEmc()];

@@ -6,6 +6,7 @@ export default fabriquerEtude(donnees, {
   documents: [
     {
       id: 'mobilisation',
+      reperes: ['Assassinat de l\'archiduc François-Ferdinand à Sarajevo', 'Bataille de la Marne'],
       titre: 'L\'ordre de mobilisation générale',
       html: '<p>« Par décret du Président de la République, la mobilisation des armées de terre et de mer est ordonnée, ainsi que la réquisition des animaux, voitures, harnais, nécessaires au complément de ces armées.</p><p>Le premier jour de la mobilisation est le <u>dimanche deux août 1914</u>. »</p>',
       source: 'Affiche placardée dans toutes les communes de France, 1<sup>er</sup> août 1914.',
@@ -21,6 +22,7 @@ export default fabriquerEtude(donnees, {
     },
     {
       id: 'versailles',
+      reperes: ['Armistice de la Première Guerre mondiale'],
       titre: 'Le traité de Versailles',
       html: '<p>« Article 231. Les Gouvernements alliés et associés déclarent et l\'Allemagne reconnaît que l\'Allemagne et ses alliés sont <u>responsables</u>, pour les avoir causés, de toutes les pertes et de tous les dommages subis par les Gouvernements alliés et associés et leurs nationaux en conséquence de la guerre, qui leur a été imposée par l\'agression de l\'Allemagne et de ses alliés. »</p>',
       source: 'Traité de Versailles, signé le 28 juin 1919.',
@@ -35,6 +37,7 @@ export default fabriquerEtude(donnees, {
     },
     {
       id: 'craonne',
+      reperes: ['Bataille de Verdun', 'Entrée en guerre des États-Unis'],
       titre: 'La chanson de Craonne',
       html: '<p>« Adieu la vie, adieu l\'amour,<br>Adieu toutes les femmes.<br>C\'est bien fini, c\'est pour toujours,<br>De cette guerre <u>infâme</u>.<br>C\'est à Craonne, sur le plateau,<br>Qu\'on doit laisser sa peau<br>Car nous sommes tous condamnés,<br>Nous sommes les sacrifiés. »</p>',
       source: 'Refrain de la <em>Chanson de Craonne</em>, chanson anonyme de soldats français, 1917. Elle fut interdite par l\'armée.',
@@ -49,7 +52,6 @@ export default fabriquerEtude(donnees, {
     }
   ],
   syntheses: [
-    { docs: ['mobilisation', 'craonne'], consigne: 'Montre que la Première Guerre mondiale est une guerre totale qui fait subir une violence de masse aux soldats.', mots: [['mobilisation', 'mobilisé'], ['réquisition'], ['mort', 'sacrifiés'], ['1914'], ['totale']], corrige: 'La Première Guerre mondiale (1914-1918) est une guerre totale. Dès le 2 août 1914, tous les hommes mobilisables sont appelés et l\'État réquisitionne les biens des civils (document 1). Les soldats subissent une violence de masse : dans les tranchées, ils vivent dans la peur de la mort. En 1917, la chanson de Craonne montre qu\'ils se sentent « condamnés » et « sacrifiés » (document 2). Certains se mutinent pour refuser des attaques inutiles.' }
-  ],
-  reperes: []
+    { docs: ['mobilisation', 'craonne'], reperes: ['Bataille de Verdun', 'Armistice de la Première Guerre mondiale'], consigne: 'Montre que la Première Guerre mondiale est une guerre totale qui fait subir une violence de masse aux soldats.', mots: [['mobilisation', 'mobilisé'], ['réquisition'], ['mort', 'sacrifiés'], ['1914'], ['totale']], corrige: 'La Première Guerre mondiale (1914-1918) est une guerre totale. Dès le 2 août 1914, tous les hommes mobilisables sont appelés et l\'État réquisitionne les biens des civils (document 1). Les soldats subissent une violence de masse : dans les tranchées, ils vivent dans la peur de la mort. En 1917, la chanson de Craonne montre qu\'ils se sentent « condamnés » et « sacrifiés » (document 2). Certains se mutinent pour refuser des attaques inutiles.' }
+  ]
 });

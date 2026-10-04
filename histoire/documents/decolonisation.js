@@ -6,6 +6,7 @@ export default fabriquerEtude(donnees, {
   documents: [
     {
       id: 'charte-onu-peuples',
+      reperes: ['Capitulation de l\'Allemagne', 'Indépendance de l\'Inde'],
       titre: 'Les buts des Nations unies',
       html: '<p>« Les buts des Nations unies sont les suivants : […] Développer entre les nations des relations amicales fondées sur le respect du principe de l\'égalité de droits des peuples et de <u>leur droit à disposer d\'eux-mêmes</u>… »</p>',
       source: 'Charte des Nations unies, article 1, 26 juin 1945.',
@@ -18,6 +19,7 @@ export default fabriquerEtude(donnees, {
     },
     {
       id: 'bandung',
+      reperes: ['Défaite française de Diên Biên Phu', 'Indépendance du Maroc et de la Tunisie'],
       titre: 'La conférence de Bandung',
       html: '<p>La conférence est d\'accord « pour déclarer que <u>le colonialisme, dans toutes ses manifestations, est un mal</u> auquel il doit être mis fin rapidement ».</p>',
       source: 'Communiqué final de la conférence afro-asiatique de Bandung (Indonésie), 24 avril 1955.',
@@ -31,6 +33,7 @@ export default fabriquerEtude(donnees, {
     },
     {
       id: 'nehru',
+      reperes: ['Indépendance de l\'Inde'],
       titre: 'L\'indépendance de l\'Inde',
       html: '<p>« Au douzième coup de minuit, à l\'heure où le monde dort, <u>l\'Inde s\'éveillera à la vie et à la liberté</u>. »</p>',
       source: 'Jawaharlal Nehru, futur Premier ministre de l\'Inde, discours devant l\'Assemblée constituante, 14 août 1947.',
@@ -44,7 +47,6 @@ export default fabriquerEtude(donnees, {
     }
   ],
   syntheses: [
-    { docs: ['charte-onu-peuples', 'bandung'], consigne: 'Montre qu\'après 1945, le colonialisme est de plus en plus contesté dans le monde.', mots: [['onu'], ['disposer d\'eux-mêmes'], ['bandung'], ['indépendance'], ['1945', '1955']], corrige: 'Après la Seconde Guerre mondiale, les puissances coloniales comme la France et le Royaume-Uni sont affaiblies. En 1945, la Charte des Nations unies affirme le droit des peuples à disposer d\'eux-mêmes (document 1). En 1955, les pays réunis à Bandung condamnent le colonialisme comme « un mal » (document 2). Les peuples colonisés obtiennent alors leur indépendance, parfois par la négociation, comme l\'Inde en 1947, parfois par la guerre, comme l\'Algérie en 1962. Le colonialisme est donc rejeté dans le monde entier.' }
-  ],
-  reperes: []
+    { docs: ['charte-onu-peuples', 'bandung'], reperes: ['Indépendance de l\'Inde', 'Indépendance de l\'Algérie'], consigne: 'Montre qu\'après 1945, le colonialisme est de plus en plus contesté dans le monde.', mots: [['onu'], ['disposer d\'eux-mêmes'], ['bandung'], ['indépendance'], ['1945', '1955']], corrige: 'Après la Seconde Guerre mondiale, les puissances coloniales comme la France et le Royaume-Uni sont affaiblies. En 1945, la Charte des Nations unies affirme le droit des peuples à disposer d\'eux-mêmes (document 1). En 1955, les pays réunis à Bandung condamnent le colonialisme comme « un mal » (document 2). Les peuples colonisés obtiennent alors leur indépendance, parfois par la négociation, comme l\'Inde en 1947, parfois par la guerre, comme l\'Algérie en 1962. Le colonialisme est donc rejeté dans le monde entier.' }
+  ]
 });

@@ -6,6 +6,7 @@ export default fabriquerEtude(donnees, {
   documents: [
     {
       id: 'schuman',
+      reperes: ['Création de la CECA', 'Traités de Rome'],
       titre: 'La déclaration Schuman',
       html: '<p>« L\'Europe ne se fera pas d\'un coup, ni dans une construction d\'ensemble : elle se fera par des <u>réalisations concrètes</u> créant d\'abord une solidarité de fait. […]</p><p>Le gouvernement français propose de placer l\'ensemble de la <u>production franco-allemande de charbon et d\'acier</u> sous une Haute Autorité commune. […]</p><p>La solidarité de production qui sera ainsi nouée manifestera que toute guerre entre la France et l\'Allemagne devient non seulement impensable, mais matériellement impossible. »</p>',
       source: 'Robert Schuman, ministre français des Affaires étrangères, déclaration du 9 mai 1950.',
@@ -21,6 +22,7 @@ export default fabriquerEtude(donnees, {
     },
     {
       id: 'valeurs-ue',
+      reperes: ['Traité de Maastricht', 'Élargissement de l\'Union européenne à l\'Est'],
       titre: 'Les valeurs de l\'Union européenne',
       html: '<p>« L\'Union est fondée sur les valeurs de <u>respect de la dignité humaine, de liberté, de démocratie, d\'égalité, de l\'État de droit</u>, ainsi que de respect des droits de l\'homme, y compris des droits des personnes appartenant à des minorités. »</p>',
       source: 'Traité sur l\'Union européenne, article 2 (rédaction issue du traité de Lisbonne, 2007).',
@@ -33,7 +35,6 @@ export default fabriquerEtude(donnees, {
     }
   ],
   syntheses: [
-    { docs: ['schuman', 'valeurs-ue'], consigne: 'Montre que la construction européenne cherche à garantir la paix et la démocratie en Europe.', mots: [['paix'], ['ceca', 'charbon'], ['démocratie'], ['union européenne'], ['1950', '1951', '1957']], corrige: 'Après la Seconde Guerre mondiale, des Européens veulent éviter une nouvelle guerre. En 1950, Robert Schuman propose de mettre en commun le charbon et l\'acier de la France et de l\'Allemagne, pour rendre la guerre impossible (document 1). La CECA est créée en 1951, puis la CEE en 1957 avec les traités de Rome. Aujourd\'hui, l\'Union européenne est fondée sur des valeurs comme la liberté et la démocratie (document 2). La construction européenne garantit donc la paix et la démocratie entre ses membres.' }
-  ],
-  reperes: []
+    { docs: ['schuman', 'valeurs-ue'], reperes: ['Création de la CECA', 'Traités de Rome'], consigne: 'Montre que la construction européenne cherche à garantir la paix et la démocratie en Europe.', mots: [['paix'], ['ceca', 'charbon'], ['démocratie'], ['union européenne'], ['1950', '1951', '1957']], corrige: 'Après la Seconde Guerre mondiale, des Européens veulent éviter une nouvelle guerre. En 1950, Robert Schuman propose de mettre en commun le charbon et l\'acier de la France et de l\'Allemagne, pour rendre la guerre impossible (document 1). La CECA est créée en 1951, puis la CEE en 1957 avec les traités de Rome. Aujourd\'hui, l\'Union européenne est fondée sur des valeurs comme la liberté et la démocratie (document 2). La construction européenne garantit donc la paix et la démocratie entre ses membres.' }
+  ]
 });

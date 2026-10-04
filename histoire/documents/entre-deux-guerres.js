@@ -6,6 +6,7 @@ export default fabriquerEtude(donnees, {
   documents: [
     {
       id: 'mussolini',
+      reperes: ['Arrivée de Mussolini au pouvoir en Italie'],
       titre: 'Mussolini définit l\'État fasciste',
       html: '<p>« <u>Tout dans l\'État</u>, rien en dehors de l\'État, rien contre l\'État. »</p>',
       source: 'Benito Mussolini, discours à Milan, 28 octobre 1925.',
@@ -19,6 +20,7 @@ export default fabriquerEtude(donnees, {
     },
     {
       id: 'nuremberg-lois',
+      reperes: ['Nuit de Cristal'],
       titre: 'Les lois de Nuremberg',
       html: '<p>« Article 1. Les <u>mariages entre Juifs et citoyens de sang allemand</u> ou apparenté sont interdits. »</p>',
       source: 'Loi sur la protection du sang et de l\'honneur allemands, dite loi de Nuremberg, 15 septembre 1935.',
@@ -33,7 +35,6 @@ export default fabriquerEtude(donnees, {
     }
   ],
   syntheses: [
-    { docs: ['mussolini', 'nuremberg-lois'], consigne: 'Montre que les régimes totalitaires contrôlent la société et excluent une partie de la population.', mots: [['totalitaire'], ['contrôle', 'contrôler'], ['juifs'], ['racis', 'antisémit'], ['1935', '1933', '1922']], corrige: 'Dans l\'entre-deux-guerres, des régimes totalitaires s\'installent en Europe. En Italie, Mussolini, au pouvoir depuis 1922, veut que tout passe par l\'État : aucune opposition n\'est tolérée (document 1). En Allemagne, Hitler, au pouvoir en 1933, applique une politique raciste et antisémite. Les lois de Nuremberg de 1935 excluent les Juifs et contrôlent jusqu\'à leur vie privée (document 2). Ces régimes contrôlent donc toute la société et persécutent ceux qu\'ils désignent comme ennemis.' }
-  ],
-  reperes: []
+    { docs: ['mussolini', 'nuremberg-lois'], reperes: ['Arrivée de Mussolini au pouvoir en Italie', 'Nuit de Cristal'], consigne: 'Montre que les régimes totalitaires contrôlent la société et excluent une partie de la population.', mots: [['totalitaire'], ['contrôle', 'contrôler'], ['juifs'], ['racis', 'antisémit'], ['1935', '1933', '1922']], corrige: 'Dans l\'entre-deux-guerres, des régimes totalitaires s\'installent en Europe. En Italie, Mussolini, au pouvoir depuis 1922, veut que tout passe par l\'État : aucune opposition n\'est tolérée (document 1). En Allemagne, Hitler, au pouvoir en 1933, applique une politique raciste et antisémite. Les lois de Nuremberg de 1935 excluent les Juifs et contrôlent jusqu\'à leur vie privée (document 2). Ces régimes contrôlent donc toute la société et persécutent ceux qu\'ils désignent comme ennemis.' }
+  ]
 });
