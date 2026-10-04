@@ -4,7 +4,7 @@
 // VERSION et FICHIERS sont mis à jour par : node tests/verifier-sw.mjs --maj
 // (à lancer avant chaque commit ; sans --maj, le script vérifie seulement).
 
-const VERSION = '04be4036e22d';
+const VERSION = '9225f03aead7';
 const CACHE = `revision-brevet-${VERSION}`;
 const DELAI_RESEAU = 4000; // ms avant de se rabattre sur le cache
 

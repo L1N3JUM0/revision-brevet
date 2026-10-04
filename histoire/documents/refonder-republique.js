@@ -23,10 +23,10 @@ export default fabriquerEtude(donnees, {
       reperes: ['Libération de Paris', 'Premier vote des femmes'],
       titre: 'Le droit de vote des femmes',
       html: '<p>« Article 17. <u>Les femmes sont électrices et éligibles</u> dans les mêmes conditions que les hommes. »</p>',
-      source: 'Ordonnance du Gouvernement provisoire de la République française, 21 avril 1944.',
+      source: 'Ordonnance du Comité français de la Libération nationale (CFLN), présidé par le général de Gaulle, Alger, 21 avril 1944.',
       prelevement: [
         { consigne: 'Relève le nouveau droit accordé aux femmes.', mots: [['électrices', 'électrice', 'voter'], ['éligibles', 'éligible']], corrige: 'Les femmes deviennent « électrices et éligibles », comme les hommes.' },
-        { consigne: 'Qui accorde ce droit et en quelle année ?', mots: [['gouvernement provisoire', 'de gaulle'], ['1944']], corrige: 'Ce droit est accordé par le Gouvernement provisoire de la République française en 1944.' }
+        { consigne: 'Qui accorde ce droit et en quelle année ?', mots: [['comité français de la libération nationale', 'cfln', 'de gaulle'], ['1944']], corrige: 'Ce droit est accordé en 1944 par le Comité français de la Libération nationale (CFLN), dirigé par le général de Gaulle. Ce comité devient le Gouvernement provisoire en juin 1944.' }
       ],
       analyse: [
         { consigne: 'Explique ce que signifie « électrices et éligibles » et quand les femmes votent pour la première fois.', mots: [['voter', 'vote'], ['candidat', 'élue', 'élu'], ['1945']], corrige: 'Être électrice signifie avoir le droit de voter. Être éligible signifie pouvoir être candidate et élue. Les femmes votent pour la première fois aux élections municipales d\'avril 1945.' }
